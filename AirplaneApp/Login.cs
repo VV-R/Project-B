@@ -16,8 +16,7 @@ public class LoginMenu : Toplevel
             Y = Pos.Bottom(loginButton),
         };
 
-        // TODO: Make an seperate register window.
-        // registerButton.Clicked += () => {};
+        registerButton.Clicked += () => { WindowManager.SetWindow(this, new RegisterMenu()); };
 
         Button guestButton = new Button() {
             Text = "Doorgaan als gast",
