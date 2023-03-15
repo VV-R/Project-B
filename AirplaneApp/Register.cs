@@ -54,6 +54,16 @@ public class RegisterMenu : Toplevel
             Width = Dim.Percent(20),
         };
 
+        CheckBox passwordCheckBox = new CheckBox() {
+            X = Pos.Right(passwordText) + 1,
+            Y = Pos.Top(passwordLabel),
+        };
+
+        passwordCheckBox.Toggled += (e) => {if (!e)
+            passwordText.Secret = false;
+            else passwordText.Secret = true;};
+
+
         Label emailLabel = new Label() {
             Text = "E-mailadres:",
             X = Pos.Left(usernameLabel),
@@ -66,7 +76,7 @@ public class RegisterMenu : Toplevel
             Width = Dim.Percent(20),
         };
 
-        Add(usernameLabel, usernameText, passwordLabel, passwordText, emailLabel, emailText);
+        Add(usernameLabel, usernameText, passwordLabel, passwordText, passwordCheckBox, emailLabel, emailText);
         #endregion
 
         #region Date of birth
@@ -189,16 +199,9 @@ public class RegisterMenu : Toplevel
     }
     private bool IsValidEmail(string email)
     {
-        // Regular expression for email validation
         string pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
-
-        // Create Regex object
         Regex regex = new Regex(pattern);
-
-        // Match the email string against the regular expression
         Match match = regex.Match(email);
-
-        // Return true if the email matches the pattern, false otherwise
         return match.Success;
     }
 }

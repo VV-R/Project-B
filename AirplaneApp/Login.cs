@@ -62,6 +62,16 @@ public class LoginScreen : Toplevel
             Width = Dim.Percent(20),
         };
 
+        CheckBox passwordCheckBox = new CheckBox() {
+            X = Pos.Right(passwordText) + 1,
+            Y = Pos.Top(passwordLabel),
+        };
+
+        passwordCheckBox.Toggled += (e) => {if (!e)
+            passwordText.Secret = false;
+            else passwordText.Secret = true;};
+
+
         Button loginButton = new Button() {
             Text = "Log in",
             X = Pos.Left(usernameLabel),
@@ -85,7 +95,7 @@ public class LoginScreen : Toplevel
 
         backButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
 
-        Add(usernameLabel, usernameText, passwordLabel, passwordText, loginButton, backButton);
+        Add(usernameLabel, usernameText, passwordLabel, passwordText, passwordCheckBox, loginButton, backButton);
     }
 
     private bool CheckLogin(string username, string password)
