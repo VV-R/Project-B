@@ -16,7 +16,7 @@ public class MainMenu : Toplevel
             Y = Pos.Bottom(nameLabel),
         };
 
-        goBackButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        goBackButton.Clicked += () => {  WindowManager.currentColor = Colors.Base; WindowManager.SetWindow(this, new LoginMenu()); };
 
         Add(nameLabel, goBackButton);
     }

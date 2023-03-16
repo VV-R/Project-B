@@ -81,6 +81,8 @@ public class LoginScreen : Toplevel
         loginButton.Clicked += () => {
             if (CheckLogin(((string)usernameText.Text), ((string)passwordText.Text))) {
                 MessageBox.Query("Logging In", "Log in Successvol", "Ok");
+                if ((string)usernameText.Text == "admin")
+                    WindowManager.currentColor = Colors.TopLevel;
                 WindowManager.SetWindow(this, new MainMenu((string)usernameText.Text));
             }  else {
 				MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");

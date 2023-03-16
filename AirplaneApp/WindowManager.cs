@@ -3,6 +3,7 @@ using Terminal.Gui;
 
 public static class WindowManager
 {
+    public static ColorScheme currentColor = Colors.Base;
     public static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {
         Application.MainLoop.Invoke(() => {
@@ -10,8 +11,9 @@ public static class WindowManager
             newWindow.Y = 8;
             newWindow.Width = 238;
             newWindow.Height = 53;
-            newWindow.ColorScheme = Colors.Base;
+            newWindow.ColorScheme = currentColor;
             Application.Current.Add(newWindow);
+            Application.Current.ColorScheme = currentColor;
             Application.Current.SetNeedsDisplay();
         });
     }
