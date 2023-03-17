@@ -4,6 +4,7 @@ using Terminal.Gui;
 public static class WindowManager
 {
     public static ColorScheme currentColor = Colors.Base;
+    public static string CurrentTime {get {return DateTime.Now.ToString();}}
     public static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {
         Application.MainLoop.Invoke(() => {

@@ -1,9 +1,18 @@
 using System;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Terminal.Gui;
 
 public class RegisterMenu : Toplevel
 {
+    TextField firstnameText;
+    TextField lastnameText;
+    TextField usernameText;
+    TextField passwordText;
+    TextField emailText;
+    TextField documentNumber;
+    TextField ibanText;
+
     public RegisterMenu()
     {
         #region Name
@@ -11,7 +20,7 @@ public class RegisterMenu : Toplevel
             Text = "Voornaam:",
         };
 
-        TextField firstnameText = new TextField("") {
+        firstnameText = new TextField("") {
             X = Pos.Right(firstnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -21,7 +30,7 @@ public class RegisterMenu : Toplevel
             X = Pos.Right(firstnameText) + 1
         };
 
-        TextField lastnameText = new TextField("") {
+        lastnameText = new TextField("") {
             X = Pos.Right(lastnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -35,8 +44,8 @@ public class RegisterMenu : Toplevel
             Y = Pos.Bottom(firstnameLabel) + 1,
         };
 
-        TextField usernameText = new TextField ("") {
-            X = Pos.Right(usernameLabel) + 1,
+        usernameText = new TextField ("") {
+            X = Pos.Right(usernameLabel) + 2,
             Y = Pos.Top(usernameLabel),
             Width = Dim.Percent(20),
         };
@@ -47,7 +56,7 @@ public class RegisterMenu : Toplevel
             Y = Pos.Bottom(usernameLabel) + 1,
         };
 
-        TextField passwordText = new TextField("") {
+        passwordText = new TextField("") {
             Secret = true,
             X = Pos.Left(usernameText),
             Y = Pos.Top(passwordLabel),
@@ -70,7 +79,7 @@ public class RegisterMenu : Toplevel
             Y = Pos.Bottom(passwordLabel) + 1,
         };
 
-        TextField emailText = new TextField("") {
+        emailText = new TextField("") {
             X = Pos.Left(passwordText),
             Y = Pos.Top(emailLabel),
             Width = Dim.Percent(20),
@@ -141,21 +150,72 @@ public class RegisterMenu : Toplevel
         Add(dateOfBirthLabel, dayComboBox, monthComboBox, yearComboBox);
         #endregion
 
-        #region Register
-        Button registerButton = new Button() {
-            Text = "Registreren",
+        #region Private Data
+        Label documentNumberLabel = new Label() {
+            Text = "Document nummer:",
             X = Pos.Left(dateOfBirthLabel),
             Y = Pos.Bottom(dateOfBirthLabel) + 1,
         };
 
+        documentNumber = new TextField("") {
+            X = Pos.Left(passwordText),
+            Y = Pos.Top(documentNumberLabel),
+            Width = Dim.Percent(20),
+        };
+
+        documentNumber.TextChanged += (text) => {
+        if (!int.TryParse(documentNumber.Text == "" ? "0" : (string)documentNumber.Text, out _))
+            documentNumber.Text = text == "" ? "" : text;
+        else if (documentNumber.Text.Length > 9)
+            documentNumber.Text = text;
+        documentNumber.CursorPosition = documentNumber.Text.Length;};
+
+        Label ibanLabel = new Label() {
+            Text = "IBAN:",
+            X = Pos.Left(documentNumberLabel),
+            Y = Pos.Bottom(documentNumberLabel) + 1,
+        };
+
+        ibanText = new TextField("") {
+            X = Pos.Left(passwordText),
+            Y = Pos.Top(ibanLabel),
+            Width = Dim.Percent(20),
+        };
+
+        ibanText.TextChanged += (text) => { int len = ibanText.Text.Split(" ").Last().Length;
+        if (len >= 4 && text.Length < ibanText.Text.Length)
+            ibanText.InsertText(" ");
+        else if (len == 4 && text.Length > ibanText.Text.Length) {
+            ibanText.CursorPosition -= 1;
+            ibanText.DeleteCharRight();
+        }
+        if (ibanText.Text.Length > 22) {
+            ibanText.Text = text;
+        }
+        ibanText.CursorPosition = ibanText.Text.Length; };
+
+        Add(documentNumberLabel, documentNumber, ibanLabel, ibanText);
+        #endregion
+
+        #region Register
+        Button registerButton = new Button() {
+            Text = "Registreren",
+            X = Pos.Left(ibanLabel),
+            Y = Pos.Bottom(ibanLabel) + 1,
+        };
+
         registerButton.Clicked += () => {
-            int year = Convert.ToInt32(yearComboBox.Text);
-            int month = Convert.ToInt32(monthComboBox.Text);
-            int day = Convert.ToInt32(dayComboBox.Text);
-            string? result = RegisterUser((string)firstnameText.Text, (string)lastnameText.Text, (string)usernameText.Text,
-                                        (string)passwordText.Text, (string)emailText.Text, new DateTime(year, month, day));
-            if (result != null)
-                WindowManager.SetWindow(this, new MainMenu(result)); };
+            try {
+                int year = Convert.ToInt32(yearComboBox.Text);
+                int month = Convert.ToInt32(monthComboBox.Text);
+                int day = Convert.ToInt32(dayComboBox.Text);
+                string? result = RegisterUser(new DateTime(year, month, day));
+                if (result != null)
+                    WindowManager.SetWindow(this, new MainMenu(result));
+            } catch (FormatException e) {
+                Console.WriteLine(e.Message);
+            }
+            };
 
         Button backButton = new Button() {
             Text = "Terug",
@@ -170,16 +230,25 @@ public class RegisterMenu : Toplevel
     }
 
 
-    private string RegisterUser(string fname, string lname, string uname, string password, string email, DateTime dateOfBirth)
+    private string? RegisterUser(DateTime dateOfBirth)
     {
-        if (fname == "" || lname == "" || uname == "" || password == "" || email == "")
+        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" || passwordText.Text == "" ||
+            emailText.Text == "" || documentNumber.Text == "" || ibanText.Text == "")
         {
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
         }
 
-        if (!IsValidEmail(email))
-        {
+        MailAddress address;
+        bool isValid = false;
+        try {
+            address = new MailAddress((string)emailText.Text);
+            isValid = (address.Address == (string)emailText.Text);
+        } catch (FormatException) {
+            MessageBox.ErrorQuery("Registreren", "Onjuist email", "Ok");
+            return null;
+        }
+        if (!isValid) {
             MessageBox.ErrorQuery("Registreren", "Onjuist email", "Ok");
             return null;
         }
@@ -195,13 +264,6 @@ public class RegisterMenu : Toplevel
             WindowManager.SetWindow(this, new LoginMenu());
         }
 
-        return uname;
-    }
-    private bool IsValidEmail(string email)
-    {
-        string pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
-        Regex regex = new Regex(pattern);
-        Match match = regex.Match(email);
-        return match.Success;
+        return (string)usernameText.Text;
     }
 }

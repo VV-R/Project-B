@@ -21,6 +21,13 @@ public class MainWindow : Window
             Text = AirlineText.ToString(),
         };
 
+        Label currentTime = new Label() {
+            Text = WindowManager.CurrentTime,
+            X = Pos.AnchorEnd(WindowManager.CurrentTime.Length),
+        };
+
+        Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => {currentTime.Text = WindowManager.CurrentTime; return true;});
+
         LineView line = new LineView() {
             Y = 7,
         };
@@ -32,6 +39,6 @@ public class MainWindow : Window
             ColorScheme = Colors.Base,
         };
 
-        Add(airlineTextLabel, line, startingWindow);
+        Add(airlineTextLabel, currentTime, line, startingWindow);
     }
 }
