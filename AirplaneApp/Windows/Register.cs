@@ -10,9 +10,11 @@ public class RegisterMenu : Toplevel
     TextField usernameText;
     TextField passwordText;
     TextField emailText;
+    ComboBox dialCodesComboBox;
+    TextField phoneText;
+    ComboBox nationalityComboBox;
     TextField documentNumber;
     ComboBox documentTypeComboBox;
-    ComboBox nationalityComboBox;
 
     public RegisterMenu()
     {
@@ -73,7 +75,6 @@ public class RegisterMenu : Toplevel
             passwordText.Secret = false;
             else passwordText.Secret = true;};
 
-
         Label emailLabel = new Label() {
             Text = "E-mailadres:",
             X = Pos.Left(usernameLabel),
@@ -85,8 +86,41 @@ public class RegisterMenu : Toplevel
             Y = Pos.Top(emailLabel),
             Width = Dim.Percent(20),
         };
-
         Add(usernameLabel, usernameText, passwordLabel, passwordText, passwordCheckBox, emailLabel, emailText);
+        #endregion
+
+        #region Phonenumber
+        StreamReader dialcodesReader = new StreamReader("dial_codes.json");
+        string dialcodesFile = dialcodesReader.ReadToEnd();
+
+        Label phoneLabel = new Label() {
+            Text = "Telefoonnummer:",
+            X = Pos.Left(usernameLabel),
+            Y = Pos.Bottom(emailLabel) + 1,
+        };
+        dialCodesComboBox = new ComboBox() {
+            X = Pos.Left(passwordText),
+            Y = Pos.Top(phoneLabel),
+            Width = 7,
+            Height = 4,
+        };
+
+        dialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
+
+        phoneText = new TextField("") {
+            X = Pos.Right(dialCodesComboBox) + 1,
+            Y = Pos.Top(phoneLabel),
+            Width = 39
+        };
+
+        phoneText.TextChanged += (text) => {
+        if (!int.TryParse(phoneText.Text == "" ? "0" : (string)phoneText.Text, out _))
+            phoneText.Text = text == "" ? "" : text;
+        else if (phoneText.Text.Length > 10)
+            phoneText.Text = text;
+        phoneText.CursorPosition = phoneText.Text.Length;};
+
+        Add(phoneLabel, dialCodesComboBox, phoneText);
         #endregion
 
         #region Date of birth
@@ -96,7 +130,7 @@ public class RegisterMenu : Toplevel
         Label dateOfBirthLabel = new Label() {
             Text = "Geboortedatum:",
             X = Pos.Left(usernameLabel),
-            Y = Pos.Bottom(emailLabel) + 1,
+            Y = Pos.Bottom(phoneLabel) + 1,
         };
 
         ComboBox dayComboBox = new ComboBox(){
@@ -163,7 +197,7 @@ public class RegisterMenu : Toplevel
         nationalityComboBox = new ComboBox() {
             X = Pos.Left(usernameText),
             Y = Pos.Top(nationalityLabel),
-            Width = 46,
+            Width = 47,
             Height = 8,
         };
 
@@ -195,7 +229,7 @@ public class RegisterMenu : Toplevel
         documentNumber = new TextField("") {
             X = Pos.Left(passwordText) + 2,
             Y = Pos.Top(documentNumberLabel),
-            Width = Dim.Percent(20),
+            Width = Dim.Percent(20) - 2,
         };
 
         documentNumber.TextChanged += (text) => {
@@ -290,7 +324,7 @@ public class RegisterMenu : Toplevel
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
                 string? result = RegisterUser(dateOfBirth, expireDate);
                 if (result != null)
-                    WindowManager.SetWindow(this, new MainMenu(result));
+                    WindowManager.SetWindow(this, new UserMenu(result));
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
             }
@@ -310,9 +344,8 @@ public class RegisterMenu : Toplevel
 
     private string? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
     {
-        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" ||
-            passwordText.Text == "" || emailText.Text == "" || nationalityComboBox.Text == "")
-        {
+        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" || passwordText.Text == "" ||
+            emailText.Text == "" || phoneText.Text == "" || dialCodesComboBox.Text == "" || nationalityComboBox.Text == "") {
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
         }
@@ -331,22 +364,26 @@ public class RegisterMenu : Toplevel
             return null;
         }
 
+        if (phoneText.Text.Length < 10) {
+            MessageBox.ErrorQuery("Registreren", "Onjuist telefoonnummer", "Ok");
+            return null;
+        }
+
         DateTime currentDate = DateTime.Today;
         int age =  currentDate.Year - dateOfBirth.Year;
         if (currentDate < dateOfBirth.AddYears(age))
             age--;
 
+        if (age < 18) {
+            MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Ok");
+            return null;
+        }
+
         if (documentTypeComboBox.Text == "" && documentNumber.Text != "") {
             MessageBox.ErrorQuery("Registreren", "Document type niet ingevuld", "Ok");
             return null;
         } else if (currentDate > expireDate && documentNumber.Text != "") {
-            MessageBox.ErrorQuery("Registreren", $"{documentTypeComboBox.Text} vervallen", "Ok");
-            return null;
-        }
-
-        if (age < 18)
-        {
-            MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Sluiten");
+            MessageBox.ErrorQuery("Registreren", $"Uw {documentTypeComboBox.Text} is vervallen", "Ok");
             return null;
         }
 

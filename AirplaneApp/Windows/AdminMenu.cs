@@ -2,21 +2,21 @@ using System;
 using Terminal.Gui;
 
 
-public class MainMenu : Toplevel
+public class AdminMenu : Toplevel
 {
     // public MainMenu(User user)
-    public MainMenu(string name)
+    public AdminMenu(string name)
     {
         Label nameLabel = new Label(){
-            Text = $"Hello {name}!",
+            Text = $"Welkom {name}!",
         };
 
         Button goBackButton = new Button() {
             Text = name == "guest" ? "Terug" : "Uitloggen",
-            Y = Pos.Bottom(nameLabel),
+            Y = Pos.Bottom(nameLabel) + 1,
         };
 
-        goBackButton.Clicked += () => {  WindowManager.currentColor = Colors.Base; WindowManager.SetWindow(this, new LoginMenu()); };
+        goBackButton.Clicked += () => { WindowManager.currentColor = Colors.Base; WindowManager.SetWindow(this, new LoginMenu()); };
 
         Add(nameLabel, goBackButton);
     }

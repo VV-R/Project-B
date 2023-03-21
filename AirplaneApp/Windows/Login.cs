@@ -23,7 +23,7 @@ public class LoginMenu : Toplevel
             Y = Pos.Bottom(registerButton),
         };
 
-        guestButton.Clicked += () => { WindowManager.SetWindow(this, new MainMenu("guest")); };
+        guestButton.Clicked += () => { WindowManager.SetWindow(this, new UserMenu("guest")); };
 
         Button exitButton = new Button() {
             Text = "Afsluiten",
@@ -80,10 +80,12 @@ public class LoginScreen : Toplevel
 
         loginButton.Clicked += () => {
             if (CheckLogin(((string)usernameText.Text), ((string)passwordText.Text))) {
-                MessageBox.Query("Logging In", "Log in Successvol", "Ok");
-                if ((string)usernameText.Text == "admin")
+                if ((string)usernameText.Text == "admin") {
                     WindowManager.currentColor = Colors.TopLevel;
-                WindowManager.SetWindow(this, new MainMenu((string)usernameText.Text));
+                    WindowManager.SetWindow(this, new AdminMenu((string)usernameText.Text));
+                } else {
+                    WindowManager.SetWindow(this, new UserMenu((string)usernameText.Text));
+                }
             }  else {
 				MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");
 			}
@@ -105,6 +107,7 @@ public class LoginScreen : Toplevel
         // TODO: Add database check here
         // TODO: Change the return type to a user class instead of bool
 
-        return (username == "admin" && password == "password");
+        return (username == "admin" && password == "password") ||
+                (username == "user" && password == "password");
     }
 }
