@@ -23,7 +23,7 @@ public class MainWindow : Window
 
         Label currentTime = new Label() {
             Text = WindowManager.CurrentTime,
-            X = Pos.AnchorEnd(WindowManager.CurrentTime.Length),
+            X = Pos.AnchorEnd(21),
         };
 
         Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => {currentTime.Text = WindowManager.CurrentTime; return true;});

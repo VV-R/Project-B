@@ -3,7 +3,7 @@
 Application.Init();
 
 try {
-    Application.Driver.SetCursorVisibility(CursorVisibility.Box);
+    Application.Driver.SetCursorVisibility(CursorVisibility.Underline);
     Application.Run<MainWindow>();
 }
 finally {

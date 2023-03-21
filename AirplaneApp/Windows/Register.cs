@@ -1,6 +1,6 @@
 using System;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using Terminal.Gui;
 
 public class RegisterMenu : Toplevel
@@ -11,7 +11,8 @@ public class RegisterMenu : Toplevel
     TextField passwordText;
     TextField emailText;
     TextField documentNumber;
-    TextField ibanText;
+    ComboBox documentTypeComboBox;
+    ComboBox nationalityComboBox;
 
     public RegisterMenu()
     {
@@ -101,18 +102,17 @@ public class RegisterMenu : Toplevel
         ComboBox dayComboBox = new ComboBox(){
             X = Pos.Left(passwordText),
             Y = Pos.Top(dateOfBirthLabel),
-            Height = Dim.Fill(2),
-            Width = Dim.Percent(5),
+            Height = 4,
+            Width = 8,
         };
 
         dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-
         ComboBox monthComboBox = new ComboBox(){
             X = Pos.Right(dayComboBox) + 1,
             Y = Pos.Top(dayComboBox),
-            Height = Dim.Fill(2),
-            Width = Dim.Percent(5),
+            Height = 4,
+            Width = 8,
         };
 
         monthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
@@ -129,8 +129,8 @@ public class RegisterMenu : Toplevel
         ComboBox yearComboBox = new ComboBox(){
             X = Pos.Right(monthComboBox) + 1 ,
             Y = Pos.Top(monthComboBox),
-            Height = Dim.Fill(2),
-            Width = Dim.Percent(5),
+            Height = 4,
+            Width = 8,
         };
 
         yearComboBox.SetSource(Enumerable.Range(1960, 46).ToList());
@@ -150,15 +150,50 @@ public class RegisterMenu : Toplevel
         Add(dateOfBirthLabel, dayComboBox, monthComboBox, yearComboBox);
         #endregion
 
-        #region Private Data
-        Label documentNumberLabel = new Label() {
-            Text = "Document nummer:",
-            X = Pos.Left(dateOfBirthLabel),
+        #region Nationality
+        StreamReader reader = new StreamReader("countries.json");
+        string countriesFile = reader.ReadToEnd();
+
+        Label nationalityLabel = new Label() {
+            Text = "Nationaliteit:",
+            X = Pos.Left(usernameLabel),
             Y = Pos.Bottom(dateOfBirthLabel) + 1,
         };
 
+        nationalityComboBox = new ComboBox() {
+            X = Pos.Left(usernameText),
+            Y = Pos.Top(nationalityLabel),
+            Width = 46,
+            Height = 8,
+        };
+
+        nationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
+
+        Add(nationalityLabel, nationalityComboBox);
+        #endregion
+
+        #region Document Information
+        Label optionalLabel = new Label() {
+            Text = "Optioneel:",
+            X = Pos.Left(usernameLabel),
+            Y = Pos.Bottom(nationalityLabel) + 1,
+        };
+
+        LineView optionalLine = new LineView() {
+            X = Pos.Right(optionalLabel),
+            Y = Pos.Top(optionalLabel),
+        };
+
+        Add(optionalLabel, optionalLine);
+
+        Label documentNumberLabel = new Label() {
+            Text = "Document nummer:",
+            X = Pos.Left(usernameLabel) + 2,
+            Y = Pos.Bottom(optionalLabel) + 1,
+        };
+
         documentNumber = new TextField("") {
-            X = Pos.Left(passwordText),
+            X = Pos.Left(passwordText) + 2,
             Y = Pos.Top(documentNumberLabel),
             Width = Dim.Percent(20),
         };
@@ -170,46 +205,90 @@ public class RegisterMenu : Toplevel
             documentNumber.Text = text;
         documentNumber.CursorPosition = documentNumber.Text.Length;};
 
-        Label ibanLabel = new Label() {
-            Text = "IBAN:",
-            X = Pos.Left(documentNumberLabel),
+        Label documentTypeLabel = new Label() {
+            Text = "Type:",
+            X = Pos.Right(documentNumber) + 1,
+            Y = Pos.Top(documentNumberLabel),
+        };
+
+        documentTypeComboBox = new ComboBox() {
+            X = Pos.Right(documentTypeLabel) + 1,
+            Y = Pos.Top(documentNumberLabel),
+            Width = 10,
+            Height = 4,
+        };
+        documentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
+
+        Label expireDateLabel = new Label() {
+            Text = "Verval datum:",
+            X = Pos.Left(usernameLabel) + 2,
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
-        ibanText = new TextField("") {
-            X = Pos.Left(passwordText),
-            Y = Pos.Top(ibanLabel),
-            Width = Dim.Percent(20),
+        ComboBox exipreDayComboBox = new ComboBox(){
+            X = Pos.Left(passwordText) + 2,
+            Y = Pos.Top(expireDateLabel),
+            Height = 4,
+            Width = 8,
         };
 
-        ibanText.TextChanged += (text) => { int len = ibanText.Text.Split(" ").Last().Length;
-        if (len >= 4 && text.Length < ibanText.Text.Length)
-            ibanText.InsertText(" ");
-        else if (len == 4 && text.Length > ibanText.Text.Length) {
-            ibanText.CursorPosition -= 1;
-            ibanText.DeleteCharRight();
-        }
-        if (ibanText.Text.Length > 22) {
-            ibanText.Text = text;
-        }
-        ibanText.CursorPosition = ibanText.Text.Length; };
+        exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-        Add(documentNumberLabel, documentNumber, ibanLabel, ibanText);
+        ComboBox expireMonthComboBox = new ComboBox(){
+            X = Pos.Right(exipreDayComboBox) + 1,
+            Y = Pos.Top(exipreDayComboBox),
+            Height = 4,
+            Width = 8,
+        };
+
+        expireMonthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
+
+        expireMonthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
+            exipreDayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
+            } else if (differentDays.Contains(month)) {
+                exipreDayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
+             }
+            else {
+                exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
+            } exipreDayComboBox.SelectedItem = 0; };
+
+        ComboBox expireYearComboBox = new ComboBox(){
+            X = Pos.Right(expireMonthComboBox) + 1 ,
+            Y = Pos.Top(expireMonthComboBox),
+            Height = 4,
+            Width = 8,
+        };
+
+        expireYearComboBox.SetSource(Enumerable.Range(DateTime.Now.Year, 10).ToList());
+
+        expireYearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
+            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+                increaseDay = 1;
+                expireMonthComboBox.SelectedItem = 0;
+            }
+            else increaseDay = 0;
+            };
+
+        expireYearComboBox.SelectedItem = 0;
+        expireMonthComboBox.SelectedItem = 0;
+        exipreDayComboBox.SelectedItem = 0;
+
+        Add(documentNumberLabel, documentNumber, documentTypeLabel, documentTypeComboBox);
+        Add(expireDateLabel, exipreDayComboBox, expireMonthComboBox, expireYearComboBox);
         #endregion
 
         #region Register
         Button registerButton = new Button() {
             Text = "Registreren",
-            X = Pos.Left(ibanLabel),
-            Y = Pos.Bottom(ibanLabel) + 1,
+            X = Pos.Left(usernameLabel),
+            Y = Pos.Bottom(expireDateLabel) + 1,
         };
 
         registerButton.Clicked += () => {
             try {
-                int year = Convert.ToInt32(yearComboBox.Text);
-                int month = Convert.ToInt32(monthComboBox.Text);
-                int day = Convert.ToInt32(dayComboBox.Text);
-                string? result = RegisterUser(new DateTime(year, month, day));
+                DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
+                DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
+                string? result = RegisterUser(dateOfBirth, expireDate);
                 if (result != null)
                     WindowManager.SetWindow(this, new MainMenu(result));
             } catch (FormatException e) {
@@ -229,11 +308,10 @@ public class RegisterMenu : Toplevel
         #endregion
     }
 
-
-    private string? RegisterUser(DateTime dateOfBirth)
+    private string? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
     {
-        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" || passwordText.Text == "" ||
-            emailText.Text == "" || documentNumber.Text == "" || ibanText.Text == "")
+        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" ||
+            passwordText.Text == "" || emailText.Text == "" || nationalityComboBox.Text == "")
         {
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
@@ -258,10 +336,18 @@ public class RegisterMenu : Toplevel
         if (currentDate < dateOfBirth.AddYears(age))
             age--;
 
+        if (documentTypeComboBox.Text == "" && documentNumber.Text != "") {
+            MessageBox.ErrorQuery("Registreren", "Document type niet ingevuld", "Ok");
+            return null;
+        } else if (currentDate > expireDate && documentNumber.Text != "") {
+            MessageBox.ErrorQuery("Registreren", $"{documentTypeComboBox.Text} vervallen", "Ok");
+            return null;
+        }
+
         if (age < 18)
         {
             MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Sluiten");
-            WindowManager.SetWindow(this, new LoginMenu());
+            return null;
         }
 
         return (string)usernameText.Text;
