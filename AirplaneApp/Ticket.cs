@@ -1,12 +1,14 @@
-public class Ticket : Flight
+public class Ticket
 {
-    public string Name;
+    public Flight Flight;
+    public int UserId;
     public string SeatNumber;
     public DateTime BoardingTime; // Departure time - x amount of time
 
-    public Ticket(string flightNumber, string name, int gateNumber, string seatNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, DateTime boardingTime) : base(flightNumber, gateNumber, departureLocation, departureTime, arrivalLocation, arrivalTime)
+    public Ticket(Flight flight, int userId, string seatNumber, DateTime boardingTime)
     {
-        Name = name;
+        Flight = flight;
+        UserId = userId;
         SeatNumber = seatNumber;
         BoardingTime = boardingTime;
     }
