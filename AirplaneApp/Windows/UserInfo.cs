@@ -6,6 +6,7 @@ using Terminal.Gui;
 public class UserInfo : Toplevel
 {
     public TextField FirstnameText;
+    public TextField PrepositionText;
     public TextField LastnameText;
     public TextField PasswordText;
     public TextField EmailText;
@@ -20,7 +21,7 @@ public class UserInfo : Toplevel
     {
         #region Name
         Label firstnameLabel = new Label() {
-            Text = "Voornaam:",
+            Text = "Voornaam*:",
         };
 
         FirstnameText = new TextField("") {
@@ -28,9 +29,19 @@ public class UserInfo : Toplevel
             Width = Dim.Percent(10),
         };
 
+        Label prepositionLabel = new Label() {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(FirstnameText) + 1
+        };
+
+        PrepositionText = new TextField("") {
+            X = Pos.Right(prepositionLabel) + 1,
+            Width = 10,
+        };
+
         Label lastnameLabel = new Label() {
             Text = "Achternaam:",
-            X = Pos.Right(FirstnameText) + 1
+            X = Pos.Right(PrepositionText) + 1
         };
 
         LastnameText = new TextField("") {
@@ -38,7 +49,12 @@ public class UserInfo : Toplevel
             Width = Dim.Percent(10),
         };
 
-        Add(firstnameLabel, FirstnameText, lastnameLabel, LastnameText);
+        Label attentionLabel = new Label {
+            Text = "*voornaam zoals op het paspoort",
+            X = Pos.Right(LastnameText) + 2,
+        };
+
+        Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
         #endregion
 
         #region User

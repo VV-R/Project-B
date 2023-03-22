@@ -6,6 +6,7 @@ using Terminal.Gui;
 public class RegisterMenu : Toplevel
 {
     TextField firstnameText;
+    TextField prepositionText;
     TextField lastnameText;
     TextField passwordText;
     TextField passwordRepeat;
@@ -20,25 +21,40 @@ public class RegisterMenu : Toplevel
     {
         #region Name
         Label firstnameLabel = new Label() {
-            Text = "Voornaam:",
+            Text = "Voornaam*:",
         };
 
         firstnameText = new TextField("") {
             X = Pos.Right(firstnameLabel) + 1,
-            Width = Dim.Percent(10),
+            Width = 22,
+        };
+
+        Label prepositionLabel = new Label() {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(firstnameText) + 1
+        };
+
+        prepositionText = new TextField("") {
+            X = Pos.Right(prepositionLabel) + 1,
+            Width = 10,
         };
 
         Label lastnameLabel = new Label() {
             Text = "Achternaam:",
-            X = Pos.Right(firstnameText) + 1
+            X = Pos.Right(prepositionText) + 1
         };
 
         lastnameText = new TextField("") {
             X = Pos.Right(lastnameLabel) + 1,
-            Width = Dim.Percent(10),
+            Width = 22,
         };
 
-        Add(firstnameLabel, firstnameText, lastnameLabel, lastnameText);
+        Label attentionLabel = new Label {
+            Text = "*voornaam zoals op het paspoort",
+            X = Pos.Right(lastnameText) + 2,
+        };
+
+        Add(firstnameLabel, firstnameText, prepositionLabel, prepositionText, lastnameLabel, lastnameText, attentionLabel);
         #endregion
 
         #region User
@@ -356,9 +372,14 @@ public class RegisterMenu : Toplevel
 
     private string? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
     {
-        if (firstnameText.Text == "" || lastnameText.Text == "" || passwordText.Text == "" ||
+        if (firstnameText.Text == "" || lastnameText.Text == "" || passwordText.Text == "" || passwordRepeat.Text == "" ||
             emailText.Text == "" || phoneText.Text == "" || dialCodesComboBox.Text == "" || nationalityComboBox.Text == "") {
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+        }
+
+        if (passwordText.Text != passwordRepeat.Text) {
+            MessageBox.ErrorQuery("Registreren", "Wachtwoorden komt niet overheen.", "Ok");
             return null;
         }
 
