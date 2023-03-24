@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Terminal.Gui;
+
+Application.Init();
+
+try {
+    Application.Driver.SetCursorVisibility(CursorVisibility.Underline);
+    Application.Run<MainWindow>();
+}
+finally {
+    Application.Shutdown();
+}
