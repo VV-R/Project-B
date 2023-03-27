@@ -25,6 +25,12 @@ public class LoginMenu : Toplevel
 
         guestButton.Clicked += () => { WindowManager.SetWindow(this, new UserMenu("guest")); };
 
+        Button bookingButton = new Button() {
+            Text = "Vlucht Boeken",
+            Y = Pos.Bottom(guestButton),
+        };
+        bookingButton.Clicked += () => { WindowManager.SetWindow(this, new Booking()); };
+
         Button exitButton = new Button() {
             Text = "Afsluiten",
             Y = Pos.Bottom(guestButton),
