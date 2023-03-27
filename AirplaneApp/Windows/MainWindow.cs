@@ -17,41 +17,28 @@ public class MainWindow : Window
         AirlineText.AppendLine(@"| | \ \ (_) | |_| ||  __/ | | (_| | (_| | | | | | |  / ____ \| | |  | | | | | |  __/");
         AirlineText.AppendLine(@"|_|  \_\___/ \__|\__\___|_|  \__,_|\__,_|_| |_| |_| /_/    \_\_|_|  |_|_|_| |_|\___|");
 
-        Label airlineTextLabel = new Label()
-        {
+        Label airlineTextLabel = new Label() {
             Text = AirlineText.ToString(),
         };
 
-        Label currentTime = new Label()
-        {
+        Label currentTime = new Label() {
             Text = WindowManager.CurrentTime,
             X = Pos.AnchorEnd(21),
         };
 
-        Button aboutUs = new Button()
-        {
-            Text = "Contact en Over Ons",
-            X = Pos.AnchorEnd(25),
-            Y = Pos.At(6),
-        };
+        Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => {currentTime.Text = WindowManager.CurrentTime; return true;});
 
-        aboutUs.Clicked += () => { WindowManager.SetWindow(this, new AboutUs()); };
-
-        Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => { currentTime.Text = WindowManager.CurrentTime; return true; });
-
-        LineView line = new LineView()
-        {
+        LineView line = new LineView() {
             Y = 7,
         };
 
-        var startingWindow = new LoginMenu()
-        {
+        var startingWindow = new LoginMenu(){
             Y = 8,
             Width = Dim.Fill(),
             Height = Dim.Fill(),
             ColorScheme = Colors.Base,
         };
 
-        Add(airlineTextLabel, currentTime, line, aboutUs, startingWindow);
+        Add(airlineTextLabel, currentTime, line, startingWindow);
     }
 }
