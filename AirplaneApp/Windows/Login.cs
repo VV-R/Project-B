@@ -22,13 +22,14 @@ public class LoginMenu : Toplevel
             Text = "Doorgaan als gast",
             Y = Pos.Bottom(registerButton),
         };
-        registerButton.Clicked += () => { WindowManager.SetWindow(this, new RegisterMenu()); };
+
+        guestButton.Clicked += () => { WindowManager.SetWindow(this, new UserMenu("guest")); };
 
         Button bookingButton = new Button() {
             Text = "Vlucht Boeken",
             Y = Pos.Bottom(guestButton),
         };
-        registerButton.Clicked += () => { WindowManager.SetWindow(this, new Booking()); };
+        bookingButton.Clicked += () => { WindowManager.SetWindow(this, new Booking()); };
 
         Button flightScheduleButton = new Button() {
             Text = "VluchtSchema",
