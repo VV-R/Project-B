@@ -31,26 +31,14 @@ public class LoginMenu : Toplevel
         };
         bookingButton.Clicked += () => { WindowManager.SetWindow(this, new Booking()); };
 
-        Button flightScheduleButton = new Button() {
-            Text = "VluchtSchema",
-            Y = Pos.Bottom(bookingButton),
-        };
-        flightScheduleButton.Clicked += () => { WindowManager.SetWindow(this, new FlightSchedule()); };
-
-        Button airplaneInformationButton = new Button() {
-            Text = "Vliegtuig Informatie",
-            Y = Pos.Bottom(flightScheduleButton),
-        };
-        airplaneInformationButton.Clicked += () => { WindowManager.SetWindow(this, new AirplaneInformation()); };
-
         Button exitButton = new Button() {
             Text = "Afsluiten",
-            Y = Pos.Bottom(airplaneInformationButton),
+            Y = Pos.Bottom(guestButton),
         };
 
         exitButton.Clicked += () => { Application.RequestStop();};
 
-        Add(loginButton, registerButton, guestButton,bookingButton, flightScheduleButton, airplaneInformationButton, exitButton);
+        Add(loginButton, registerButton, guestButton, exitButton);
     }
 }
 public class LoginScreen : Toplevel
