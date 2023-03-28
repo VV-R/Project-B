@@ -4,20 +4,35 @@ using Terminal.Gui;
 
 public class AdminMenu : Toplevel
 {
-    // public MainMenu(User user)
+    // public AdminMenu(User user)
     public AdminMenu(string name)
     {
         Label nameLabel = new Label(){
-            Text = $"Welkom {name}!",
+            Text = $"Admin panel",
+        };
+
+        Button searchUsers = new Button() {
+            Text = "Klanten zoeken",
+            Y = Pos.Bottom(nameLabel) + 1,
+        };
+
+        Button searchReservation = new Button() {
+            Text = "Reserveringen zoeken",
+            Y = Pos.Bottom(searchUsers) + 1,
+        };
+
+        Button flightSchedule = new Button() {
+            Text = "Vluchtschemas",
+            Y = Pos.Bottom(searchReservation) + 1,
         };
 
         Button goBackButton = new Button() {
-            Text = name == "guest" ? "Terug" : "Uitloggen",
-            Y = Pos.Bottom(nameLabel) + 1,
+            Text = "Uitloggen",
+            Y = Pos.Bottom(flightSchedule) + 1,
         };
 
         goBackButton.Clicked += () => { WindowManager.currentColor = Colors.Base; WindowManager.SetWindow(this, new LoginMenu()); };
 
-        Add(nameLabel, goBackButton);
+        Add(nameLabel, searchUsers, searchReservation, flightSchedule, goBackButton);
     }
 }
