@@ -8,7 +8,6 @@ public class UserInfo : Toplevel
     public TextField FirstnameText;
     public TextField PrepositionText;
     public TextField LastnameText;
-    public TextField PasswordText;
     public TextField EmailText;
     public ComboBox DialCodesComboBox;
     public TextField PhoneText;
@@ -69,28 +68,7 @@ public class UserInfo : Toplevel
             Width = Dim.Percent(20),
         };
 
-        Label passwordLabel = new Label() {
-            Text = "Wachtwoord:",
-            Y = Pos.Bottom(emailLabel) + 1,
-        };
-
-        PasswordText = new TextField("") {
-            Secret = true,
-            X = Pos.Left(EmailText),
-            Y = Pos.Top(passwordLabel),
-            Width = Dim.Percent(20),
-        };
-
-        CheckBox passwordCheckBox = new CheckBox() {
-            X = Pos.Right(PasswordText) + 1,
-            Y = Pos.Top(passwordLabel),
-        };
-
-        passwordCheckBox.Toggled += (e) => {if (!e)
-            PasswordText.Secret = false;
-            else PasswordText.Secret = true;};
-
-        Add(emailLabel, EmailText, passwordLabel, PasswordText, passwordCheckBox);
+        Add(emailLabel, EmailText);
         #endregion
 
         #region Phonenumber
@@ -100,10 +78,10 @@ public class UserInfo : Toplevel
         Label phoneLabel = new Label() {
             Text = "Telefoonnummer:",
             X = Pos.Left(emailLabel),
-            Y = Pos.Bottom(passwordLabel) + 1,
+            Y = Pos.Bottom(emailLabel) + 1,
         };
         DialCodesComboBox = new ComboBox() {
-            X = Pos.Left(PasswordText),
+            X = Pos.Left(EmailText),
             Y = Pos.Top(phoneLabel),
             Width = 7,
             Height = 4,
@@ -138,7 +116,7 @@ public class UserInfo : Toplevel
         };
 
         ComboBox dayComboBox = new ComboBox(){
-            X = Pos.Left(PasswordText),
+            X = Pos.Left(EmailText),
             Y = Pos.Top(dateOfBirthLabel),
             Height = 4,
             Width = 8,
@@ -231,7 +209,7 @@ public class UserInfo : Toplevel
         };
 
         DocumentNumber = new TextField("") {
-            X = Pos.Left(PasswordText) + 2,
+            X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(documentNumberLabel),
             Width = Dim.Percent(20) - 2,
         };
@@ -264,7 +242,7 @@ public class UserInfo : Toplevel
         };
 
         ComboBox exipreDayComboBox = new ComboBox(){
-            X = Pos.Left(PasswordText) + 2,
+            X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(ExpireDateLabel),
             Height = 4,
             Width = 8,
@@ -335,5 +313,33 @@ public class EditUserInfo : UserInfo
         exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(editButton, exitButton);
+    }
+}
+
+
+public class EditUserInfoAdmin : UserInfo
+{
+    public EditUserInfoAdmin(string name) : base(name)
+    {
+        Button editButton = new Button() {
+            Text = "Aanpassen",
+            Y = Pos.Bottom(ExpireDateLabel) + 1,
+        };
+
+        Button deleteButton = new Button() {
+            Text = "Verwijderen",
+            X = Pos.Right(editButton) + 1,
+            Y = Pos.Top(editButton),
+        };
+
+        Button exitButton = new Button() {
+            Text = "Annuleren",
+            X = Pos.Right(deleteButton) + 1,
+            Y = Pos.Top(editButton),
+        };
+
+        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(editButton, deleteButton, exitButton);
     }
 }

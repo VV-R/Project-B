@@ -97,8 +97,8 @@ public class RegisterMenu : Toplevel
 
         passwordRepeat = new TextField("") {
             Secret = true,
-            X = Pos.Left(emailText),
-            Y = Pos.Top(passwordRepeatLabel),
+            X = Pos.Left(passwordText),
+            Y = Pos.Bottom(passwordLabel) + 1,
             Width = Dim.Percent(20),
         };
 
@@ -111,10 +111,7 @@ public class RegisterMenu : Toplevel
             passwordRepeat.Secret = false;
             else passwordRepeat.Secret = true;};
 
-
-
-        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox);
-        Add(passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox);
+        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox);
         #endregion
 
         #region Phonenumber
@@ -351,8 +348,10 @@ public class RegisterMenu : Toplevel
                 DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
                 string? result = RegisterUser(dateOfBirth, expireDate);
-                if (result != null)
+                if (result != null) {
+                    MainWindow.LoginButton.Text = "Uitloggen";
                     WindowManager.GoForwardOne(new UserMenu(result));
+                }
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
             }
@@ -397,7 +396,7 @@ public class RegisterMenu : Toplevel
             return null;
         }
 
-        if (phoneText.Text.Length < 10) {
+        if (phoneText.Text.Length < 9) {
             MessageBox.ErrorQuery("Registreren", "Onjuist telefoonnummer", "Ok");
             return null;
         }
