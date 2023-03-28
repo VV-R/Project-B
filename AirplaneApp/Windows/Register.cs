@@ -352,7 +352,7 @@ public class RegisterMenu : Toplevel
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
                 string? result = RegisterUser(dateOfBirth, expireDate);
                 if (result != null)
-                    WindowManager.SetWindow(this, new UserMenu(result));
+                    WindowManager.GoForwardOne(new UserMenu(result));
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
             }
@@ -364,7 +364,7 @@ public class RegisterMenu : Toplevel
             Y = Pos.Top(registerButton),
         };
 
-        backButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(registerButton, backButton);
         #endregion

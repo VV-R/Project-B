@@ -7,7 +7,7 @@ public class AdminMenu : Toplevel
     // public AdminMenu(User user)
     public AdminMenu(string name)
     {
-        Label nameLabel = new Label(){
+        Label nameLabel = new Label() {
             Text = $"Admin panel",
         };
 
@@ -26,13 +26,6 @@ public class AdminMenu : Toplevel
             Y = Pos.Bottom(searchReservation) + 1,
         };
 
-        Button goBackButton = new Button() {
-            Text = "Uitloggen",
-            Y = Pos.Bottom(flightSchedule) + 1,
-        };
-
-        goBackButton.Clicked += () => { WindowManager.currentColor = Colors.Base; WindowManager.SetWindow(this, new LoginMenu()); };
-
-        Add(nameLabel, searchUsers, searchReservation, flightSchedule, goBackButton);
+        Add(nameLabel, searchUsers, searchReservation, flightSchedule);
     }
 }
