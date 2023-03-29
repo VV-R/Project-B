@@ -121,7 +121,7 @@ public class AboutUs : Toplevel
             Y = Pos.Bottom(questionLabel) + 11
         };
 
-        goBackButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(aboutUs, headerInfo, contactDetails, headerQuestions, nameLabel, nameText, subjectLabel, subjectComboBox, emailLabel, emailText, questionLabel, questionText, sendButton, goBackButton);
     }

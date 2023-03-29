@@ -1,143 +1,81 @@
 using System;
 using Terminal.Gui;
 
-public class LoginMenu : Toplevel
-{
-    public LoginMenu()
-    {
-        Button loginButton = new Button()
-        {
-            Text = "Inloggen",
-        };
-
-        loginButton.Clicked += () => { WindowManager.SetWindow(this, new LoginScreen()); };
-
-        Button registerButton = new Button()
-        {
-            Text = "Registreren",
-            Y = Pos.Bottom(loginButton),
-        };
-
-        registerButton.Clicked += () => { WindowManager.SetWindow(this, new RegisterMenu()); };
-
-        Button guestButton = new Button()
-        {
-            Text = "Doorgaan als gast",
-            Y = Pos.Bottom(registerButton),
-        };
-
-        guestButton.Clicked += () => { WindowManager.SetWindow(this, new UserMenu("guest")); };
-
-        Button bookingButton = new Button() {
-            Text = "Vlucht Boeken",
-            Y = Pos.Bottom(guestButton),
-        };
-        bookingButton.Clicked += () => { WindowManager.SetWindow(this, new Booking()); };
-
-        Button flightScheduleButton = new Button() {
-            Text = "VluchtSchema",
-            Y = Pos.Bottom(bookingButton),
-        };
-        flightScheduleButton.Clicked += () => { WindowManager.SetWindow(this, new FlightSchedule()); };
-
-        Button airplaneInformationButton = new Button() {
-            Text = "Vliegtuig Informatie",
-            Y = Pos.Bottom(flightScheduleButton),
-        };
-        airplaneInformationButton.Clicked += () => { WindowManager.SetWindow(this, new AirplaneInformation()); };
-
-        Button exitButton = new Button()
-        {
-            Text = "Afsluiten",
-            Y = Pos.Bottom(airplaneInformationButton),
-        };
-
-        exitButton.Clicked += () => { Application.RequestStop(); };
-
-        Add(loginButton, registerButton, guestButton, bookingButton, flightScheduleButton, airplaneInformationButton, exitButton);
-    }
-}
 public class LoginScreen : Toplevel
 {
     public LoginScreen()
     {
-        Label emailLabel = new Label()
-        {
+        Label emailLabel = new Label() {
             Text = "E-mailadres:",
         };
 
-        TextField emailText = new TextField("")
-        {
+        TextField emailText = new TextField("") {
             X = Pos.Right(emailLabel) + 1,
             Width = Dim.Percent(20),
         };
 
-        Label passwordLabel = new Label()
-        {
+        Label passwordLabel = new Label() {
             Text = "Wachtwoord:",
             X = Pos.Left(emailLabel),
             Y = Pos.Bottom(emailLabel) + 1,
         };
 
-        TextField passwordText = new TextField("")
-        {
+        TextField passwordText = new TextField("") {
             Secret = true,
             X = Pos.Left(emailText),
             Y = Pos.Top(passwordLabel),
             Width = Dim.Percent(20),
         };
 
-        CheckBox passwordCheckBox = new CheckBox()
-        {
+        CheckBox passwordCheckBox = new CheckBox() {
             X = Pos.Right(passwordText) + 1,
             Y = Pos.Top(passwordLabel),
         };
 
-        passwordCheckBox.Toggled += (e) =>
-        {
+        passwordCheckBox.Toggled += (e) => {
             if (!e)
                 passwordText.Secret = false;
             else passwordText.Secret = true;
         };
 
 
-        Button loginButton = new Button()
-        {
+        Button loginButton = new Button() {
             Text = "Log in",
             X = Pos.Left(emailLabel),
             Y = Pos.Bottom(passwordLabel) + 1,
         };
 
-        loginButton.Clicked += () =>
-        {
-            if (CheckLogin(((string)emailText.Text), ((string)passwordText.Text)))
-            {
-                if ((string)emailText.Text == "admin@admin.com")
-                {
-                    WindowManager.currentColor = Colors.TopLevel;
-                    WindowManager.SetWindow(this, new AdminMenu((string)emailText.Text));
+        loginButton.Clicked += () => {
+            if (CheckLogin(((string)emailText.Text), ((string)passwordText.Text))) {
+                MainWindow.LoginButton.Text = "Uitloggen";
+                if ((string)emailText.Text == "admin@admin.com"){
+                    WindowManager.CurrentColor = Colors.TopLevel;
+                    WindowManager.GoForwardOne(new AdminMenu((string)emailText.Text));
+                } else {
+                    WindowManager.GoForwardOne(new UserMenu((string)emailText.Text));
                 }
-                else
-                {
-                    WindowManager.SetWindow(this, new UserMenu((string)emailText.Text));
-                }
-            }
-            else
-            {
+            } else {
                 MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");
             }
         };
 
-        Button backButton = new Button()
-        {
-            Text = "Terug",
+        Button registerButton = new Button() {
+            Text = "Registreren",
             X = Pos.Right(loginButton) + 1,
             Y = Pos.Top(loginButton),
         };
 
-        backButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        registerButton.Clicked += () => { WindowManager.GoForwardOne(new RegisterMenu()); };
 
-        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, loginButton, backButton);
+        Button backButton = new Button() {
+            Text = "Terug",
+            X = Pos.Right(registerButton) + 1,
+            Y = Pos.Top(loginButton),
+        };
+
+        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, loginButton, registerButton ,backButton);
     }
 
     private bool CheckLogin(string email, string password)
