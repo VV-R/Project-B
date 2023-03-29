@@ -13,6 +13,8 @@ public class User
     public string? DocumentNumber;
     public  string? DocumentType;
     public DateTime? ExpirationDate;
+    public List<Ticket> Reservations = new List<Ticket>();
+    
 
     public User (int id, string firtstname, string preposition, string lastname, 
                  string password, MailAddress email, string phonenumber, 
