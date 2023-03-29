@@ -1,12 +1,12 @@
 using System;
 using Terminal.Gui;
 
-public class AirplaneInformation : Toplevel
+public class FlightSchedule : Toplevel
 {
-    public AirplaneInformation()
+    public FlightSchedule()
     {
         Button goBackButton = new Button() {
-            Text = "Terug"
+        Text = "Terug"
         };
 
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};

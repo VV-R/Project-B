@@ -5,6 +5,7 @@ using Terminal.Gui;
 public class MainWindow : Window
 {
     public StringBuilder AirlineText;
+    public static Button LoginButton = new Button();
 
     public MainWindow()
     {
@@ -26,19 +27,36 @@ public class MainWindow : Window
             X = Pos.AnchorEnd(21),
         };
 
-        Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => {currentTime.Text = WindowManager.CurrentTime; return true;});
+        Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(1), (e) => { currentTime.Text = WindowManager.CurrentTime; return true; });
+
+        Button aboutUs = new Button() {
+            Text = "Contact en Over Ons",
+            X = Pos.AnchorEnd(25),
+            Y = Pos.At(6),
+        };
+
+        aboutUs.Clicked += () => { WindowManager.GoForwardOne(new AboutUs()); };
+
+        LoginButton = new Button() {
+            Text = "Inloggen",
+            X = Pos.Left(aboutUs) - 14,
+            Y = 6
+        };
+
+        LoginButton.Clicked += () => {
+            if (LoginButton.Text == "Inloggen") {
+                WindowManager.GoForwardOne(new LoginScreen());
+            }
+            else if (LoginButton.Text == "Uitloggen") {
+                WindowManager.CurrentColor = Colors.Base;
+                WindowManager.GoForwardOne(new MainMenu());
+                LoginButton.Text = "Inloggen";
+            } };
 
         LineView line = new LineView() {
             Y = 7,
         };
 
-        var startingWindow = new LoginMenu(){
-            Y = 8,
-            Width = Dim.Fill(),
-            Height = Dim.Fill(),
-            ColorScheme = Colors.Base,
-        };
-
-        Add(airlineTextLabel, currentTime, line, startingWindow);
+        Add(airlineTextLabel, currentTime, line, WindowManager.CurrentWindow, aboutUs, LoginButton);
     }
 }

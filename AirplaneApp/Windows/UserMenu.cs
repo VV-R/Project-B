@@ -11,13 +11,13 @@ public class UserMenu : Toplevel
             Text = $"Welkom {name}!",
         };
 
-        Button goBackButton = new Button() {
-            Text = name == "guest" ? "Terug" : "Uitloggen",
-            Y = Pos.Bottom(nameLabel),
+        Button infoButton = new Button() {
+            Text = "Mijn gegevens",
+            Y = Pos.Bottom(nameLabel) + 1,
         };
 
-        goBackButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo(name)); };
 
-        Add(nameLabel, goBackButton);
+        Add(nameLabel, infoButton);
     }
 }

@@ -6,9 +6,10 @@ using Terminal.Gui;
 public class RegisterMenu : Toplevel
 {
     TextField firstnameText;
+    TextField prepositionText;
     TextField lastnameText;
-    TextField usernameText;
     TextField passwordText;
+    TextField passwordRepeat;
     TextField emailText;
     ComboBox dialCodesComboBox;
     TextField phoneText;
@@ -20,48 +21,62 @@ public class RegisterMenu : Toplevel
     {
         #region Name
         Label firstnameLabel = new Label() {
-            Text = "Voornaam:",
+            Text = "Voornaam*:",
         };
 
         firstnameText = new TextField("") {
             X = Pos.Right(firstnameLabel) + 1,
-            Width = Dim.Percent(10),
+            Width = 22,
+        };
+
+        Label prepositionLabel = new Label() {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(firstnameText) + 1
+        };
+
+        prepositionText = new TextField("") {
+            X = Pos.Right(prepositionLabel) + 1,
+            Width = 10,
         };
 
         Label lastnameLabel = new Label() {
             Text = "Achternaam:",
-            X = Pos.Right(firstnameText) + 1
+            X = Pos.Right(prepositionText) + 1
         };
 
         lastnameText = new TextField("") {
             X = Pos.Right(lastnameLabel) + 1,
-            Width = Dim.Percent(10),
+            Width = 22,
         };
 
-        Add(firstnameLabel, firstnameText, lastnameLabel, lastnameText);
+        Label attentionLabel = new Label {
+            Text = "*voornaam zoals op het paspoort",
+            X = Pos.Right(lastnameText) + 2,
+        };
+
+        Add(firstnameLabel, firstnameText, prepositionLabel, prepositionText, lastnameLabel, lastnameText, attentionLabel);
         #endregion
 
         #region User
-        Label usernameLabel = new Label() {
-            Text = "Gebruikersnaam:",
+        Label emailLabel = new Label() {
+            Text = "E-mailadres:",
             Y = Pos.Bottom(firstnameLabel) + 1,
         };
 
-        usernameText = new TextField ("") {
-            X = Pos.Right(usernameLabel) + 2,
-            Y = Pos.Top(usernameLabel),
+        emailText = new TextField("") {
+            X = Pos.Right(emailLabel) + 8,
+            Y = Pos.Top(emailLabel),
             Width = Dim.Percent(20),
         };
 
         Label passwordLabel = new Label() {
             Text = "Wachtwoord:",
-            X = Pos.Left(usernameLabel),
-            Y = Pos.Bottom(usernameLabel) + 1,
+            Y = Pos.Bottom(emailLabel) + 1,
         };
 
         passwordText = new TextField("") {
             Secret = true,
-            X = Pos.Left(usernameText),
+            X = Pos.Left(emailText),
             Y = Pos.Top(passwordLabel),
             Width = Dim.Percent(20),
         };
@@ -75,18 +90,28 @@ public class RegisterMenu : Toplevel
             passwordText.Secret = false;
             else passwordText.Secret = true;};
 
-        Label emailLabel = new Label() {
-            Text = "E-mailadres:",
-            X = Pos.Left(usernameLabel),
+        Label passwordRepeatLabel = new Label() {
+            Text = "Herhaal-Wachtwoord:",
             Y = Pos.Bottom(passwordLabel) + 1,
         };
 
-        emailText = new TextField("") {
+        passwordRepeat = new TextField("") {
+            Secret = true,
             X = Pos.Left(passwordText),
-            Y = Pos.Top(emailLabel),
+            Y = Pos.Bottom(passwordLabel) + 1,
             Width = Dim.Percent(20),
         };
-        Add(usernameLabel, usernameText, passwordLabel, passwordText, passwordCheckBox, emailLabel, emailText);
+
+        CheckBox passwordRepeatCheckBox = new CheckBox() {
+            X = Pos.Right(passwordRepeat) + 1,
+            Y = Pos.Top(passwordRepeatLabel),
+        };
+
+        passwordRepeatCheckBox.Toggled += (e) => {if (!e)
+            passwordRepeat.Secret = false;
+            else passwordRepeat.Secret = true;};
+
+        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox);
         #endregion
 
         #region Phonenumber
@@ -95,8 +120,8 @@ public class RegisterMenu : Toplevel
 
         Label phoneLabel = new Label() {
             Text = "Telefoonnummer:",
-            X = Pos.Left(usernameLabel),
-            Y = Pos.Bottom(emailLabel) + 1,
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(passwordRepeatLabel) + 1,
         };
         dialCodesComboBox = new ComboBox() {
             X = Pos.Left(passwordText),
@@ -129,7 +154,7 @@ public class RegisterMenu : Toplevel
 
         Label dateOfBirthLabel = new Label() {
             Text = "Geboortedatum:",
-            X = Pos.Left(usernameLabel),
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(phoneLabel) + 1,
         };
 
@@ -190,12 +215,12 @@ public class RegisterMenu : Toplevel
 
         Label nationalityLabel = new Label() {
             Text = "Nationaliteit:",
-            X = Pos.Left(usernameLabel),
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(dateOfBirthLabel) + 1,
         };
 
         nationalityComboBox = new ComboBox() {
-            X = Pos.Left(usernameText),
+            X = Pos.Left(emailText),
             Y = Pos.Top(nationalityLabel),
             Width = 47,
             Height = 8,
@@ -209,7 +234,7 @@ public class RegisterMenu : Toplevel
         #region Document Information
         Label optionalLabel = new Label() {
             Text = "Optioneel:",
-            X = Pos.Left(usernameLabel),
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(nationalityLabel) + 1,
         };
 
@@ -222,7 +247,7 @@ public class RegisterMenu : Toplevel
 
         Label documentNumberLabel = new Label() {
             Text = "Document nummer:",
-            X = Pos.Left(usernameLabel) + 2,
+            X = Pos.Left(emailLabel) + 2,
             Y = Pos.Bottom(optionalLabel) + 1,
         };
 
@@ -255,7 +280,7 @@ public class RegisterMenu : Toplevel
 
         Label expireDateLabel = new Label() {
             Text = "Verval datum:",
-            X = Pos.Left(usernameLabel) + 2,
+            X = Pos.Left(emailLabel) + 2,
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
@@ -314,7 +339,7 @@ public class RegisterMenu : Toplevel
         #region Register
         Button registerButton = new Button() {
             Text = "Registreren",
-            X = Pos.Left(usernameLabel),
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(expireDateLabel) + 1,
         };
 
@@ -323,8 +348,10 @@ public class RegisterMenu : Toplevel
                 DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
                 string? result = RegisterUser(dateOfBirth, expireDate);
-                if (result != null)
-                    WindowManager.SetWindow(this, new UserMenu(result));
+                if (result != null) {
+                    MainWindow.LoginButton.Text = "Uitloggen";
+                    WindowManager.GoForwardOne(new UserMenu(result));
+                }
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
             }
@@ -336,7 +363,7 @@ public class RegisterMenu : Toplevel
             Y = Pos.Top(registerButton),
         };
 
-        backButton.Clicked += () => { WindowManager.SetWindow(this, new LoginMenu()); };
+        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(registerButton, backButton);
         #endregion
@@ -344,9 +371,14 @@ public class RegisterMenu : Toplevel
 
     private string? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
     {
-        if (firstnameText.Text == "" || lastnameText.Text == "" || usernameText.Text == "" || passwordText.Text == "" ||
+        if (firstnameText.Text == "" || lastnameText.Text == "" || passwordText.Text == "" || passwordRepeat.Text == "" ||
             emailText.Text == "" || phoneText.Text == "" || dialCodesComboBox.Text == "" || nationalityComboBox.Text == "") {
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+        }
+
+        if (passwordText.Text != passwordRepeat.Text) {
+            MessageBox.ErrorQuery("Registreren", "Wachtwoorden komt niet overheen.", "Ok");
             return null;
         }
 
@@ -364,7 +396,7 @@ public class RegisterMenu : Toplevel
             return null;
         }
 
-        if (phoneText.Text.Length < 10) {
+        if (phoneText.Text.Length < 9) {
             MessageBox.ErrorQuery("Registreren", "Onjuist telefoonnummer", "Ok");
             return null;
         }
@@ -387,6 +419,6 @@ public class RegisterMenu : Toplevel
             return null;
         }
 
-        return (string)usernameText.Text;
+        return (string)emailText.Text;
     }
 }
