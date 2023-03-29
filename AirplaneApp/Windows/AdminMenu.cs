@@ -1,5 +1,6 @@
 using System;
 using Terminal.Gui;
+using System.Net.Mail;
 
 
 public class AdminMenu : Toplevel
@@ -46,20 +47,20 @@ public class SearchUsers : Toplevel
         };
 
         // Want a list of users from the database
-        List<string> users = new List<string>() {"ID: 1 Naam: Cas", "ID: 2 Naam: Steyn", "ID: 3 Naam: Levi", "ID: 4 Naam: Janell", "ID: 5 Naam: Ruben",
-                                                "ID: 6 Naam: Rick", "ID: 7 Naam: Jesse", "ID: 8 Naam: John", "ID: 9 Naam: Jane", "ID: 10 Naam: Doe"};
+        List<User> users = new List<User>() {new User(1, "Levi", "van", "Daalen", "1234", new MailAddress("2004levi@gmail.com"), "+31|613856964", new DateTime(2004, 1, 19), "Nederland")};
+
 
         ListView usersView = new ListView() {
             Y = Pos.Bottom(searchBox) + 1,
             Height = 5,
-            Width = 20,
+            Width = Dim.Fill(),
         };
 
         usersView.SetSource(users);
-        usersView.OpenSelectedItem += (item) => { WindowManager.GoForwardOne(new EditUserInfoAdmin((string)item.Value)); };
+        usersView.OpenSelectedItem += (item) => { WindowManager.GoForwardOne(new EditUserInfoAdmin((users[item.Item]))); };
 
         searchBox.TextChanged += (text) => {usersView.SetSource(users.FindAll((x) => {
-            if (x.ToLower().Contains((string)searchBox.Text.ToLower()))
+            if (x.ToString().ToLower().Contains((string)searchBox.Text.ToLower()))
                 return true;
             else return false;
         }));};
