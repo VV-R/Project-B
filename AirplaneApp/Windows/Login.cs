@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using Terminal.Gui;
 
 public class LoginScreen : Toplevel
@@ -46,13 +47,14 @@ public class LoginScreen : Toplevel
         };
 
         loginButton.Clicked += () => {
-            if (CheckLogin(((string)emailText.Text), ((string)passwordText.Text))) {
+            User? user = CheckLogin(((string)emailText.Text), ((string)passwordText.Text));
+            if (user != null) {
                 MainWindow.LoginButton.Text = "Uitloggen";
                 if ((string)emailText.Text == "admin@admin.com"){
                     WindowManager.CurrentColor = Colors.TopLevel;
-                    WindowManager.GoForwardOne(new AdminMenu((string)emailText.Text));
+                    WindowManager.GoForwardOne(new AdminMenu(user));
                 } else {
-                    WindowManager.GoForwardOne(new UserMenu((string)emailText.Text));
+                    WindowManager.GoForwardOne(new UserMenu(user));
                 }
             } else {
                 MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");
@@ -78,12 +80,16 @@ public class LoginScreen : Toplevel
         Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, loginButton, registerButton ,backButton);
     }
 
-    private bool CheckLogin(string email, string password)
+    private User? CheckLogin(string email, string password)
     {
         // TODO: Add database check here
-        // TODO: Change the return type to a user class instead of bool
 
-        return (email == "admin@admin.com" && password == "password") ||
-                (email == "user@user.com" && password == "password");
+        if (email == "admin@admin.com" && password == "password")
+            return new User(0, "Levi", "van", "Daalen", "password", new MailAddress("admin@admin.com"),
+                            "+31|613856964", new DateTime(2004, 1, 19), "Nederland");
+        if (email == "user@user.com" && password == "password")
+            return new User(1, "Levi", "van", "Daalen", "password", new MailAddress("user@user.com"),
+                            "+31|613856964", new DateTime(2004, 1, 19), "Nederland");
+        return null;
     }
 }

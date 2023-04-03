@@ -419,8 +419,15 @@ public class RegisterMenu : Toplevel
             return null;
         }
         string phonenumber = $"{dialCodesComboBox.Text}|{phoneText.Text}";
-
-        return new User(0, (string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, (string)passwordText.Text,
+        User user = new User(0, (string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, (string)passwordText.Text,
                             address, phonenumber, dateOfBirth, (string)nationalityComboBox.Text);
+
+        if (documentNumber.Text != "") {
+            user.DocumentNumber = (string)documentNumber.Text;
+            user.DocumentType = (string)documentTypeComboBox.Text;
+            user.ExpirationDate = expireDate;
+        }
+
+        return user;
     }
 }

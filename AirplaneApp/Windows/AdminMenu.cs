@@ -5,8 +5,7 @@ using System.Net.Mail;
 
 public class AdminMenu : Toplevel
 {
-    // public AdminMenu(User user)
-    public AdminMenu(string name)
+    public AdminMenu(User user)
     {
         Label nameLabel = new Label() {
             Text = $"Admin panel",
