@@ -16,4 +16,5 @@ public class Flight
         ArrivalLocation = arrivalLocation;
         ArrivalTime = arrivalTime;
     }
+    public override string ToString() => $"Gate: {GateNumber}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime} Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}";
 }

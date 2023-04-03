@@ -21,10 +21,13 @@ public static class WindowManager
             newWindow.Y = 8;
             newWindow.Width = 238;
             newWindow.Height = 53;
+            newWindow.Width = Dim.Fill();
+            newWindow.Height = Dim.Fill();
             newWindow.ColorScheme = CurrentColor;
             Application.Current.Add(newWindow);
             Application.Current.SetNeedsDisplay();
         });
+
     }
     public static void GoBackOne(Toplevel oldwindow) {
         _windows.Remove(oldwindow);
