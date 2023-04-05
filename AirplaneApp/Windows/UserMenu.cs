@@ -4,10 +4,10 @@ using Terminal.Gui;
 
 public class UserMenu : Toplevel
 {
-    public UserMenu(User user)
+    public UserMenu()
     {
         Label nameLabel = new Label(){
-            Text = $"Welkom {user.FirstName}!",
+            Text = $"Welkom {WindowManager.CurrentUser.FirstName}!",
         };
 
         Button infoButton = new Button() {
@@ -15,7 +15,7 @@ public class UserMenu : Toplevel
             Y = Pos.Bottom(nameLabel) + 1,
         };
 
-        infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo(user)); };
+        infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo()); };
 
         Add(nameLabel, infoButton);
     }

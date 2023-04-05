@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using Terminal.Gui;
 
 public static class WindowManager
@@ -13,6 +14,7 @@ public static class WindowManager
     public static ColorScheme CurrentColor {get {return Application.Current.ColorScheme;} set {Application.Current.ColorScheme = value;}}
     public static string CurrentTime {get {return DateTime.Now.ToString();}}
     public static Toplevel CurrentWindow {get {return _windows.Last();}}
+    public static User CurrentUser = new User(-1, "", "", "", "", new MailAddress("guest@guest.com"), "", DateTime.Now, "");
 
     private static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {

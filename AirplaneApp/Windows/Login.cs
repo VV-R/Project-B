@@ -49,12 +49,13 @@ public class LoginScreen : Toplevel
         loginButton.Clicked += () => {
             User? user = CheckLogin(((string)emailText.Text), ((string)passwordText.Text));
             if (user != null) {
+                WindowManager.CurrentUser = user;
                 MainWindow.LoginButton.Text = "Uitloggen";
                 if ((string)emailText.Text == "admin@admin.com"){
                     WindowManager.CurrentColor = Colors.TopLevel;
-                    WindowManager.GoForwardOne(new AdminMenu(user));
+                    WindowManager.GoForwardOne(new AdminMenu());
                 } else {
-                    WindowManager.GoForwardOne(new UserMenu(user));
+                    WindowManager.GoForwardOne(new UserMenu());
                 }
             } else {
                 MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");
