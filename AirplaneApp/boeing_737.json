@@ -1,0 +1,14 @@
+[
+    {
+        "Seat": "A1",
+        "Taken": false
+    },
+    {
+        "Seat": "A2",
+        "Taken": false
+    },
+    {
+        "Seat": "A3",
+        "Taken": false
+    }
+]
