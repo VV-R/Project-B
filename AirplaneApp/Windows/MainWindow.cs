@@ -49,7 +49,7 @@ public class MainWindow : Window
                 WindowManager.GoForwardOne(new LoginScreen());
             }
             else if (LoginButton.Text == "Uitloggen") {
-                WindowManager.CurrentUser = new User(-1, "", "", "", "", new MailAddress("guest@guest.com"), "", DateTime.Now, "");
+                WindowManager.CurrentUser = null;
                 WindowManager.CurrentColor = Colors.Base;
                 WindowManager.GoForwardOne(new MainMenu());
                 LoginButton.Text = "Inloggen";

@@ -24,9 +24,11 @@ public class AdminMenu : Toplevel
         };
 
         Button flightSchedule = new Button() {
-            Text = "Vluchtschemas",
+            Text = "Vlucht Schemas",
             Y = Pos.Bottom(searchReservation) + 1,
         };
+
+        flightSchedule.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelAdmin(WindowManager.Flights));};
 
         Add(nameLabel, searchUsers, searchReservation, flightSchedule);
     }

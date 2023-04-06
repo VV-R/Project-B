@@ -1,13 +1,14 @@
 public class Flight
 {
-    public string FlightNumber;
+    public int FlightNumber;
     public int GateNumber;
     public string DepartureLocation;
     public DateTime DepartureTime;
     public string ArrivalLocation;
     public DateTime ArrivalTime;
+    public string Airplane;
 
-    public Flight(string flightNumber, int gateNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime)
+    public Flight(int flightNumber, int gateNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane)
     {
         FlightNumber = flightNumber;
         GateNumber = gateNumber;
@@ -15,6 +16,7 @@ public class Flight
         DepartureTime = departureTime;
         ArrivalLocation = arrivalLocation;
         ArrivalTime = arrivalTime;
+        Airplane = airplane;
     }
-    public override string ToString() => $"Gate: {GateNumber}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime} Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}";
+    public override string ToString() => $"Gate: {GateNumber}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime} Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}; Vliegtuig: {Airplane}";
 }

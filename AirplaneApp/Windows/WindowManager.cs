@@ -14,8 +14,21 @@ public static class WindowManager
     public static ColorScheme CurrentColor {get {return Application.Current.ColorScheme;} set {Application.Current.ColorScheme = value;}}
     public static string CurrentTime {get {return DateTime.Now.ToString();}}
     public static Toplevel CurrentWindow {get {return _windows.Last();}}
-    public static User CurrentUser = new User(-1, "", "", "", "", new MailAddress("guest@guest.com"), "", DateTime.Now, "");
+    public static User? CurrentUser = null;
 
+    public static List<Flight> Flights = new List<Flight>() {
+        new Flight(0, 1, "Rotterdam", new DateTime(2023, 3, 4, 12, 13, 00), "Parijs", new DateTime(2023, 4, 5), "Boeing 737"),
+        new Flight(1, 2, "Rotterdam", new DateTime(2023, 3, 4, 14, 20, 00), "Madrid", new DateTime(2023, 8, 4), "Airbus 330"),
+        new Flight(2, 3, "Rotterdam", new DateTime(2023, 3, 4, 16, 20, 00), "Berlijn", new DateTime(2023, 4, 6), "Boeing 737"),
+        new Flight(3, 1, "Rotterdam", new DateTime(2023, 3, 6, 8, 30, 00), "Parijs", new DateTime(2023, 3, 20), "Boeing 787")
+    };
+
+    public static List<string> Locations = new List<string>() {"London", "Parijs", "Amsterdam", "München", "Wenen", "Rome", "Barcelona", "Brussels", "Berlijn", "Rotterdam", "Madrid"};
+
+    static WindowManager()
+    {
+        Locations.Sort();
+    }
     private static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {
         Application.MainLoop.Invoke(() => {
