@@ -255,7 +255,15 @@ public class FlightInfoEdit : FlightInfo
             }
         };
 
-        Add(updateButton);
+        Button goBackButton = new Button() {
+            Text = "Annuleren",
+            Y = Pos.Top(updateButton),
+            X = Pos.Right(updateButton) + 1,
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(updateButton, goBackButton);
     }
 
     private Flight? UpdateFlight(Flight flight, DateTime departureTime, DateTime arrivalTime)
@@ -311,7 +319,15 @@ public class FlightInfoAdd : FlightInfo
             }
         };
 
-        Add(addButton);
+        Button goBackButton = new Button() {
+            Text = "Annuleren",
+            Y = Pos.Top(addButton),
+            X = Pos.Right(addButton) + 1,
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(addButton, goBackButton);
     }
 
     private Flight? AddFlight(DateTime departureTime, DateTime arrivalTime)

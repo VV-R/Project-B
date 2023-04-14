@@ -51,7 +51,7 @@ public class MainWindow : Window
             else if (LoginButton.Text == "Uitloggen") {
                 WindowManager.CurrentUser = null;
                 WindowManager.CurrentColor = Colors.Base;
-                WindowManager.GoForwardOne(new MainMenu());
+                WindowManager.GoToFirst();
                 LoginButton.Text = "Inloggen";
             } };
 
