@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using Terminal.Gui;
 
 public class FlightInfo : Toplevel
@@ -255,15 +257,23 @@ public class FlightInfoEdit : FlightInfo
             }
         };
 
+        Button cancelFlight = new Button() {
+            Text = "Vlucht Annuleren",
+            Y = Pos.Top(updateButton),
+            X = Pos.Right(updateButton) + 1
+        };
+
+        cancelFlight.Clicked +=  () => { CancelFlight(flight); WindowManager.GoBackOne(this);};
+
         Button goBackButton = new Button() {
             Text = "Annuleren",
             Y = Pos.Top(updateButton),
-            X = Pos.Right(updateButton) + 1,
+            X = Pos.Right(cancelFlight) + 1,
         };
 
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
-        Add(updateButton, goBackButton);
+        Add(updateButton, cancelFlight ,goBackButton);
     }
 
     private Flight? UpdateFlight(Flight flight, DateTime departureTime, DateTime arrivalTime)
@@ -290,6 +300,57 @@ public class FlightInfoEdit : FlightInfo
         flight.ArrivalTime = arrivalTime;
         flight.Airplane = (string)AirplaneCombobox.Text;
         return flight;
+    }
+
+    private void CancelFlight(Flight flight)
+    {
+        var n = MessageBox.Query("Annuleren", "Wat is de reden van Annuleren", "Weer", "Storing", "Staking", "Strakke Tijdschema's","Annuleren");
+        string reason;
+        switch(n) {
+            case 0:
+                reason = "extreme weersomstandigheden";
+                break;
+            case 1:
+                reason = "een storing";
+                break;
+            case 2:
+                reason = "een staking";
+                break;
+            case 3:
+                reason = "een te strakke tijdschema";
+                break;
+            default:
+                return;
+        };
+
+        // Set up SMPT client
+        MailAddress fromAddress = new MailAddress("rotterdamairline@outlook.com");
+        SmtpClient smtp = new SmtpClient() {
+            Host = "smtp.office365.com",
+            Port = 587,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(fromAddress.Address, "Team1Admin1234")
+        };
+
+        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {reason}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+
+        // Notify customers via E-Mail
+        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com")};
+        Application.MainLoop.Invoke(async () => {
+            foreach(MailAddress email in emails) {
+                using (MailMessage message = new MailMessage(fromAddress, email) {
+                    Subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}",
+                    Body = body,
+                }) {
+                    await smtp.SendMailAsync(message);
+                }
+            }
+        });
+
+        // Remove it from the DB
+        WindowManager.Flights.Remove(flight);
     }
 }
 
