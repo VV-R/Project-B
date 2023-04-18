@@ -17,15 +17,16 @@ public class Seat
 public class InteraciveSeat : Label
 {
     public bool IsClicked = false;
-    public bool Occupied = false;
+    public bool Occupied;
     public Seat Seat;
 
-    public InteraciveSeat(Seat seat)
+    public InteraciveSeat(Seat seat, bool occupied)
     {
         Seat = seat;
         Text = Seat.Text;
         X = Seat.X;
         Y = Seat.Y;
+        Occupied = occupied;
         ColorScheme = Occupied ? Colors.ColorSchemes["SeatTaken"] : Colors.ColorSchemes["SeatOpen"];
     }
 
