@@ -293,6 +293,18 @@ public class FlightInfoEdit : FlightInfo
             return null;
         }
 
+        string subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}";
+        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gewijzigd.\nDit zijn de wijzigingen:\n";
+        body += $"Gate nummer:\t\t{flight.GateNumber} --> {gateNumber}\n";
+        body += $"Vertrek Locatie:\t {flight.DepartureLocation} --> {(string)DepartureLocationCombo.Text}\n";
+        body += $"Tijd van Vertrek:\t {flight.DepartureTime} --> {departureTime}\n";
+        body += $"Bestemming:\t\t {flight.ArrivalLocation} --> {(string)ArrivalLocationCombo.Text}\n";
+        body += $"Tijd van Aankomst:\t{flight.ArrivalTime} --> {arrivalTime}\n";
+        body += $"Vliegtuig:\t\t\t{flight.Airplane} --> {(string)AirplaneCombobox.Text}\n\n";
+        body += "Met vriendelijke groeten,\nRotterdam Airline Service";
+
+        SendEmails(subject, body);
+
         flight.GateNumber = gateNumber;
         flight.DepartureLocation = (string)DepartureLocationCombo.Text;
         flight.DepartureTime = departureTime;
@@ -322,8 +334,16 @@ public class FlightInfoEdit : FlightInfo
             default:
                 return;
         };
+        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {reason}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+        SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", body);
 
-        // Set up SMPT client
+        // Remove it from the DB
+        WindowManager.Flights.Remove(flight);
+    }
+
+    private void SendEmails(string subject, string body)
+    {
+         // Set up SMPT client
         MailAddress fromAddress = new MailAddress("rotterdamairline@outlook.com");
         SmtpClient smtp = new SmtpClient() {
             Host = "smtp.office365.com",
@@ -334,23 +354,18 @@ public class FlightInfoEdit : FlightInfo
             Credentials = new NetworkCredential(fromAddress.Address, "Team1Admin1234")
         };
 
-        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {reason}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
-
         // Notify customers via E-Mail
         List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com")};
         Application.MainLoop.Invoke(async () => {
             foreach(MailAddress email in emails) {
                 using (MailMessage message = new MailMessage(fromAddress, email) {
-                    Subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}",
+                    Subject = subject,
                     Body = body,
                 }) {
                     await smtp.SendMailAsync(message);
                 }
             }
         });
-
-        // Remove it from the DB
-        WindowManager.Flights.Remove(flight);
     }
 }
 
