@@ -33,8 +33,8 @@ public class MainMenu : Toplevel
 
         Button Test = new Button()
         {
-            Text = "Test",
-            Y = Pos.Bottom(airplaneInformationButton) + 1,
+            Text = "Vliegtuig plattegronden",
+            Y = 10,
         };
 
         Test.Clicked += () => { WindowManager.GoForwardOne(new SeattingPlan()); };
@@ -42,7 +42,7 @@ public class MainMenu : Toplevel
         Button exitButton = new Button()
         {
             Text = "Afsluiten",
-            Y = Pos.Bottom(airplaneInformationButton) + 1 + 2,
+            Y = Pos.Bottom(airplaneInformationButton) + 1,
         };
 
         exitButton.Clicked += () => { Application.RequestStop(); };
