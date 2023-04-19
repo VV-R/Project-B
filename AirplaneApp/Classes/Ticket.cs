@@ -13,4 +13,5 @@ public class Ticket
         BoardingTime = boardingTime;
     }
 
+    public override string ToString() => $"Vlucht: {Flight.DepartureLocation} - {Flight.ArrivalLocation}; UserID: {UserId}; Stoelnummer: {SeatNumber}; Boarding tijd: {BoardingTime}";
 }

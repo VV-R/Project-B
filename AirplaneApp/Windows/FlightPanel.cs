@@ -14,7 +14,10 @@ public class FlightPanel : Toplevel
 			CanFocus = true,
         };
 
-        CategoryListView = new ListView(new List<string>() {"Alle vluchten", "Parijs", "Madrid", "Berlijn"}) {
+        List<string> categories = new List<string>() {"Alle vluchten"};
+        categories.AddRange(WindowManager.Locations);
+
+        CategoryListView = new ListView(categories) {
             X = 0,
             Y = 0,
             Width = Dim.Fill(0),
@@ -52,15 +55,46 @@ public class FlightPanel : Toplevel
         RightPane.Add(FlightsListView);
 
         Add(LeftPane, RightPane);
+    }
+}
 
+public class FlightPanelUser : FlightPanel
+{
+    public FlightPanelUser(List<Flight> flights) : base(flights)
+    {
+        FlightsListView.OpenSelectedItem += (flight) => {};
         Button goBackButton = new Button() {
-            Y = Pos.Bottom(LeftPane) + 1,
+            Y = Pos.Bottom(CategoryListView) + 3,
             Text = "Terug",
         };
 
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
 
         Add(goBackButton);
+    }
+}
 
+public class FlightPanelAdmin : FlightPanel
+{
+    public FlightPanelAdmin(List<Flight> flights) : base(flights)
+    {
+        FlightsListView.OpenSelectedItem += (flight) => { WindowManager.GoForwardOne(new FlightInfoEdit((Flight)flight.Value));};
+
+        Button addFlightButton = new Button {
+            Y = Pos.Bottom(CategoryListView) + 3,
+            Text = "Toevoegen",
+        };
+
+        addFlightButton.Clicked += () => {WindowManager.GoForwardOne(new FlightInfoAdd());};
+
+        Button goBackButton = new Button() {
+            Y = Pos.Bottom(CategoryListView) + 3,
+            X = Pos.Right(addFlightButton) + 1,
+            Text = "Terug",
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
+
+        Add(addFlightButton, goBackButton);
     }
 }
