@@ -597,23 +597,74 @@ public class UserInfo : Toplevel
 
 public class EditUserInfo : UserInfo
 {
-    public EditUserInfo()
-    {
-        Button editButton = new Button() {
-            Text = "Aanpassen",
-            Y = Pos.Bottom(ExpireDateLabel) + 1,
-        };
+    public EditUserInfo(string name) : base(name)
+    {
+        Button editButton = new Button() {
+            Text = "Aanpassen",
+            Y = Pos.Bottom(ExpireDateLabel) + 1,
+        };
 
-        Button exitButton = new Button() {
-            Text = "Annuleren",
-            X = Pos.Right(editButton) + 1,
-            Y = Pos.Top(editButton),
-        };
+        editButton.Clicked += () =>
+        {
+            EditInfo(WindowManager.CurrentUser);
+        };
 
-        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
+        Button exitButton = new Button() {
+            Text = "Annuleren",
+            X = Pos.Right(editButton) + 1,
+            Y = Pos.Top(editButton),
+        };
+        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
+        Add(editButton, exitButton);
+    }
 
-        Add(editButton, exitButton);
-    }
+    private User? EditInfo(User user)
+    {     
+        if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
+            EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
+            MessageBox.ErrorQuery("Aanpassen", "Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+        }
+
+        MailAddress address;
+        bool isValid = false;
+        try {
+            address = new MailAddress((string)EmailText.Text);
+            isValid = (address.Address == (string)EmailText.Text);
+        } catch (FormatException) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
+
+        if (!isValid) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
+
+        if (PhoneText.Text.Length < 9) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist telefoonnummer", "Ok");
+            return null;
+        }
+        
+        DateTime currentDate = DateTime.Today;
+
+        if (DocumentTypeComboBox.Text == "" && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", "Document type niet ingevuld", "Ok");
+            return null;
+        } else if (currentDate > ExpireDate && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
+            return null;
+        }
+        user.FirstName = (string) FirstnameText.Text;
+        user.Preposition = (string) PrepositionText.Text;
+        user.LastName = (string) LastnameText.Text;
+        user.Email = new MailAddress((string)EmailText.Text);
+        user.PhoneNumber = (string) PhoneText.Text;
+        user.Nationality = (string) NationalityComboBox.Text;
+        user.ExpirationDate = ExpireDate;
+        user.DocumentNumber = (string) DocumentNumber.Text;
+        return user;
+    }
 }
 
 
