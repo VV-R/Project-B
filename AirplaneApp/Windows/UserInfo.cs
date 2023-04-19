@@ -9,12 +9,19 @@ public class UserInfo : Toplevel
     public TextField PrepositionText;
     public TextField LastnameText;
     public TextField EmailText;
+    public ComboBox dayComboBox;
+    public ComboBox monthComboBox;
+    public ComboBox yearComboBox;
     public ComboBox DialCodesComboBox;
     public TextField PhoneText;
     public ComboBox NationalityComboBox;
     public TextField DocumentNumber;
     public ComboBox DocumentTypeComboBox;
     public Label ExpireDateLabel;
+    public ComboBox exipreDayComboBox;
+    public ComboBox expireMonthComboBox;
+    public ComboBox expireYearComboBox;
+
 
     public UserInfo()
     {
@@ -117,7 +124,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(phoneLabel) + 1,
         };
 
-        ComboBox dayComboBox = new ComboBox(){
+        dayComboBox = new ComboBox(){
             X = Pos.Left(EmailText),
             Y = Pos.Top(dateOfBirthLabel),
             Height = 4,
@@ -126,7 +133,7 @@ public class UserInfo : Toplevel
 
         dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-        ComboBox monthComboBox = new ComboBox(){
+        monthComboBox = new ComboBox(){
             X = Pos.Right(dayComboBox) + 1,
             Y = Pos.Top(dayComboBox),
             Height = 4,
@@ -144,7 +151,7 @@ public class UserInfo : Toplevel
                 dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
             } dayComboBox.SelectedItem = 0; };
 
-        ComboBox yearComboBox = new ComboBox(){
+        yearComboBox = new ComboBox(){
             X = Pos.Right(monthComboBox) + 1 ,
             Y = Pos.Top(monthComboBox),
             Height = 4,
@@ -246,7 +253,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
-        ComboBox exipreDayComboBox = new ComboBox(){
+        exipreDayComboBox = new ComboBox(){
             X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(ExpireDateLabel),
             Height = 4,
@@ -255,7 +262,7 @@ public class UserInfo : Toplevel
 
         exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-        ComboBox expireMonthComboBox = new ComboBox(){
+        expireMonthComboBox = new ComboBox(){
             X = Pos.Right(exipreDayComboBox) + 1,
             Y = Pos.Top(exipreDayComboBox),
             Height = 4,
@@ -273,7 +280,7 @@ public class UserInfo : Toplevel
                 exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
             } exipreDayComboBox.SelectedItem = 0; };
 
-        ComboBox expireYearComboBox = new ComboBox(){
+        expireYearComboBox = new ComboBox(){
             X = Pos.Right(expireMonthComboBox) + 1 ,
             Y = Pos.Top(expireMonthComboBox),
             Height = 4,
@@ -405,7 +412,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(phoneLabel) + 1,
         };
 
-        ComboBox dayComboBox = new ComboBox(){
+        dayComboBox = new ComboBox(){
             X = Pos.Left(EmailText),
             Y = Pos.Top(dateOfBirthLabel),
             Height = 4,
@@ -414,7 +421,7 @@ public class UserInfo : Toplevel
 
         dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-        ComboBox monthComboBox = new ComboBox(){
+        monthComboBox = new ComboBox(){
             X = Pos.Right(dayComboBox) + 1,
             Y = Pos.Top(dayComboBox),
             Height = 4,
@@ -432,7 +439,7 @@ public class UserInfo : Toplevel
                 dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
             } dayComboBox.SelectedItem = 0; };
 
-        ComboBox yearComboBox = new ComboBox(){
+        yearComboBox = new ComboBox(){
             X = Pos.Right(monthComboBox) + 1 ,
             Y = Pos.Top(monthComboBox),
             Height = 4,
@@ -534,7 +541,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
-        ComboBox exipreDayComboBox = new ComboBox(){
+        exipreDayComboBox = new ComboBox(){
             X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(ExpireDateLabel),
             Height = 4,
@@ -543,7 +550,7 @@ public class UserInfo : Toplevel
 
         exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
-        ComboBox expireMonthComboBox = new ComboBox(){
+        expireMonthComboBox = new ComboBox(){
             X = Pos.Right(exipreDayComboBox) + 1,
             Y = Pos.Top(exipreDayComboBox),
             Height = 4,
@@ -561,7 +568,7 @@ public class UserInfo : Toplevel
                 exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
             } exipreDayComboBox.SelectedItem = 0; };
 
-        ComboBox expireYearComboBox = new ComboBox(){
+        expireYearComboBox = new ComboBox(){
             X = Pos.Right(expireMonthComboBox) + 1 ,
             Y = Pos.Top(expireMonthComboBox),
             Height = 4,
@@ -597,74 +604,94 @@ public class UserInfo : Toplevel
 
 public class EditUserInfo : UserInfo
 {
-    public EditUserInfo(string name) : base(name)
-    {
-        Button editButton = new Button() {
-            Text = "Aanpassen",
-            Y = Pos.Bottom(ExpireDateLabel) + 1,
-        };
+    public EditUserInfo(User user) : base(user)
+    {
+        Button editButton = new Button() {
+            Text = "Aanpassen",
+            Y = Pos.Bottom(ExpireDateLabel) + 1,
+        };
 
-        editButton.Clicked += () =>
-        {
-            EditInfo(WindowManager.CurrentUser);
-        };
+        editButton.Clicked += () =>
+        {
+            try {
+                DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
+                DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
+                User? user = EditInfo(WindowManager.CurrentUser, dateOfBirth, expireDate);
+                if (user != null) {
+                    WindowManager.GoBackOne(this);
+                }
+            } catch (FormatException e) {
+                Console.WriteLine(e.Message);
+            }
+        };
 
-        Button exitButton = new Button() {
-            Text = "Annuleren",
-            X = Pos.Right(editButton) + 1,
-            Y = Pos.Top(editButton),
-        };
-        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
-        Add(editButton, exitButton);
-    }
+        Button exitButton = new Button() {
+            Text = "Annuleren",
+            X = Pos.Right(editButton) + 1,
+            Y = Pos.Top(editButton),
+        };
+        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
+        Add(editButton, exitButton);
+    }
 
-    private User? EditInfo(User user)
-    {     
-        if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
-            EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
-            MessageBox.ErrorQuery("Aanpassen", "Sommige velden zijn niet ingevuld.", "Ok");
-            return null;
-        }
+    private User? EditInfo(User user, DateTime dateOfBirth, DateTime expireDate)
+    {
+        if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
+        EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
+            MessageBox.ErrorQuery("Aanpassen", "Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+        }
 
-        MailAddress address;
-        bool isValid = false;
-        try {
-            address = new MailAddress((string)EmailText.Text);
-            isValid = (address.Address == (string)EmailText.Text);
-        } catch (FormatException) {
-            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
-            return null;
-        }
+        MailAddress address;
+        bool isValid = false;
+        try {
+            address = new MailAddress((string)EmailText.Text);
+            isValid = (address.Address == (string)EmailText.Text);
+        } catch (FormatException) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
 
-        if (!isValid) {
-            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
-            return null;
-        }
+        if (!isValid) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
 
-        if (PhoneText.Text.Length < 9) {
-            MessageBox.ErrorQuery("Aanpassen", "Onjuist telefoonnummer", "Ok");
-            return null;
-        }
-        
-        DateTime currentDate = DateTime.Today;
+        if (PhoneText.Text.Length < 9) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist telefoonnummer", "Ok");
+            return null;
+        }
+        DateTime currentDate = DateTime.Today;
+        int age =  currentDate.Year - dateOfBirth.Year;
+        if (currentDate < dateOfBirth.AddYears(age))
+            age--;
 
-        if (DocumentTypeComboBox.Text == "" && DocumentNumber.Text != "") {
-            MessageBox.ErrorQuery("Aanpassen", "Document type niet ingevuld", "Ok");
-            return null;
-        } else if (currentDate > ExpireDate && DocumentNumber.Text != "") {
-            MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
-            return null;
-        }
-        user.FirstName = (string) FirstnameText.Text;
-        user.Preposition = (string) PrepositionText.Text;
-        user.LastName = (string) LastnameText.Text;
-        user.Email = new MailAddress((string)EmailText.Text);
-        user.PhoneNumber = (string) PhoneText.Text;
-        user.Nationality = (string) NationalityComboBox.Text;
-        user.ExpirationDate = ExpireDate;
-        user.DocumentNumber = (string) DocumentNumber.Text;
-        return user;
-    }
+        if (age < 18) {
+            MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Ok");
+            return null;
+        }
+
+        if (DocumentTypeComboBox.Text == "" && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", "Document type niet ingevuld", "Ok");
+            return null;
+        } else if (currentDate > expireDate && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
+            return null;
+        } else if (DocumentNumber.Text != "") {
+            user.ExpirationDate = expireDate;
+            user.DocumentNumber = (string)DocumentNumber.Text;
+            user.DocumentType = (string)DocumentTypeComboBox.Text;
+        }
+        string phonenumber = $"{DialCodesComboBox.Text}|{PhoneText.Text}";
+        user.FirstName = (string)FirstnameText.Text;
+        user.Preposition = (string)PrepositionText.Text;
+        user.LastName = (string)LastnameText.Text;
+        user.Email = new MailAddress((string)EmailText.Text);
+        user.PhoneNumber = phonenumber;
+        user.DateOfBirth = dateOfBirth;
+        user.Nationality = (string)NationalityComboBox.Text;
+        return user;
+    }
 }
 
 
