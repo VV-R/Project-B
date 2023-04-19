@@ -347,10 +347,10 @@ public class RegisterMenu : Toplevel
             try {
                 DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
-                string? result = RegisterUser(dateOfBirth, expireDate);
-                if (result != null) {
+                User? user = RegisterUser(dateOfBirth, expireDate);
+                if (user != null) {
                     MainWindow.LoginButton.Text = "Uitloggen";
-                    WindowManager.GoForwardOne(new UserMenu(result));
+                    WindowManager.GoForwardOne(new UserMenu());
                 }
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
@@ -369,7 +369,7 @@ public class RegisterMenu : Toplevel
         #endregion
     }
 
-    private string? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
+    private User? RegisterUser(DateTime dateOfBirth, DateTime expireDate)
     {
         if (firstnameText.Text == "" || lastnameText.Text == "" || passwordText.Text == "" || passwordRepeat.Text == "" ||
             emailText.Text == "" || phoneText.Text == "" || dialCodesComboBox.Text == "" || nationalityComboBox.Text == "") {
@@ -418,7 +418,16 @@ public class RegisterMenu : Toplevel
             MessageBox.ErrorQuery("Registreren", $"Uw {documentTypeComboBox.Text} is vervallen", "Ok");
             return null;
         }
+        string phonenumber = $"{dialCodesComboBox.Text}|{phoneText.Text}";
+        User user = new User(0, (string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, (string)passwordText.Text,
+                            address, phonenumber, dateOfBirth, (string)nationalityComboBox.Text);
 
-        return (string)emailText.Text;
+        if (documentNumber.Text != "") {
+            user.DocumentNumber = (string)documentNumber.Text;
+            user.DocumentType = (string)documentTypeComboBox.Text;
+            user.ExpirationDate = expireDate;
+        }
+
+        return user;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Net.Mail;
 using Terminal.Gui;
 
 public class MainWindow : Window
@@ -48,8 +49,9 @@ public class MainWindow : Window
                 WindowManager.GoForwardOne(new LoginScreen());
             }
             else if (LoginButton.Text == "Uitloggen") {
+                WindowManager.CurrentUser = null;
                 WindowManager.CurrentColor = Colors.Base;
-                WindowManager.GoForwardOne(new MainMenu());
+                WindowManager.GoToFirst();
                 LoginButton.Text = "Inloggen";
             } };
 
