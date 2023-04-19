@@ -24,7 +24,7 @@ public static class WindowManager
         new Flight(3, 1, "Rotterdam", DateTime.Now.AddDays(1), "Parijs", DateTime.Now.AddDays(1.7), "Boeing 787")
     };
 
-    public static List<string> Locations = new List<string>() {"London", "Parijs", "Amsterdam", "München", "Wenen", "Rome", "Barcelona", "Brussels", "Berlijn", "Rotterdam", "Madrid"};
+    public static List<string> Locations = new List<string>() {"London", "Parijs", "Amsterdam", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Rotterdam", "Madrid"};
 
     static WindowManager()
     {

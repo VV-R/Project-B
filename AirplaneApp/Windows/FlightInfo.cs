@@ -263,7 +263,7 @@ public class FlightInfoEdit : FlightInfo
             X = Pos.Right(updateButton) + 1
         };
 
-        cancelFlight.Clicked +=  () => { CancelFlight(flight); WindowManager.GoBackOne(this);};
+        cancelFlight.Clicked +=  () => { CancelFlight(flight); };
 
         Button goBackButton = new Button() {
             Text = "Annuleren",
@@ -316,7 +316,7 @@ public class FlightInfoEdit : FlightInfo
 
     private void CancelFlight(Flight flight)
     {
-        var n = MessageBox.Query("Annuleren", "Wat is de reden van Annuleren", "Weer", "Storing", "Staking", "Strakke Tijdschema's","Annuleren");
+        var n = MessageBox.Query("Annuleren", "Wat is de reden van Annuleren", "Weer", "Storing", "Staking", "Vertraging", "Bijzondere reden", "Stoppen");
         string reason;
         switch(n) {
             case 0:
@@ -329,9 +329,13 @@ public class FlightInfoEdit : FlightInfo
                 reason = "een staking";
                 break;
             case 3:
-                reason = "een te strakke tijdschema";
+                reason = "een opgelopen vertraging";
                 break;
+            case 4:
+                SpecialEmail(flight);
+                return;
             default:
+                WindowManager.GoBackOne(this);
                 return;
         };
         string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {reason}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
@@ -339,6 +343,7 @@ public class FlightInfoEdit : FlightInfo
 
         // Remove it from the DB
         WindowManager.Flights.Remove(flight);
+        WindowManager.GoBackOne(this);
     }
 
     private void SendEmails(string subject, string body)
@@ -366,6 +371,34 @@ public class FlightInfoEdit : FlightInfo
                 }
             }
         });
+    }
+
+    private void SpecialEmail(Flight flight)
+    {
+        RemoveAll();
+        TextView textField = new TextView() {
+            Text = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege %%.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service",
+            Width = Dim.Percent(50),
+            Height = Dim.Percent(30),
+            Y = 1,
+        };
+
+        Button sendButton = new Button() {
+            Text = "Versturen",
+            Y = Pos.Bottom(textField) + 1
+        };
+
+        sendButton.Clicked += () => { SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
+
+        Button goBack = new Button() {
+            Text = "Terug",
+            Y = Pos.Top(sendButton),
+            X = Pos.Right(sendButton) + 1,
+        };
+
+        goBack.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(textField, sendButton, goBack);
     }
 }
 
@@ -426,3 +459,4 @@ public class FlightInfoAdd : FlightInfo
         return new Flight(WindowManager.Flights.Count, gateNumber, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, arrivalTime, (string)AirplaneCombobox.Text);
     }
 }
+

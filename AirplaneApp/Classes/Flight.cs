@@ -18,6 +18,6 @@ public class Flight
         ArrivalTime = arrivalTime;
         Airplane = airplane;
     }
-    public override string ToString() => $"Gate: {GateNumber}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime} Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}; Vliegtuig: {Airplane}";
+    public override string ToString() => $"Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime}; Vliegtuig: {Airplane}";
     public string ToNewLineString() => $"Gate: {GateNumber}\nVertrek Locatie: {DepartureLocation}\nVertrek Tijd: {DepartureTime}\nBestemming: {ArrivalLocation}\nTijd van Aankomst: {ArrivalTime}\nVliegtuig: {Airplane}";
 }
