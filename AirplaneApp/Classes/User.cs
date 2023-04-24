@@ -51,7 +51,8 @@ public class User
 
     public override string ToString()
     {
-        return $"ID: {IdUser}\nName: {FirstName} {LastName}\nEmail: {Email}\nNumber: {PhoneNumber}";
+        return $"ID: {IdUser}; Name: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}; Email: {Email}; Number: {PhoneNumber}";
     }
 
+    public string ToNewLineString() => $"ID: {IdUser}\nName: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}\nEmail\n{Email}\nNumber\n{PhoneNumber}";
 }
