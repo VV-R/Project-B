@@ -4,7 +4,6 @@ using Terminal.Gui;
 
 public class FlightInfo : Toplevel
 {
-    public TextField GateNumber;
     public ComboBox DepartureLocationCombo;
     public ComboBox DepartureDayComboBox;
     public ComboBox DepartureMonthComboBox;
@@ -21,29 +20,14 @@ public class FlightInfo : Toplevel
         int[] differentDays = {4, 6, 9, 11};
         int increaseDay = 1;
 
-        #region Gate
-        Label gateNumberLabel = new Label() {
-            Text = "Gate nummer:",
-        };
-
-        GateNumber = new TextField("") {
-            Y = Pos.Top(gateNumberLabel),
-            X = Pos.Right(gateNumberLabel) + 6,
-            Width = 8,
-        };
-
-        Add(gateNumberLabel, GateNumber);
-        #endregion
-
         #region Departure
         Label departureLocationLabel = new Label() {
             Text = "Vertrek Locatie:",
-            Y = Pos.Bottom(gateNumberLabel) + 1
         };
 
         DepartureLocationCombo = new ComboBox() {
             Y = Pos.Top(departureLocationLabel),
-            X = Pos.Left(GateNumber),
+            X = Pos.Right(departureLocationLabel) + 4,
             Width = Dim.Percent(20),
             Height = 4,
         };
@@ -59,7 +43,7 @@ public class FlightInfo : Toplevel
 
         DepartureDayComboBox = new ComboBox(){
             Y = Pos.Top(departureTimeLabel),
-            X = Pos.Left(GateNumber),
+            X = Pos.Left(DepartureLocationCombo),
             Height = 4,
             Width = 8,
         };
@@ -129,7 +113,7 @@ public class FlightInfo : Toplevel
 
         ArrivalLocationCombo = new ComboBox() {
             Y = Pos.Top(arrivalLocationLabel),
-            X = Pos.Left(GateNumber),
+            X = Pos.Left(DepartureLocationCombo),
             Width = Dim.Percent(20),
             Height = 4,
         };
@@ -145,7 +129,7 @@ public class FlightInfo : Toplevel
 
         ArrivalDayComboBox = new ComboBox(){
             Y = Pos.Top(arrivalTimeLabel),
-            X = Pos.Left(GateNumber),
+            X = Pos.Left(DepartureLocationCombo),
             Height = 4,
             Width = 8,
         };
@@ -215,7 +199,7 @@ public class FlightInfo : Toplevel
 
         AirplaneCombobox = new ComboBox() {
             Y = Pos.Top(airplaneLabel),
-            X = Pos.Left(GateNumber),
+            X = Pos.Left(DepartureLocationCombo),
             Width = Dim.Percent(20),
             Height = 4,
         };
@@ -231,7 +215,6 @@ public class FlightInfoEdit : FlightInfo
 {
     public FlightInfoEdit(Flight flight)
     {
-        GateNumber.Text = flight.GateNumber.ToString();
         DepartureLocationCombo.SelectedItem = DepartureLocationCombo.Source.ToList().IndexOf(flight.DepartureLocation);
         DepartureYearComboBox.SelectedItem = DepartureYearComboBox.Source.ToList().IndexOf(flight.DepartureTime.Year);
         DepartureMonthComboBox.SelectedItem = flight.DepartureTime.Month - 1;
@@ -278,13 +261,8 @@ public class FlightInfoEdit : FlightInfo
 
     private Flight? UpdateFlight(Flight flight, DateTime departureTime, DateTime arrivalTime)
     {
-        if (GateNumber.Text == "" || DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
+        if (DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
             MessageBox.ErrorQuery("Vlucht Updaten", "Sommige velden zijn niet ingevuld.", "Ok");
-            return null;
-        }
-
-        if (!int.TryParse((string)GateNumber.Text, out int gateNumber)) {
-            MessageBox.ErrorQuery("Vlucht Updaten", "Gate nummer is niet goed ingevuld.", "Ok");
             return null;
         }
 
@@ -295,7 +273,6 @@ public class FlightInfoEdit : FlightInfo
 
         string subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gewijzigd.\nDit zijn de wijzigingen:\n";
-        body += $"Gate nummer:\t\t{flight.GateNumber} --> {gateNumber}\n";
         body += $"Vertrek Locatie:\t {flight.DepartureLocation} --> {(string)DepartureLocationCombo.Text}\n";
         body += $"Tijd van Vertrek:\t {flight.DepartureTime} --> {departureTime}\n";
         body += $"Bestemming:\t\t {flight.ArrivalLocation} --> {(string)ArrivalLocationCombo.Text}\n";
@@ -304,8 +281,6 @@ public class FlightInfoEdit : FlightInfo
         body += "Met vriendelijke groeten,\nRotterdam Airline Service";
 
         SendEmails(subject, body);
-
-        flight.GateNumber = gateNumber;
         flight.DepartureLocation = (string)DepartureLocationCombo.Text;
         flight.DepartureTime = departureTime;
         flight.ArrivalLocation = (string)ArrivalLocationCombo.Text;
@@ -441,13 +416,8 @@ public class FlightInfoAdd : FlightInfo
 
     private Flight? AddFlight(DateTime departureTime, DateTime arrivalTime)
     {
-        if (GateNumber.Text == "" || DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
+        if (DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
             MessageBox.ErrorQuery("Vlucht Updaten", "Sommige velden zijn niet ingevuld.", "Ok");
-            return null;
-        }
-
-        if (!int.TryParse((string)GateNumber.Text, out int gateNumber)) {
-            MessageBox.ErrorQuery("Vlucht Updaten", "Gate nummer is niet goed ingevuld.", "Ok");
             return null;
         }
 
@@ -456,7 +426,7 @@ public class FlightInfoAdd : FlightInfo
             return null;
         }
 
-        return new Flight(WindowManager.Flights.Count, gateNumber, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, arrivalTime, (string)AirplaneCombobox.Text);
+        return new Flight(WindowManager.Flights.Count, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, arrivalTime, (string)AirplaneCombobox.Text);
     }
 }
 

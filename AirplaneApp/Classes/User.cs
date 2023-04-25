@@ -54,5 +54,5 @@ public class User
         return $"ID: {IdUser}; Name: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}; Email: {Email}; Number: {PhoneNumber}";
     }
 
-    public string ToNewLineString() => $"ID: {IdUser}\nName: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}\nEmail\n{Email}\nNumber\n{PhoneNumber}";
+    public string ToNewLineString() => $"ID: {IdUser}\nName: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}\nEmail: {Email}\nNumber: {PhoneNumber}";
 }
