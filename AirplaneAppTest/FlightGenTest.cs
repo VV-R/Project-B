@@ -46,7 +46,7 @@ public class UnitTest1
     {
         FlightScheduleGen.Flights.SetList(new List<Flight>());
         FlightScheduleGen.PopulateAll();
-        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights * 8);
+        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights * 9);
     }
 
     [TestMethod]
