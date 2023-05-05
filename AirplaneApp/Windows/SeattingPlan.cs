@@ -182,21 +182,103 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        LeftWing = new StringBuilder();
+        LeftWing.AppendLine(@"|                                          \");
+        LeftWing.AppendLine(@"|                                           \");
+        LeftWing.AppendLine(@"|                                            \");
+        LeftWing.AppendLine(@"|                                             \");
+        LeftWing.AppendLine(@"|                                              \");
+        LeftWing.AppendLine(@"|                                               \");
+        LeftWing.AppendLine(@"|                                                \");
+        LeftWing.AppendLine(@"---------------------------------------------------");
+
+        Label lefttwing = new Label()
+        {
+            Text = LeftWing.ToString(),
+            Y = 2,
+            X = 75
+        };
+
         Label rightWall = new Label()
         {
-            Text = "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-            Y = 22,
-            X = 5,
+            Text = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 23,
+            X = 6,
         };
 
         Label leftWall = new Label()
         {
-            Text = "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-            Y = 10,
-            X = 5,
+            Text = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 9,
+            X = 6,
         };
 
-        Add(rightWall, leftWall);
+        RightWing = new StringBuilder();
+        RightWing.AppendLine(@"---------------------------------------------------");
+        RightWing.AppendLine(@"|                                                /");
+        RightWing.AppendLine(@"|                                               /");
+        RightWing.AppendLine(@"|                                              /");
+        RightWing.AppendLine(@"|                                             /");
+        RightWing.AppendLine(@"|                                            /");
+        RightWing.AppendLine(@"|                                           /");
+        RightWing.AppendLine(@"|                                          /");
+
+        Label rightWing = new Label()
+        {
+            Text = RightWing.ToString(),
+            Y = 23,
+            X = 75
+        };
+
+        Cockpit = new StringBuilder();
+        Cockpit.AppendLine(@"\");
+        Cockpit.AppendLine(@" \");
+        Cockpit.AppendLine(@"  \");
+        Cockpit.AppendLine(@"   \");
+        Cockpit.AppendLine(@"    \");
+        Cockpit.AppendLine(@"     \");
+        Cockpit.AppendLine(@"      \");
+        Cockpit.AppendLine(@"       )");
+        Cockpit.AppendLine(@"      /");
+        Cockpit.AppendLine(@"     /");
+        Cockpit.AppendLine(@"    /");
+        Cockpit.AppendLine(@"   /");
+        Cockpit.AppendLine(@"  /");
+        Cockpit.AppendLine(@" /");
+        Cockpit.AppendLine(@"/");
+
+        Label cockpit = new Label()
+        {
+            Text = Cockpit.ToString(),
+            Y = 9,
+            X = 194
+        };
+
+        Back = new StringBuilder();
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+
+        Label back = new Label()
+        {
+            Text = Back.ToString(),
+            Y = 9,
+            X = 6
+        };
+
+        Add(rightWall, leftWall, lefttwing, rightWing, cockpit, back);
     }
 
     private void PlanBoeing_787()
@@ -214,20 +296,98 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        RightWing = new StringBuilder();
+        RightWing.AppendLine(@"    /                                              |");
+        RightWing.AppendLine(@"   /                                               |");
+        RightWing.AppendLine(@"  /                                                |");
+        RightWing.AppendLine(@" /                                                 |");
+        RightWing.AppendLine(@"/                                                  |");
+        RightWing.AppendLine(@"----------------------------------------------------");
+
+        Label rightwing = new Label()
+        {
+            Text = RightWing.ToString(),
+            Y = 4,
+            X = 66
+        };
+
         Label rightWall = new Label()
         {
-            Text = "------------------------------------------------------------------------------------------------------------------------------------",
-            Y = 10,
-            X = 41,
+            Text = "-----------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 9,
+            X = 38,
         };
 
         Label leftWall = new Label()
         {
-            Text = "------------------------------------------------------------------------------------------------------------------------------------",
-            Y = 22,
-            X = 41,
+            Text = "-----------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 23,
+            X = 38,
         };
 
-        Add(rightWall, leftWall);
+        LeftWing = new StringBuilder();
+        LeftWing.AppendLine(@"----------------------------------------------------");
+        LeftWing.AppendLine(@"\                                                  |");
+        LeftWing.AppendLine(@" \                                                 |");
+        LeftWing.AppendLine(@"  \                                                |");
+        LeftWing.AppendLine(@"   \                                               |");
+        LeftWing.AppendLine(@"    \                                              |");
+
+        Label leftwing = new Label()
+        {
+            Text = LeftWing.ToString(),
+            Y = 23,
+            X = 66
+        };
+
+        Cockpit = new StringBuilder();
+        Cockpit.AppendLine(@"       /");
+        Cockpit.AppendLine(@"      /");
+        Cockpit.AppendLine(@"     /");
+        Cockpit.AppendLine(@"    /");
+        Cockpit.AppendLine(@"   /");
+        Cockpit.AppendLine(@"  /");
+        Cockpit.AppendLine(@" /");
+        Cockpit.AppendLine(@"(");
+        Cockpit.AppendLine(@" \");
+        Cockpit.AppendLine(@"  \");
+        Cockpit.AppendLine(@"   \");
+        Cockpit.AppendLine(@"    \");
+        Cockpit.AppendLine(@"     \");
+        Cockpit.AppendLine(@"      \");
+        Cockpit.AppendLine(@"       \");
+
+        Label cockpit = new Label()
+        {
+            Text = Cockpit.ToString(),
+            Y = 9,
+            X = 31
+        };
+
+        Back = new StringBuilder();
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+
+        Label back = new Label()
+        {
+            Text = Back.ToString(),
+            Y = 9,
+            X = 175
+        };
+
+        Add(rightWall, leftWall, rightwing, leftwing, cockpit, back);
     }
 }
