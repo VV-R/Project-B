@@ -1,10 +1,15 @@
 using System;
+using System.Text;
 using Terminal.Gui;
 using Newtonsoft.Json;
 
 public class SeattingPlan : Toplevel
 {
     ComboBox PlaneType;
+    public StringBuilder RightWing;
+    public StringBuilder LeftWing;
+    public StringBuilder Cockpit;
+    public StringBuilder Back;
     public SeattingPlan()
     {
 
@@ -63,21 +68,103 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        RightWing = new StringBuilder();
+        RightWing.AppendLine(@"          /               |");
+        RightWing.AppendLine(@"         /                |");
+        RightWing.AppendLine(@"        /                 |");
+        RightWing.AppendLine(@"       /                  |");
+        RightWing.AppendLine(@"      /                   |");
+        RightWing.AppendLine(@"     /                    |");
+        RightWing.AppendLine(@"    /                     |");
+        RightWing.AppendLine(@"   /                      |");
+        RightWing.AppendLine(@"  /                       |");
+        RightWing.AppendLine(@" /                        |");
+        RightWing.AppendLine(@"/                         |");
+        RightWing.AppendLine(@"---------------------------");
+
+        Label rightWing = new Label()
+        {
+            Text = RightWing.ToString(),
+            Y = 5,
+            X = 72
+        };
+
         Label rightWall = new Label()
         {
-            Text = "--------------------------------------------------------------------------------------------------------------------------------",
-            Y = 17,
-            X = 34,
+            Text = "--------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 16,
+            X = 31,
         };
 
         Label leftWall = new Label()
         {
-            Text = "--------------------------------------------------------------------------------------------------------------------------------",
-            Y = 25,
-            X = 34,
+            Text = "--------------------------------------------------------------------------------------------------------------------------------------",
+            Y = 26,
+            X = 31,
         };
 
-        Add(rightWall, leftWall);
+        LeftWing = new StringBuilder();
+        LeftWing.AppendLine(@"---------------------------");
+        LeftWing.AppendLine(@"\                         |");
+        LeftWing.AppendLine(@" \                        |");
+        LeftWing.AppendLine(@"  \                       |");
+        LeftWing.AppendLine(@"   \                      |");
+        LeftWing.AppendLine(@"    \                     |");
+        LeftWing.AppendLine(@"     \                    |");
+        LeftWing.AppendLine(@"      \                   |");
+        LeftWing.AppendLine(@"       \                  |");
+        LeftWing.AppendLine(@"        \                 |");
+        LeftWing.AppendLine(@"         \                |");
+        LeftWing.AppendLine(@"          \               |");
+
+        Label leftWing = new Label()
+        {
+            Text = LeftWing.ToString(),
+            Y = 26,
+            X = 72
+        };
+
+        Cockpit = new StringBuilder();
+        Cockpit.AppendLine(@"     /");
+        Cockpit.AppendLine(@"    /");
+        Cockpit.AppendLine(@"   /");
+        Cockpit.AppendLine(@"  /");
+        Cockpit.AppendLine(@" /");
+        Cockpit.AppendLine(@"(");
+        Cockpit.AppendLine(@" \");
+        Cockpit.AppendLine(@"  \");
+        Cockpit.AppendLine(@"   \");
+        Cockpit.AppendLine(@"    \");
+        Cockpit.AppendLine(@"     \");
+
+        Label cockpit = new Label()
+        {
+            Text = Cockpit.ToString(),
+            Y = 16,
+            X = 28
+        };
+
+        Back = new StringBuilder();
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+        Back.AppendLine(@"|");
+
+        Label back = new Label()
+        {
+            Text = Back.ToString(),
+            Y = 16,
+            X = 164
+        };
+
+        Add(rightWall, leftWall, rightWing, leftWing, cockpit, back);
     }
 
     private void PlanAirbus_330()
