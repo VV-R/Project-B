@@ -5,12 +5,14 @@ public class Seat
     public string Text;
     public int X;
     public int Y;
+    public string SeatType;
 
-    public Seat(string text, int x, int y)
+    public Seat(string text, int x, int y, string seatType)
     {
         Text = text;
         X = x;
         Y = y;
+        SeatType = seatType;
     }
 }
 

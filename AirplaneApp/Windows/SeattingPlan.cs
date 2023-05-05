@@ -29,7 +29,7 @@ public class SeattingPlan : Toplevel
             Y = Pos.Bottom(goBackButton) + 3
         };
 
-        testButton.Clicked += () => 
+        testButton.Clicked += () =>
         {
             if (PlaneType.Text == "Boeing 737")
             {
@@ -50,12 +50,12 @@ public class SeattingPlan : Toplevel
 
     private void PlanBoeing_737()
     {
-        List<string> occupied = new List<string>() {"F2", "D5", "A7", "A16"};
+        List<string> occupied = new List<string>() { "F2", "D5", "A7", "A16" };
 
         StreamReader reader = new StreamReader("Boeing_737.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
 
-        foreach(Seat seat in seats_list)
+        foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
                 Add(new InteraciveSeat(seat, true));
@@ -82,12 +82,12 @@ public class SeattingPlan : Toplevel
 
     private void PlanAirbus_330()
     {
-        List<string> occupied = new List<string>() {"F23", "D5", "A7", "A16"};
+        List<string> occupied = new List<string>() { "F23", "D5", "A7", "A16" };
 
         StreamReader reader = new StreamReader("Airbus_330.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
 
-        foreach(Seat seat in seats_list)
+        foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
                 Add(new InteraciveSeat(seat, true));
@@ -114,12 +114,12 @@ public class SeattingPlan : Toplevel
 
     private void PlanBoeing_787()
     {
-        List<string> occupied = new List<string>() {"F23", "D5", "A7", "A16"};
+        List<string> occupied = new List<string>() { "F23", "D5", "A7", "A16" };
 
         StreamReader reader = new StreamReader("Boeing_787.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
 
-        foreach(Seat seat in seats_list)
+        foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
                 Add(new InteraciveSeat(seat, true));
