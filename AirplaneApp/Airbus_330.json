@@ -225,7 +225,7 @@
         "Text": "A4",
         "X": 176,
         "Y": 11,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "A2",
@@ -465,7 +465,7 @@
         "Text": "B4",
         "X": 176,
         "Y": 12,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "C43",
@@ -657,7 +657,7 @@
         "Text": "C4",
         "X": 176,
         "Y": 13,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "C2",
@@ -1173,7 +1173,7 @@
         "Text": "F5",
         "X": 173,
         "Y": 16,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "G50",
@@ -1419,7 +1419,7 @@
         "Text": "G5",
         "X": 173,
         "Y": 17,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "G2",
@@ -1623,7 +1623,7 @@
         "Text": "H4",
         "X": 176,
         "Y": 19,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "H2",
@@ -1863,7 +1863,7 @@
         "Text": "J4",
         "X": 176,
         "Y": 20,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "K49",
@@ -2091,7 +2091,7 @@
         "Text": "K4",
         "X": 176,
         "Y": 21,
-        "SeatType": "Front cabin comfort seat"
+        "SeatType": "Comfort"
     },
     {
         "Text": "K2",

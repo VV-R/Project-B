@@ -78,6 +78,7 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        #region Drawing
         RightWing = new StringBuilder();
         RightWing.AppendLine(@"          /               |");
         RightWing.AppendLine(@"         /                |");
@@ -175,6 +176,71 @@ public class SeattingPlan : Toplevel
         };
 
         Add(rightWall, leftWall, rightWing, leftWing, cockpit, back);
+        #endregion
+
+        #region Legend
+        Label economy1 = new Label()
+        {
+            Text = "X00",
+            X = 63,
+            Y = 41,
+            ColorScheme = Colors.ColorSchemes["Economy"]
+        };
+
+        Label economy2 = new Label()
+        {
+            Text = " => Economy",
+            X = Pos.Right(economy1),
+            Y = 41
+        };
+
+        Label comfort1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(economy2) + 5,
+            Y = 41,
+            ColorScheme = Colors.ColorSchemes["Comfort"]
+        };
+
+        Label comfort2 = new Label()
+        {
+            Text = " => Comfort",
+            X = Pos.Right(comfort1),
+            Y = 41
+        };
+
+        Label taken1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(comfort2) + 5,
+            Y = 41,
+            ColorScheme = Colors.ColorSchemes["SeatTaken"]
+        };
+
+        Label taken2 = new Label()
+        {
+            Text = " => Bezet",
+            X = Pos.Right(taken1),
+            Y = 41
+        };
+
+        Label selected1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(taken2) + 5,
+            Y = 41,
+            ColorScheme = Colors.ColorSchemes["SeatSelected"]
+        };
+
+        Label selected2 = new Label()
+        {
+            Text = " => Gekozen",
+            X = Pos.Right(selected1),
+            Y = 41
+        };
+
+        Add(economy1, economy2, comfort1, comfort2, taken1, taken2, selected1, selected2);
+        #endregion
     }
 
     private void PlanAirbus_330()
@@ -192,6 +258,7 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        #region Drawing
         LeftWing = new StringBuilder();
         LeftWing.AppendLine(@"|                                          \");
         LeftWing.AppendLine(@"|                                           \");
@@ -289,6 +356,116 @@ public class SeattingPlan : Toplevel
         };
 
         Add(rightWall, leftWall, lefttwing, rightWing, cockpit, back);
+        #endregion
+
+        #region Legend
+        Label economy1 = new Label()
+        {
+            Text = "X00",
+            X = 27,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["Economy"]
+        };
+
+        Label economy2 = new Label()
+        {
+            Text = " => Economy",
+            X = Pos.Right(economy1),
+            Y = 34
+        };
+
+        Label comfort1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(economy2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["Comfort"]
+        };
+
+        Label comfort2 = new Label()
+        {
+            Text = " => Comfort",
+            X = Pos.Right(comfort1),
+            Y = 34
+        };
+
+        Label frontSeats1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(comfort2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["Front seats"]
+        };
+
+        Label frontSeats2 = new Label()
+        {
+            Text = " => Stoelen voorin de cabine",
+            X = Pos.Right(frontSeats1),
+            Y = 34
+        };
+
+        Label duo1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(frontSeats2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["Duo seats"]
+        };
+
+        Label duo2 = new Label()
+        {
+            Text = " => Duo stoelen",
+            X = Pos.Right(duo1),
+            Y = 34
+        };
+
+        Label clubClass1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(duo2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["Club Class"]
+        };
+
+        Label clubClass2 = new Label()
+        {
+            Text = " => Club Class",
+            X = Pos.Right(clubClass1),
+            Y = 34
+        };
+
+        Label taken1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(clubClass2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["SeatTaken"]
+        };
+
+        Label taken2 = new Label()
+        {
+            Text = " => Bezet",
+            X = Pos.Right(taken1),
+            Y = 34
+        };
+
+        Label selected1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(taken2) + 5,
+            Y = 34,
+            ColorScheme = Colors.ColorSchemes["SeatSelected"]
+        };
+
+        Label selected2 = new Label()
+        {
+            Text = " => Gekozen",
+            X = Pos.Right(selected1),
+            Y = 34
+        };
+
+        Add(economy1, economy2, comfort1, comfort2, frontSeats1, frontSeats2, duo1, duo2, clubClass1, clubClass2, taken1, taken2, selected1, selected2);
+        #endregion
     }
 
     private void PlanBoeing_787()
@@ -306,6 +483,7 @@ public class SeattingPlan : Toplevel
                 Add(new InteraciveSeat(seat, false));
         }
 
+        #region Drawing
         RightWing = new StringBuilder();
         RightWing.AppendLine(@"    /                                              |");
         RightWing.AppendLine(@"   /                                               |");
@@ -399,5 +577,85 @@ public class SeattingPlan : Toplevel
         };
 
         Add(rightWall, leftWall, rightwing, leftwing, cockpit, back);
+        #endregion
+
+        #region Legend
+        Label economy1 = new Label()
+        {
+            Text = "X00",
+            X = 55,
+            Y = 33,
+            ColorScheme = Colors.ColorSchemes["Economy"]
+        };
+
+        Label economy2 = new Label()
+        {
+            Text = " => Economy",
+            X = Pos.Right(economy1),
+            Y = 33
+        };
+
+        Label economyPlus1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(economy2) + 5,
+            Y = 33,
+            ColorScheme = Colors.ColorSchemes["Economy Plus"]
+        };
+
+        Label economyPlus2 = new Label()
+        {
+            Text = " => Economy Plus",
+            X = Pos.Right(economyPlus1),
+            Y = 33
+        };
+
+        Label UBF1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(economyPlus2) + 5,
+            Y = 33,
+            ColorScheme = Colors.ColorSchemes["United BusinessFirst"]
+        };
+
+        Label UBF2 = new Label()
+        {
+            Text = " => United BusinessFirst",
+            X = Pos.Right(UBF1),
+            Y = 33
+        };
+
+        Label taken1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(UBF2) + 5,
+            Y = 33,
+            ColorScheme = Colors.ColorSchemes["SeatTaken"]
+        };
+
+        Label taken2 = new Label()
+        {
+            Text = " => Bezet",
+            X = Pos.Right(taken1),
+            Y = 33
+        };
+
+        Label selected1 = new Label()
+        {
+            Text = "X00",
+            X = Pos.Right(taken2) + 5,
+            Y = 33,
+            ColorScheme = Colors.ColorSchemes["SeatSelected"]
+        };
+
+        Label selected2 = new Label()
+        {
+            Text = " => Gekozen",
+            X = Pos.Right(selected1),
+            Y = 33
+        };
+
+        Add(economy1, economy2, economyPlus1, economyPlus2, UBF1, UBF2, taken1, taken2, selected1, selected2);
+        #endregion
     }
 }
