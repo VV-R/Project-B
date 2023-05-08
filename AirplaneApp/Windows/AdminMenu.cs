@@ -212,10 +212,8 @@ public class ReservationPanel : Toplevel
     {
         string subject = $"Vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw ticket van vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation} is gecanceld.\nU hoort hier nog meer over.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
-
-        SendEmail(CurrentUser.Email, subject, body);
         CurrentUser.Reservations.Remove(CurrentTicket);
-        WindowManager.GoBackOne(this);
+        SpecialEmail(CurrentTicket.Flight);
     }
 
     private void SendEmail(MailAddress mailAddress, string subject, string body)
@@ -238,5 +236,33 @@ public class ReservationPanel : Toplevel
                 await smtp.SendMailAsync(message);
             }
         });
+    }
+
+    private void SpecialEmail(Flight flight)
+    {
+        RemoveAll();
+        TextView textField = new TextView() {
+            Text = $"Beste Klant,\n\nUw ticket van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege %%.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service",
+            Width = Dim.Percent(50),
+            Height = Dim.Percent(30),
+            Y = 1,
+        };
+
+        Button sendButton = new Button() {
+            Text = "Versturen",
+            Y = Pos.Bottom(textField) + 1
+        };
+
+        sendButton.Clicked += () => { SendEmail(CurrentUser.Email ,$"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
+
+        Button goBack = new Button() {
+            Text = "Terug",
+            Y = Pos.Top(sendButton),
+            X = Pos.Right(sendButton) + 1,
+        };
+
+        goBack.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(textField, sendButton, goBack);
     }
 }
