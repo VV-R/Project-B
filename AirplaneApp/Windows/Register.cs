@@ -350,7 +350,7 @@ public class RegisterMenu : Toplevel
                 User? user = RegisterUser(dateOfBirth, expireDate);
                 if (user != null) {
                     MainWindow.LoginButton.Text = "Uitloggen";
-                    WindowManager.GoForwardOne(new UserMenu());
+                    WindowManager.GoForwardOne(new UserMenu(user));
                 }
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);

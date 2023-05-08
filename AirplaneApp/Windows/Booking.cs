@@ -628,4 +628,4 @@ public class Booking : Toplevel
 }
 
 // public booking(Flight flight, Seat()seatnumber)
-// public booking(User user, Flight flight, Seat()seatnumber)
+// public booking(User user, Flight flight, Seat[]seatnumber)

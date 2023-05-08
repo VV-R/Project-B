@@ -55,7 +55,7 @@ public class LoginScreen : Toplevel
                     WindowManager.CurrentColor = Colors.TopLevel;
                     WindowManager.GoForwardOne(new AdminMenu());
                 } else {
-                    WindowManager.GoForwardOne(new UserMenu());
+                    WindowManager.GoForwardOne(new UserMenu(user));
                 }
             } else {
                 MessageBox.ErrorQuery("Logging In", "Verkeerd gebruikersnaam of wachtwoord.", "Ok");

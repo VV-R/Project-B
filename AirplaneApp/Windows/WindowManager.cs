@@ -5,7 +5,6 @@ using Terminal.Gui;
 public static class WindowManager
 {
     private static List<Toplevel> _windows = new List<Toplevel>();
-
     private static MainMenu _firstWindow = new MainMenu() {
             Y = 8,
             Width = Dim.Fill(),
