@@ -53,6 +53,16 @@ public class SeattingPlan : Toplevel
         Add(goBackButton, testButton, PlaneType);
     }
 
+    public SeattingPlan(Flight flight)
+    {
+        if (flight.Airplane == "Boeing 737")
+            PlanBoeing_737();
+        else if (flight.Airplane == "Airbus 330")
+            PlanAirbus_330();
+        else if (flight.Airplane == "Boeing 787")
+            PlanBoeing_787();
+    }
+
     private void PlanBoeing_737()
     {
         List<string> occupied = new List<string>() { "F2", "D5", "A7", "A16" };

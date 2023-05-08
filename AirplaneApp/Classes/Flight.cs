@@ -18,6 +18,7 @@ public class Flight
         ArrivalTime = arrivalTime;
         Airplane = airplane;
     }
+
     public override string ToString() => $"Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime}; Vliegtuig: {Airplane}";
     public string ToNewLineString() => $"Bestemming: {ArrivalLocation}\nTijd van Aankomst: {ArrivalTime}\nVertrek Locatie: {DepartureLocation}\nVertrek Tijd: {DepartureTime}\nVliegtuig: {Airplane}";
 }
