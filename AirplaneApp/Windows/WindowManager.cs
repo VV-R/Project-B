@@ -1,6 +1,7 @@
 using System;
 using System.Net.Mail;
 using Terminal.Gui;
+using Newtonsoft.Json;
 
 public static class WindowManager
 {
@@ -16,19 +17,18 @@ public static class WindowManager
     public static Toplevel CurrentWindow {get {return _windows.Last();}}
     public static User? CurrentUser = null;
 
-    public static List<Flight> Flights = new List<Flight>() {
-        new Flight(0, 1, "Rotterdam", DateTime.Now.AddDays(1), "Parijs", DateTime.Now.AddDays(2), "Boeing 737"),
-        new Flight(1, 2, "Rotterdam", DateTime.Now.AddDays(1), "Madrid", DateTime.Now.AddDays(1.2), "Airbus 330"),
-        new Flight(2, 3, "Rotterdam", DateTime.Now.AddDays(1), "Berlijn", DateTime.Now.AddDays(1.1), "Boeing 737"),
-        new Flight(3, 1, "Rotterdam", DateTime.Now.AddDays(1), "Parijs", DateTime.Now.AddDays(1.7), "Boeing 787")
-    };
+    public static List<Flight> Flights;
 
-    public static List<string> Locations = new List<string>() {"London", "Parijs", "Amsterdam", "München", "Wenen", "Rome", "Barcelona", "Brussels", "Berlijn", "Rotterdam", "Madrid"};
+    public static List<string> Locations = new List<string>() {"London", "Parijs", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Rotterdam", "Madrid"};
 
     static WindowManager()
     {
         Locations.Sort();
         _windows.Add(_firstWindow);
+        StreamReader reader = new StreamReader("Flights.json");
+        Flights = JsonConvert.DeserializeObject<List<Flight>>(reader.ReadToEnd())!;
+        reader.Close();
+        reader.Dispose();
     }
     private static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {

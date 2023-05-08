@@ -52,8 +52,9 @@ public class SearchUsers : Toplevel
 
         // Want a list of users from the database
         List<User> users = new List<User>() {new User(1, "Levi", "van", "Daalen", "1234", new MailAddress("2004levi@gmail.com"), "+31|613856964", new DateTime(2004, 1, 19), "Nederland") {
-            Reservations = new List<Ticket>() { new Ticket(WindowManager.Flights.First(), 1, "B3", DateTime.Now.AddDays(2))}
-        }};
+            Reservations = new List<Ticket>() { new Ticket(WindowManager.Flights.First(), 1, "B3", DateTime.Now.AddDays(2))}},
+            new User(2, "Steyn", "", "Hellendoorn", "password", new MailAddress("idk@gmail.com"), "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands")
+        };
 
 
 
@@ -146,7 +147,7 @@ public class ReservationPanel : Toplevel
         };
 
         Label userLabel = new Label() {
-            Text = $"User:\n{user.ToString()}",
+            Text = $"User:\n{user.ToNewLineString()}",
             Y = Pos.Bottom(flightLabel) + 1,
         };
 
@@ -211,10 +212,8 @@ public class ReservationPanel : Toplevel
     {
         string subject = $"Vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw ticket van vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation} is gecanceld.\nU hoort hier nog meer over.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
-
-        SendEmail(CurrentUser.Email, subject, body);
         CurrentUser.Reservations.Remove(CurrentTicket);
-        WindowManager.GoBackOne(this);
+        SpecialEmail(CurrentTicket.Flight);
     }
 
     private void SendEmail(MailAddress mailAddress, string subject, string body)
@@ -237,5 +236,33 @@ public class ReservationPanel : Toplevel
                 await smtp.SendMailAsync(message);
             }
         });
+    }
+
+    private void SpecialEmail(Flight flight)
+    {
+        RemoveAll();
+        TextView textField = new TextView() {
+            Text = $"Beste Klant,\n\nUw ticket van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege %%.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service",
+            Width = Dim.Percent(50),
+            Height = Dim.Percent(30),
+            Y = 1,
+        };
+
+        Button sendButton = new Button() {
+            Text = "Versturen",
+            Y = Pos.Bottom(textField) + 1
+        };
+
+        sendButton.Clicked += () => { SendEmail(CurrentUser.Email ,$"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
+
+        Button goBack = new Button() {
+            Text = "Terug",
+            Y = Pos.Top(sendButton),
+            X = Pos.Right(sendButton) + 1,
+        };
+
+        goBack.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(textField, sendButton, goBack);
     }
 }

@@ -62,7 +62,7 @@ public class MainMenu : Toplevel
             Text = "Vlucht Schemas",
             Y = Pos.Bottom(bookingButton) + 1,
         };
-        flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
+        flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
 
         Button airplaneInformationButton = new Button()
         {
