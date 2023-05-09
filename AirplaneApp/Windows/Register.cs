@@ -69,6 +69,13 @@ public class RegisterMenu : Toplevel
             Width = Dim.Percent(20),
         };
 
+        emailText.TextChanged += (text) => {
+            if (MailAddress.TryCreate((string)emailText.Text, out _) && emailText.Text.Contains("."))
+                emailText.ColorScheme = Colors.ColorSchemes["TextCorrect"];
+            else
+                emailText.ColorScheme = Colors.ColorSchemes["TextIncorrect"];
+        };
+
         Label passwordLabel = new Label() {
             Text = "Wachtwoord:",
             Y = Pos.Bottom(emailLabel) + 1,
@@ -81,14 +88,15 @@ public class RegisterMenu : Toplevel
             Width = Dim.Percent(20),
         };
 
-        CheckBox passwordCheckBox = new CheckBox() {
+        Label passwordCheckBox = new Label("show") {
             X = Pos.Right(passwordText) + 1,
             Y = Pos.Top(passwordLabel),
         };
 
-        passwordCheckBox.Toggled += (e) => {if (!e)
-            passwordText.Secret = false;
-            else passwordText.Secret = true;};
+        passwordCheckBox.Clicked += () => {
+            passwordText.Secret = !passwordText.Secret;
+            passwordCheckBox.Text = passwordText.Secret ? "show" : "hide";
+        };
 
         Label passwordRepeatLabel = new Label() {
             Text = "Herhaal-Wachtwoord:",
@@ -102,14 +110,27 @@ public class RegisterMenu : Toplevel
             Width = Dim.Percent(20),
         };
 
-        CheckBox passwordRepeatCheckBox = new CheckBox() {
+        passwordText.TextChanged += (text) => {
+            if (passwordText.Text.Length > 8)
+                passwordText.ColorScheme = Colors.ColorSchemes["TextCorrect"];
+            else passwordText.ColorScheme = Colors.ColorSchemes["TextIncorrect"];
+        };
+
+        passwordRepeat.TextChanged += (text) => {
+            if (passwordRepeat.Text == passwordText.Text)
+                passwordRepeat.ColorScheme = Colors.ColorSchemes["TextCorrect"];
+            else passwordRepeat.ColorScheme = Colors.ColorSchemes["TextIncorrect"];
+        };
+
+        Label passwordRepeatCheckBox = new Label("show") {
             X = Pos.Right(passwordRepeat) + 1,
             Y = Pos.Top(passwordRepeatLabel),
         };
 
-        passwordRepeatCheckBox.Toggled += (e) => {if (!e)
-            passwordRepeat.Secret = false;
-            else passwordRepeat.Secret = true;};
+        passwordRepeatCheckBox.Clicked += () => {
+            passwordRepeat.Secret = !passwordRepeat.Secret;
+            passwordRepeatCheckBox.Text = passwordRepeat.Secret ? "show" : "hide";
+        };
 
         Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox);
         #endregion
@@ -144,6 +165,12 @@ public class RegisterMenu : Toplevel
         else if (phoneText.Text.Length > 10)
             phoneText.Text = text;
         phoneText.CursorPosition = phoneText.Text.Length;};
+
+        phoneText.TextChanged += (text) => {
+            if (phoneText.Text.Length > 9)
+                phoneText.ColorScheme = Colors.ColorSchemes["TextCorrect"];
+            else phoneText.ColorScheme = Colors.ColorSchemes["TextIncorrect"];
+        };
 
         Add(phoneLabel, dialCodesComboBox, phoneText);
         #endregion
@@ -349,6 +376,7 @@ public class RegisterMenu : Toplevel
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
                 User? user = RegisterUser(dateOfBirth, expireDate);
                 if (user != null) {
+                    WindowManager.CurrentUser = user;
                     MainWindow.LoginButton.Text = "Uitloggen";
                     WindowManager.GoForwardOne(new UserMenu());
                 }
