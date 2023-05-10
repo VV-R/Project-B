@@ -38,9 +38,18 @@ public class MainWindow : Window
 
         aboutUs.Clicked += () => { WindowManager.GoForwardOne(new AboutUs()); };
 
+
+        Button dashboardButton = new Button() {
+            Text = "Dashboard",
+            X = Pos.Left(aboutUs) - 14,
+            Y = 6
+        };
+
+        dashboardButton.Clicked += () => { WindowManager.GoForwardOne(new Dashboard()); };
+
         LoginButton = new Button() {
             Text = "Inloggen",
-            X = Pos.Left(aboutUs) - 14,
+            X = Pos.Left(dashboardButton) - 14,
             Y = 6
         };
 
@@ -59,6 +68,6 @@ public class MainWindow : Window
             Y = 7,
         };
 
-        Add(airlineTextLabel, currentTime, line, WindowManager.CurrentWindow, aboutUs, LoginButton);
+        Add(airlineTextLabel, currentTime, line, WindowManager.CurrentWindow, aboutUs, dashboardButton, LoginButton);
     }
 }

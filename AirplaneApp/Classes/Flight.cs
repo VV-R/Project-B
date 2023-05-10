@@ -18,8 +18,15 @@ public class Flight : IComparable<Flight>
         ArrivalTime = arrivalTime;
         Airplane = airplane;
     }
-
-    public override string ToString() => $"Bestemming: {ArrivalLocation}; Tijd van Aankomst: {ArrivalTime}; Vertrek Locatie: {DepartureLocation}; Vertrek Tijd: {DepartureTime}; Vliegtuig: {Airplane}";
+    
+    public override string ToString() {
+        string flightString = $"Bestemming: {ArrivalLocation};".PadRight(23);
+        flightString += $"Tijd van Aankomst: {ArrivalTime};".PadRight(42);
+        flightString += $"Vertrek Locatie: {DepartureLocation};".PadRight(28);
+        flightString += $"Vertrek Tijd: {DepartureTime};".PadRight(36);
+        flightString += $" Vliegtuig: {Airplane}";
+        return flightString;
+    }
     public string ToNewLineString() => $"Vertrek Locatie: {DepartureLocation}\nVertrek Tijd: {DepartureTime}\nBestemming: {ArrivalLocation}\nTijd van Aankomst: {ArrivalTime}\nVliegtuig: {Airplane}";
 
     int IComparable<Flight>.CompareTo(Flight? other)
