@@ -64,6 +64,14 @@ public class FlightPanel : Toplevel
         RightPane.Add(FlightsListView);
 
         Add(LeftPane, RightPane);
+         Button goBackButton = new Button() {
+            Y = Pos.Bottom(CategoryListView) + 3,
+            Text = "Terug",
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
+
+        Add(goBackButton);
     }
 }
 

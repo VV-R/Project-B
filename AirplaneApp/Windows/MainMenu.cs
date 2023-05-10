@@ -3,13 +3,15 @@ using Terminal.Gui;
 
 public class MainMenu : Toplevel
 {
+    private User? user = null;
     public MainMenu()
     {
         Button bookingButton = new Button()
         {
             Text = "Vlucht Boeken",
         };
-        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new Booking()); };
+        
+        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
 
         Button flightScheduleButton = new Button()
         {
