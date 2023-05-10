@@ -130,30 +130,10 @@ public class AboutUs : Toplevel
 
     private void SendEmail(string name, string Subject, string email, string question)
     {
-        var fromAddress = new MailAddress("rotterdamairline@outlook.com", name);
         var toAddress = new MailAddress("rotterdamairline@outlook.com", "Recipient Name");
-        const string fromPassword = "Team1Admin1234";
         string subject = Subject;
         string body = $"{question}\n\nCorrespondentie e-mailadres: {email}";
-
-        var smtp = new SmtpClient
-        {
-            Host = "smtp.office365.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-        };
-
-        using (var message = new MailMessage(fromAddress, toAddress)
-        {
-            Subject = subject,
-            Body = body
-        })
-        {
-            smtp.Send(message);
-        }
+        EmailManager.SendOneEmail(subject, body, toAddress);
     }
 
     private string? CheckMail()

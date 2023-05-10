@@ -326,29 +326,9 @@ public class FlightInfoEdit : FlightInfo
 
     private void SendEmails(string subject, string body)
     {
-         // Set up SMPT client
-        MailAddress fromAddress = new MailAddress("rotterdamairline@outlook.com");
-        SmtpClient smtp = new SmtpClient() {
-            Host = "smtp.office365.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromAddress.Address, "Team1Admin1234")
-        };
-
         // Notify customers via E-Mail
-        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com")};
-        Application.MainLoop.Invoke(async () => {
-            foreach(MailAddress email in emails) {
-                using (MailMessage message = new MailMessage(fromAddress, email) {
-                    Subject = subject,
-                    Body = body,
-                }) {
-                    await smtp.SendMailAsync(message);
-                }
-            }
-        });
+        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com"), new MailAddress("vandaalenlevi@gmail.com")};
+        EmailManager.SendEmails(subject, body, emails);
     }
 
     private void SpecialEmail(Flight flight)
