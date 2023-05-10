@@ -1,5 +1,8 @@
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class FlightPanel : Toplevel
 {
     public ListView CategoryListView;

@@ -1,5 +1,6 @@
 using System.Collections;
 
+namespace Entities;
 public class Flight : IComparable<Flight>
 {
     public int FlightNumber;

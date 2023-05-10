@@ -1,6 +1,9 @@
 using Terminal.Gui;
 using System.Data;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class Dashboard : Toplevel
 {
     public Dashboard()

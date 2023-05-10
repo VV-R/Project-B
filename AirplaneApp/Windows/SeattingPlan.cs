@@ -2,7 +2,10 @@ using System;
 using System.Text;
 using Terminal.Gui;
 using Newtonsoft.Json;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class SeattingPlan : Toplevel
 {
     ComboBox PlaneType;

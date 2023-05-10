@@ -1,3 +1,4 @@
+namespace Entities;
 public class Ticket
 {
     public Flight Flight;

@@ -2,8 +2,10 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using Terminal.Gui;
+using Entities;
+using Managers;
 
-
+namespace Windows;
 public class AdminMenu : Toplevel
 {
     public AdminMenu()

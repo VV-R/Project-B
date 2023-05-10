@@ -1,7 +1,10 @@
 using System;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
 
+namespace Windows;
 public class UserMenu : Toplevel
 {
     private User user;

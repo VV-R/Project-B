@@ -1,8 +1,9 @@
 using System;
 using System.Text;
-using System.Net.Mail;
+using Managers;
 using Terminal.Gui;
 
+namespace Windows;
 public class MainWindow : Window
 {
     public StringBuilder AirlineText;

@@ -2,7 +2,10 @@ using System;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class Booking : Toplevel
 {
     public User User { get; set; }

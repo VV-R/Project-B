@@ -1,6 +1,8 @@
 using System;
 using Terminal.Gui;
+using Managers;
 
+namespace Windows;
 public class AirplaneInformation : Toplevel
 {
     public AirplaneInformation()

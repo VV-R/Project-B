@@ -2,7 +2,10 @@ using System;
 using System.Net.Mail;
 using Newtonsoft.Json;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class UserInfo : Toplevel
 {
     public TextField FirstnameText;

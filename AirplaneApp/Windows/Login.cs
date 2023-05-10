@@ -1,7 +1,10 @@
 using System;
 using System.Net.Mail;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class LoginScreen : Toplevel
 {
     public LoginScreen()

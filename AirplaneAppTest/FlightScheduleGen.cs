@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 
+namespace test;
 public static class FlightScheduleGen
 {
     private static string[] _planes = {"Boeing 737", "Airbus 330", "Boeing 787"};

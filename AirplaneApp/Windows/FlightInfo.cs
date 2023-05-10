@@ -1,7 +1,10 @@
 using System.Net;
 using System.Net.Mail;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class FlightInfo : Toplevel
 {
     public ComboBox DepartureLocationCombo;

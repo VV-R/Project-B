@@ -1,6 +1,9 @@
 using System;
 using Terminal.Gui;
+using Managers;
+using Entities;
 
+namespace Windows;
 public class MainMenu : Toplevel
 {
     private User? user = null;

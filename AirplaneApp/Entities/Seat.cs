@@ -1,5 +1,6 @@
 using Terminal.Gui;
 
+namespace Entities;
 public class Seat
 {
     public string Text;

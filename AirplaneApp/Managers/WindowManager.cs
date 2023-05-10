@@ -2,7 +2,10 @@ using System;
 using System.Net.Mail;
 using Terminal.Gui;
 using Newtonsoft.Json;
+using Entities;
+using Windows;
 
+namespace Managers;
 public static class WindowManager
 {
     private static List<Toplevel> _windows = new List<Toplevel>();

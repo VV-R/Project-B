@@ -1,4 +1,6 @@
 using System.Net.Mail;
+
+namespace Entities;
 public class User
 {
     public int IdUser;
