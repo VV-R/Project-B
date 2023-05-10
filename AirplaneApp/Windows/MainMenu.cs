@@ -10,9 +10,11 @@ public class MainMenu : Toplevel
         {
             Text = "Vlucht Boeken",
         };
-        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
         
-        Button flightScheduleButton = new Button() {
+        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
+
+        Button flightScheduleButton = new Button()
+        {
             Text = "Vlucht Schemas",
             Y = Pos.Bottom(bookingButton) + 1,
         };
