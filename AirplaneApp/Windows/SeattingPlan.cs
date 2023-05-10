@@ -69,13 +69,22 @@ public class SeattingPlan : Toplevel
 
         StreamReader reader = new StreamReader("Boeing_737.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
+        List<InteraciveSeat> activeSeats = new();
 
         foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
-                Add(new InteraciveSeat(seat, true));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, true);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
             else
-                Add(new InteraciveSeat(seat, false));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, false);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
         }
 
         #region Drawing
@@ -241,6 +250,24 @@ public class SeattingPlan : Toplevel
 
         Add(economy1, economy2, comfort1, comfort2, taken1, taken2, selected1, selected2);
         #endregion
+
+        Button reservation = new Button()
+        {
+            Text = "Reserveer",
+            Y = 41,
+            X = Pos.Right(selected2) + 18
+        };
+
+        reservation.Clicked += () =>
+        {
+            var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            if (seats.Count == 0)
+                MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
+
+            List<string> selectedSeats = new List<string>();
+            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+        };
+        Add(reservation);
     }
 
     private void PlanAirbus_330()
@@ -249,13 +276,22 @@ public class SeattingPlan : Toplevel
 
         StreamReader reader = new StreamReader("Airbus_330.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
+        List<InteraciveSeat> activeSeats = new();
 
         foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
-                Add(new InteraciveSeat(seat, true));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, true);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
             else
-                Add(new InteraciveSeat(seat, false));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, false);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
         }
 
         #region Drawing
@@ -466,6 +502,24 @@ public class SeattingPlan : Toplevel
 
         Add(economy1, economy2, comfort1, comfort2, frontSeats1, frontSeats2, duo1, duo2, clubClass1, clubClass2, taken1, taken2, selected1, selected2);
         #endregion
+
+        Button reservation = new Button()
+        {
+            Text = "Reserveer",
+            Y = 34,
+            X = Pos.Right(selected2) + 18
+        };
+
+        reservation.Clicked += () =>
+        {
+            var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            if (seats.Count == 0)
+                MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
+
+            List<string> selectedSeats = new List<string>();
+            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+        };
+        Add(reservation);
     }
 
     private void PlanBoeing_787()
@@ -474,13 +528,22 @@ public class SeattingPlan : Toplevel
 
         StreamReader reader = new StreamReader("Boeing_787.json");
         List<Seat> seats_list = JsonConvert.DeserializeObject<List<Seat>>(reader.ReadToEnd())!;
+        List<InteraciveSeat> activeSeats = new();
 
         foreach (Seat seat in seats_list)
         {
             if (occupied.Contains(seat.Text))
-                Add(new InteraciveSeat(seat, true));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, true);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
             else
-                Add(new InteraciveSeat(seat, false));
+            {
+                InteraciveSeat interSeat = new InteraciveSeat(seat, false);
+                Add(interSeat);
+                activeSeats.Add(interSeat);
+            }
         }
 
         #region Drawing
@@ -657,5 +720,23 @@ public class SeattingPlan : Toplevel
 
         Add(economy1, economy2, economyPlus1, economyPlus2, UBF1, UBF2, taken1, taken2, selected1, selected2);
         #endregion
+
+        Button reservation = new Button()
+        {
+            Text = "Reserveer",
+            Y = 33,
+            X = Pos.Right(selected2) + 18
+        };
+
+        reservation.Clicked += () =>
+        {
+            var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            if (seats.Count == 0)
+                MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
+
+            List<string> selectedSeats = new List<string>();
+            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+        };
+        Add(reservation);
     }
 }
