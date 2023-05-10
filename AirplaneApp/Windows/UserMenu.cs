@@ -5,6 +5,7 @@ using Terminal.Gui;
 public class UserMenu : Toplevel
 {
     private User user;
+
     public UserMenu(User user)
     {
         this.user = user;
@@ -17,7 +18,7 @@ public class UserMenu : Toplevel
             Text = "Vlucht Boeken",
             Y = Pos.Bottom(nameLabel) + 1,
         };
-        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new Booking(user)); };
+        bookingButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
 
         Button flightScheduleButton = new Button() {
             Text = "Vlucht Schemas",
@@ -25,10 +26,17 @@ public class UserMenu : Toplevel
         };
         flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
 
+        Button searchReservation = new Button() {
+            Text = "Reserveringen",
+            Y = Pos.Bottom(flightScheduleButton) + 1,
+        };
+
+        searchReservation.Clicked += () => {WindowManager.GoForwardOne(new Booking.UserSearch(true)); };
+
         Button airplaneInformationButton = new Button()
         {
             Text = "Vliegtuig Informatie",
-            Y = Pos.Bottom(flightScheduleButton) + 1,
+            Y = Pos.Bottom(searchReservation) + 1,
         };
         airplaneInformationButton.Clicked += () => { WindowManager.GoForwardOne(new AirplaneInformation()); };
 
@@ -55,6 +63,6 @@ public class UserMenu : Toplevel
 
         exitButton.Clicked += () => { Application.RequestStop(); };
 
-        Add(nameLabel, bookingButton, flightScheduleButton, airplaneInformationButton,Test, infoButton, exitButton);
+        Add(nameLabel, bookingButton, flightScheduleButton, searchReservation, airplaneInformationButton,Test, infoButton, exitButton);
     }
 }
