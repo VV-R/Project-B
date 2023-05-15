@@ -205,39 +205,15 @@ public class ReservationPanel : Toplevel
         string subject = $"Vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
 
-        SendEmail(CurrentUser.Email, subject, body);
+        EmailManager.SendOneEmail(subject, body, CurrentUser.Email);
         CurrentTicket.SeatNumber = (string)SeatnumberText.Text;
         WindowManager.GoBackOne(this);
     }
 
     private void CancelTicket()
     {
-        string subject = $"Vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation}";
-        string body = $"Beste Klant,\n\nUw ticket van vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation} is gecanceld.\nU hoort hier nog meer over.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
         CurrentUser.Reservations.Remove(CurrentTicket);
         SpecialEmail(CurrentTicket.Flight);
-    }
-
-    private void SendEmail(MailAddress mailAddress, string subject, string body)
-    {
-        MailAddress fromAddress = new MailAddress("rotterdamairline@outlook.com");
-        SmtpClient smtp = new SmtpClient() {
-            Host = "smtp.office365.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromAddress.Address, "Team1Admin1234")
-        };
-
-        Application.MainLoop.Invoke(async () => {
-            using (MailMessage message = new MailMessage(fromAddress, mailAddress) {
-                Subject = subject,
-                Body = body,
-            }) {
-                await smtp.SendMailAsync(message);
-            }
-        });
     }
 
     private void SpecialEmail(Flight flight)
@@ -255,7 +231,7 @@ public class ReservationPanel : Toplevel
             Y = Pos.Bottom(textField) + 1
         };
 
-        sendButton.Clicked += () => { SendEmail(CurrentUser.Email ,$"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
+        sendButton.Clicked += () => { EmailManager.SendOneEmail($"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text, CurrentUser.Email); WindowManager.GoBackOne(this); };
 
         Button goBack = new Button() {
             Text = "Terug",

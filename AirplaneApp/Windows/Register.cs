@@ -170,7 +170,7 @@ public class RegisterMenu : Toplevel
         phoneText.CursorPosition = phoneText.Text.Length;};
 
         phoneText.TextChanged += (text) => {
-            if (phoneText.Text.Length > 9)
+            if (phoneText.Text.Length > 8)
                 phoneText.ColorScheme = Colors.ColorSchemes["TextCorrect"];
             else phoneText.ColorScheme = Colors.ColorSchemes["TextIncorrect"];
         };
@@ -179,64 +179,18 @@ public class RegisterMenu : Toplevel
         #endregion
 
         #region Date of birth
-        int[] differentDays = {4, 6, 9, 11};
-        int increaseDay = 1;
-
         Label dateOfBirthLabel = new Label() {
             Text = "Geboortedatum:",
             X = Pos.Left(emailLabel),
             Y = Pos.Bottom(phoneLabel) + 1,
         };
 
-        ComboBox dayComboBox = new ComboBox(){
-            X = Pos.Left(passwordText),
+        DateTimeField dateofBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList()) {
+            X = Pos.Left(emailText),
             Y = Pos.Top(dateOfBirthLabel),
-            Height = 4,
-            Width = 8,
         };
 
-        dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-
-        ComboBox monthComboBox = new ComboBox(){
-            X = Pos.Right(dayComboBox) + 1,
-            Y = Pos.Top(dayComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        monthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
-
-        monthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
-            dayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
-            } else if (differentDays.Contains(month)) {
-                dayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
-             }
-            else {
-                dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-            } dayComboBox.SelectedItem = 0; };
-
-        ComboBox yearComboBox = new ComboBox(){
-            X = Pos.Right(monthComboBox) + 1 ,
-            Y = Pos.Top(monthComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        yearComboBox.SetSource(Enumerable.Range(1960, 46).ToList());
-
-        yearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
-            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
-                increaseDay = 1;
-                monthComboBox.SelectedItem = 0;
-            }
-            else increaseDay = 0;
-            };
-
-        yearComboBox.SelectedItem = 0;
-        monthComboBox.SelectedItem = 0;
-        dayComboBox.SelectedItem = 0;
-
-        Add(dateOfBirthLabel, dayComboBox, monthComboBox, yearComboBox);
+        Add(dateOfBirthLabel, dateofBirthField);
         #endregion
 
         #region Nationality
@@ -314,56 +268,13 @@ public class RegisterMenu : Toplevel
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
-        ComboBox exipreDayComboBox = new ComboBox(){
-            X = Pos.Left(passwordText) + 2,
+        DateTimeField expireDateField = new DateTimeField(Enumerable.Range(DateTime.Now.Year, 10).ToList()) {
+            X = Pos.Left(emailText),
             Y = Pos.Top(expireDateLabel),
-            Height = 4,
-            Width = 8,
         };
-
-        exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-
-        ComboBox expireMonthComboBox = new ComboBox(){
-            X = Pos.Right(exipreDayComboBox) + 1,
-            Y = Pos.Top(exipreDayComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        expireMonthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
-
-        expireMonthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
-            exipreDayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
-            } else if (differentDays.Contains(month)) {
-                exipreDayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
-             }
-            else {
-                exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-            } exipreDayComboBox.SelectedItem = 0; };
-
-        ComboBox expireYearComboBox = new ComboBox(){
-            X = Pos.Right(expireMonthComboBox) + 1 ,
-            Y = Pos.Top(expireMonthComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        expireYearComboBox.SetSource(Enumerable.Range(DateTime.Now.Year, 10).ToList());
-
-        expireYearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
-            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
-                increaseDay = 1;
-                expireMonthComboBox.SelectedItem = 0;
-            }
-            else increaseDay = 0;
-            };
-
-        expireYearComboBox.SelectedItem = 0;
-        expireMonthComboBox.SelectedItem = 0;
-        exipreDayComboBox.SelectedItem = 0;
 
         Add(documentNumberLabel, documentNumber, documentTypeLabel, documentTypeComboBox);
-        Add(expireDateLabel, exipreDayComboBox, expireMonthComboBox, expireYearComboBox);
+        Add(expireDateLabel, expireDateField);
         #endregion
 
         #region Register
@@ -375,8 +286,8 @@ public class RegisterMenu : Toplevel
 
         registerButton.Clicked += () => {
             try {
-                DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
-                DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
+                DateTime dateOfBirth = dateofBirthField.GetDateTime();
+                DateTime expireDate = expireDateField.GetDateTime();
                 User? user = RegisterUser(dateOfBirth, expireDate);
                 if (user != null) {
                     WindowManager.CurrentUser = user;
