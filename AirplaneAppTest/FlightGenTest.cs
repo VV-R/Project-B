@@ -1,4 +1,4 @@
-namespace test;
+namespace AirplaneAppTest;
 
 [TestClass]
 public class UnitTest1

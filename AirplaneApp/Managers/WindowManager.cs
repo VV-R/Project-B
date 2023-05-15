@@ -49,9 +49,14 @@ public static class WindowManager
 
     }
     public static void GoBackOne(Toplevel oldwindow) {
-        _windows.Remove(oldwindow);
-        SetWindow(oldwindow, _windows.Last());
+        if (_windows.Count == 1)
+            Application.RequestStop();
+        else {
+            _windows.Remove(oldwindow);
+            SetWindow(oldwindow, _windows.Last());
+        }
     }
+    public static void GoBackOne() => GoBackOne(CurrentWindow);
     public static void GoForwardOne(Toplevel newwindow) {
         SetWindow(_windows.Last(), newwindow);
         _windows.Add(newwindow);

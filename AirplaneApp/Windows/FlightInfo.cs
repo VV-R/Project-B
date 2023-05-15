@@ -303,6 +303,8 @@ public class FlightInfoAdd : FlightInfo
         Add(ArrivalLocationCombo);
 
         DepatureTime.Time = TimeSpan.Zero;
+        DepatureDateField.SetDateTime(DateTime.Now);
+
         Button addButton = new Button() {
             Text = "Toevoegen",
             Y = Pos.Bottom(AirplaneCombobox) + 1,

@@ -69,6 +69,8 @@ public class MainWindow : Window
             Y = 7,
         };
 
+        Application.RootKeyEvent += (key) => {if (key.Key == Key.Esc)  {WindowManager.GoBackOne(); return true; } return false; };
+
         Add(airlineTextLabel, currentTime, line, WindowManager.CurrentWindow, aboutUs, dashboardButton, LoginButton);
     }
 }
