@@ -3,18 +3,18 @@ using System.Net.Mail;
 namespace Entities;
 public class User
 {
-    public int IdUser;
-    public string FirstName;
-    public string Preposition;
-    public string LastName;
-    public string Password;
-    public MailAddress Email;
-    public string PhoneNumber;
-    public DateTime DateOfBirth;
-    public string Nationality;
-    public string? DocumentNumber;
-    public  string? DocumentType;
-    public DateTime? ExpirationDate;
+    public int IdUser { get; set; }
+    public string FirstName { get; set; }
+    public string Preposition { get; set; }
+    public string LastName { get; set; }
+    public string Password { get; set; }
+    public MailAddress Email { get; set; }
+    public string PhoneNumber { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public string Nationality { get; set; }
+    public string? DocumentNumber { get; set; }
+    public  string? DocumentType { get; set; }
+    public DateTime? ExpirationDate { get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
     
 
