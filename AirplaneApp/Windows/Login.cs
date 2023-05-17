@@ -89,11 +89,11 @@ public class LoginScreen : Toplevel
         // TODO: Add database check here
 
         if (email == "admin@admin.com" && password == "password")
-            return new User(0, "Levi", "van", "Daalen", "password", new MailAddress("admin@admin.com"),
-                            "+31|613856964", new DateTime(2004, 1, 19), "Nederland");
+            return new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
+                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "password");
         if (email == "user@user.com" && password == "password")
-            return new User(1, "Levi", "van", "Daalen", "password", new MailAddress("user@user.com"),
-                            "+31|613856964", new DateTime(2004, 1, 19), "Nederland");
+            return new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
+                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "password");
         return null;
     }
 }

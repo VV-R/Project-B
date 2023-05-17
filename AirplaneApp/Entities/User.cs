@@ -1,13 +1,36 @@
 using System.Net.Mail;
-
 namespace Entities;
 public class User
 {
     public int IdUser;
+    public UserInfo UserInfo{get; set;}
+    public string? Password;
+    public List<Ticket> Reservations = new List<Ticket>();
+    
+    public User (int id, UserInfo userInfo, string password)
+    {
+        IdUser = id;
+        UserInfo = userInfo;
+        Password = password;
+    }
+    public User(int id, UserInfo userInfo)
+    {
+        IdUser = id;
+        UserInfo = userInfo;
+    }
+
+    public override string ToString()
+    {
+        return $"ID: {IdUser}; Name: {UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}; Email: {UserInfo.Email}; Number: {UserInfo.PhoneNumber}";
+    }
+
+    public string ToNewLineString() => $"ID: {IdUser}\nName: {UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}\nEmail: {UserInfo.Email}\nNumber: {UserInfo.PhoneNumber}";
+}
+public class UserInfo
+{
     public string FirstName;
     public string Preposition;
     public string LastName;
-    public string Password;
     public MailAddress Email;
     public string PhoneNumber;
     public DateTime DateOfBirth;
@@ -15,46 +38,33 @@ public class User
     public string? DocumentNumber;
     public  string? DocumentType;
     public DateTime? ExpirationDate;
-    public List<Ticket> Reservations = new List<Ticket>();
-    
+   public UserInfo(string firstName, string preposition, 
+                    string lastname, MailAddress email, string phonenumber, 
+                    DateTime dateofbirth, string  nationality, string documentNumber, string documenttype, DateTime expirationDate)
+    {
 
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality)
-    {
-        IdUser = id;
-        FirstName = firtstname;
+        FirstName = firstName;
         Preposition = preposition;
         LastName = lastname;
-        Password = password;
         Email = email;
         PhoneNumber = phonenumber;
         DateOfBirth = dateofbirth;
         Nationality = nationality;
-    }
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality, string documentnumber,
-                 string documenttype, DateTime expirationdate)
-    {
-        IdUser = id;
-        FirstName = firtstname;
-        Preposition = preposition;
-        LastName = lastname;
-        Password = password;
-        Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
-        Nationality = nationality;
-        DocumentNumber = documentnumber;
+        DocumentNumber = documentNumber;
         DocumentType = documenttype;
-        ExpirationDate = expirationdate;
+        ExpirationDate = expirationDate;
     }
-
-    public override string ToString()
+    public UserInfo(string firstName, string preposition, 
+                    string lastname, MailAddress email, string phonenumber, 
+                    DateTime dateofbirth, string  nationality)
     {
-        return $"ID: {IdUser}; Name: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}; Email: {Email}; Number: {PhoneNumber}";
-    }
 
-    public string ToNewLineString() => $"ID: {IdUser}\nName: {FirstName}{(Preposition != "" ? $" {Preposition}" : "")} {LastName}\nEmail: {Email}\nNumber: {PhoneNumber}";
+        FirstName = firstName;
+        Preposition = preposition;
+        LastName = lastname;
+        Email = email;
+        PhoneNumber = phonenumber;
+        DateOfBirth = dateofbirth;
+        Nationality = nationality;
+    }
 }

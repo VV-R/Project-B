@@ -7,13 +7,10 @@ using Entities;
 namespace Windows;
 public class UserMenu : Toplevel
 {
-    private User user;
-
     public UserMenu(User user)
     {
-        this.user = user;
         Label nameLabel = new Label(){
-            Text = $"Welkom {WindowManager.CurrentUser.FirstName}!",
+            Text = $"Welkom {user.UserInfo.FirstName}!",
         };
 
         Button bookingButton = new Button()

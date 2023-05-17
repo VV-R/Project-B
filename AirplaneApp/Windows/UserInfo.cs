@@ -28,13 +28,13 @@ public class UserInfo : Toplevel
 
     public UserInfo()
     {
-        User user = WindowManager.CurrentUser;
+        User? user = WindowManager.CurrentUser;
         #region Name
         Label firstnameLabel = new Label() {
             Text = "Voornaam*:",
         };
-
-        FirstnameText = new TextField(user.FirstName) {
+        
+        FirstnameText = new TextField(user.UserInfo.FirstName) {
             X = Pos.Right(firstnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -44,7 +44,7 @@ public class UserInfo : Toplevel
             X = Pos.Right(FirstnameText) + 1
         };
 
-        PrepositionText = new TextField(user.Preposition) {
+        PrepositionText = new TextField(user.UserInfo.Preposition) {
             X = Pos.Right(prepositionLabel) + 1,
             Width = 10,
         };
@@ -54,7 +54,7 @@ public class UserInfo : Toplevel
             X = Pos.Right(PrepositionText) + 1
         };
 
-        LastnameText = new TextField(user.LastName) {
+        LastnameText = new TextField(user.UserInfo.LastName) {
             X = Pos.Right(lastnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -73,7 +73,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(firstnameLabel) + 1,
         };
 
-        EmailText = new TextField(user.Email.Address) {
+        EmailText = new TextField(user.UserInfo.Email.Address) {
             X = Pos.Right(emailLabel) + 8,
             Y = Pos.Top(emailLabel),
             Width = Dim.Percent(20),
@@ -99,9 +99,9 @@ public class UserInfo : Toplevel
         };
 
         DialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
-        DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.PhoneNumber.Split("|")[0]);
+        DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.UserInfo.PhoneNumber.Split("|")[0]);
 
-        PhoneText = new TextField(user.PhoneNumber.Split("|")[1]) {
+        PhoneText = new TextField(user.UserInfo.PhoneNumber.Split("|")[1]) {
             X = Pos.Right(DialCodesComboBox) + 1,
             Y = Pos.Top(phoneLabel),
             Width = 39
@@ -171,9 +171,9 @@ public class UserInfo : Toplevel
             else increaseDay = 0;
             };
 
-        yearComboBox.SelectedItem = user.DateOfBirth.Year - 1960;
-        monthComboBox.SelectedItem = user.DateOfBirth.Month - 1;
-        dayComboBox.SelectedItem = user.DateOfBirth.Day - 1;
+        yearComboBox.SelectedItem = user.UserInfo.DateOfBirth.Year - 1960;
+        monthComboBox.SelectedItem = user.UserInfo.DateOfBirth.Month - 1;
+        dayComboBox.SelectedItem = user.UserInfo.DateOfBirth.Day - 1;
 
         Add(dateOfBirthLabel, dayComboBox, monthComboBox, yearComboBox);
         #endregion
@@ -196,7 +196,7 @@ public class UserInfo : Toplevel
         };
 
         NationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
-        NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.Nationality);
+        NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.UserInfo.Nationality);
 
         Add(nationalityLabel, NationalityComboBox);
         #endregion
@@ -221,7 +221,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(optionalLabel) + 1,
         };
 
-        DocumentNumber = new TextField(user.DocumentNumber != null ? user.DocumentNumber : "") {
+        DocumentNumber = new TextField(user.UserInfo.DocumentNumber != null ? user.UserInfo.DocumentNumber : "") {
             X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(documentNumberLabel),
             Width = Dim.Percent(20) - 2,
@@ -248,7 +248,7 @@ public class UserInfo : Toplevel
         };
         DocumentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
 
-        DocumentTypeComboBox.SelectedItem = user.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.DocumentType) : 0;
+        DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
 
         ExpireDateLabel = new Label() {
             Text = "Verval datum:",
@@ -304,10 +304,10 @@ public class UserInfo : Toplevel
         expireMonthComboBox.SelectedItem = 0;
         exipreDayComboBox.SelectedItem = 0;
 
-        if (user.DocumentNumber != null) {
-            expireYearComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Year) - 1;
-            expireMonthComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Month) - 1;
-            exipreDayComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Day) - 1;
+        if (user.UserInfo.DocumentNumber != null) {
+            expireYearComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Year) - 1;
+            expireMonthComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Month) - 1;
+            exipreDayComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Day) - 1;
         }
 
 
@@ -322,7 +322,7 @@ public class UserInfo : Toplevel
             Text = "Voornaam*:",
         };
 
-        FirstnameText = new TextField(user.FirstName) {
+        FirstnameText = new TextField(user.UserInfo.FirstName) {
             X = Pos.Right(firstnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -332,7 +332,7 @@ public class UserInfo : Toplevel
             X = Pos.Right(FirstnameText) + 1
         };
 
-        PrepositionText = new TextField(user.Preposition) {
+        PrepositionText = new TextField(user.UserInfo.Preposition) {
             X = Pos.Right(prepositionLabel) + 1,
             Width = 10,
         };
@@ -342,7 +342,7 @@ public class UserInfo : Toplevel
             X = Pos.Right(PrepositionText) + 1
         };
 
-        LastnameText = new TextField(user.LastName) {
+        LastnameText = new TextField(user.UserInfo.LastName) {
             X = Pos.Right(lastnameLabel) + 1,
             Width = Dim.Percent(10),
         };
@@ -361,7 +361,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(firstnameLabel) + 1,
         };
 
-        EmailText = new TextField(user.Email.Address) {
+        EmailText = new TextField(user.UserInfo.Email.Address) {
             X = Pos.Right(emailLabel) + 8,
             Y = Pos.Top(emailLabel),
             Width = Dim.Percent(20),
@@ -387,9 +387,9 @@ public class UserInfo : Toplevel
         };
 
         DialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
-        DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.PhoneNumber.Split("|")[0]);
+        DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.UserInfo.PhoneNumber.Split("|")[0]);
 
-        PhoneText = new TextField(user.PhoneNumber.Split("|")[1]) {
+        PhoneText = new TextField(user.UserInfo.PhoneNumber.Split("|")[1]) {
             X = Pos.Right(DialCodesComboBox) + 1,
             Y = Pos.Top(phoneLabel),
             Width = 39
@@ -459,9 +459,9 @@ public class UserInfo : Toplevel
             else increaseDay = 0;
             };
 
-        yearComboBox.SelectedItem = user.DateOfBirth.Year - 1960;
-        monthComboBox.SelectedItem = user.DateOfBirth.Month - 1;
-        dayComboBox.SelectedItem = user.DateOfBirth.Day - 1;
+        yearComboBox.SelectedItem = user.UserInfo.DateOfBirth.Year - 1960;
+        monthComboBox.SelectedItem = user.UserInfo.DateOfBirth.Month - 1;
+        dayComboBox.SelectedItem = user.UserInfo.DateOfBirth.Day - 1;
 
         Add(dateOfBirthLabel, dayComboBox, monthComboBox, yearComboBox);
         #endregion
@@ -484,7 +484,7 @@ public class UserInfo : Toplevel
         };
 
         NationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
-        NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.Nationality);
+        NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.UserInfo.Nationality);
 
         Add(nationalityLabel, NationalityComboBox);
         #endregion
@@ -509,7 +509,7 @@ public class UserInfo : Toplevel
             Y = Pos.Bottom(optionalLabel) + 1,
         };
 
-        DocumentNumber = new TextField(user.DocumentNumber != null ? user.DocumentNumber : "") {
+        DocumentNumber = new TextField(user.UserInfo.DocumentNumber != null ? user.UserInfo.DocumentNumber : "") {
             X = Pos.Left(EmailText) + 2,
             Y = Pos.Top(documentNumberLabel),
             Width = Dim.Percent(20) - 2,
@@ -536,7 +536,7 @@ public class UserInfo : Toplevel
         };
         DocumentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
 
-        DocumentTypeComboBox.SelectedItem = user.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.DocumentType) : 0;
+        DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
 
         ExpireDateLabel = new Label() {
             Text = "Verval datum:",
@@ -592,10 +592,10 @@ public class UserInfo : Toplevel
         expireMonthComboBox.SelectedItem = 0;
         exipreDayComboBox.SelectedItem = 0;
 
-        if (user.DocumentNumber != null) {
-            expireYearComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Year) - 1;
-            expireMonthComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Month) - 1;
-            exipreDayComboBox.SelectedItem = Convert.ToInt32(user.ExpirationDate?.Day) - 1;
+        if (user.UserInfo.DocumentNumber != null) {
+            expireYearComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Year) - 1;
+            expireMonthComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Month) - 1;
+            exipreDayComboBox.SelectedItem = Convert.ToInt32(user.UserInfo.ExpirationDate?.Day) - 1;
         }
 
 
@@ -619,9 +619,13 @@ public class EditUserInfo : UserInfo
             try {
                 DateTime dateOfBirth = new DateTime(Convert.ToInt32(yearComboBox.Text), Convert.ToInt32(monthComboBox.Text), Convert.ToInt32(dayComboBox.Text));
                 DateTime expireDate = new DateTime(Convert.ToInt32(expireYearComboBox.Text), Convert.ToInt32(expireMonthComboBox.Text), Convert.ToInt32(exipreDayComboBox.Text));
-                User? user = EditInfo(WindowManager.CurrentUser, dateOfBirth, expireDate);
-                if (user != null) {
-                    WindowManager.GoBackOne(this);
+                User? currentUser = WindowManager.CurrentUser;
+                if (currentUser != null)
+                {
+                    User? user = EditInfo(currentUser, dateOfBirth, expireDate);
+                    if (user != null) {
+                        WindowManager.GoBackOne(this);
+                    }
                 }
             } catch (FormatException e) {
                 Console.WriteLine(e.Message);
@@ -681,18 +685,18 @@ public class EditUserInfo : UserInfo
             MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
             return null;
         } else if (DocumentNumber.Text != "") {
-            user.ExpirationDate = expireDate;
-            user.DocumentNumber = (string)DocumentNumber.Text;
-            user.DocumentType = (string)DocumentTypeComboBox.Text;
+            user.UserInfo.ExpirationDate = expireDate;
+            user.UserInfo.DocumentNumber = (string)DocumentNumber.Text;
+            user.UserInfo.DocumentType = (string)DocumentTypeComboBox.Text;
         }
         string phonenumber = $"{DialCodesComboBox.Text}|{PhoneText.Text}";
-        user.FirstName = (string)FirstnameText.Text;
-        user.Preposition = (string)PrepositionText.Text;
-        user.LastName = (string)LastnameText.Text;
-        user.Email = new MailAddress((string)EmailText.Text);
-        user.PhoneNumber = phonenumber;
-        user.DateOfBirth = dateOfBirth;
-        user.Nationality = (string)NationalityComboBox.Text;
+        user.UserInfo.FirstName = (string)FirstnameText.Text;
+        user.UserInfo.Preposition = (string)PrepositionText.Text;
+        user.UserInfo.LastName = (string)LastnameText.Text;
+        user.UserInfo.Email = new MailAddress((string)EmailText.Text);
+        user.UserInfo.PhoneNumber = phonenumber;
+        user.UserInfo.DateOfBirth = dateOfBirth;
+        user.UserInfo.Nationality = (string)NationalityComboBox.Text;
         return user;
     }
 }
