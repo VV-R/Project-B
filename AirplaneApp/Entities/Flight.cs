@@ -21,10 +21,10 @@ public class Flight : IComparable<Flight>
     }
     
     public override string ToString() {
-        string flightString = $"Bestemming: {ArrivalLocation};".PadRight(23);
-        flightString += $"Tijd van Aankomst: {ArrivalTime};".PadRight(42);
-        flightString += $"Vertrek Locatie: {DepartureLocation};".PadRight(28);
-        flightString += $"Vertrek Tijd: {DepartureTime};".PadRight(36);
+        string flightString = $"Bestemming: {ArrivalLocation};" .PadRight(23);
+        flightString += $"Tijd van Aankomst: {ArrivalTime.ToString("dd/MM/yyyy HH:mm")}; ";
+        flightString += $"Vertrek Locatie: {DepartureLocation}; ".PadRight(28);
+        flightString += $"Vertrek Tijd: {DepartureTime.ToString("dd/MM/yyyy HH:mm")}; ";
         flightString += $" Vliegtuig: {Airplane}";
         return flightString;
     }
