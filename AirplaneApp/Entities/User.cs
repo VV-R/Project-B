@@ -16,39 +16,39 @@ public class User
     public  string? DocumentType { get; set; }
     public DateTime? ExpirationDate { get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
-    
 
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality)
+
+    public User (int idUser, string firstName, string preposition, string lastName,
+                 string password, MailAddress email, string phoneNumber,
+                 DateTime dateOfBirth, string nationality)
     {
-        IdUser = id;
-        FirstName = firtstname;
+        IdUser = idUser;
+        FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Password = password;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
     }
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality, string documentnumber,
-                 string documenttype, DateTime expirationdate)
+    public User (int idUser, string firstName, string preposition, string lastName, 
+                 string password, MailAddress email, string phoneNumber, 
+                 DateTime dateOfBirth, string  nationality, string documentNumber,
+                 string documentType, DateTime expirationDate)
     {
-        IdUser = id;
-        FirstName = firtstname;
+        IdUser = idUser;
+        FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Password = password;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
-        DocumentNumber = documentnumber;
-        DocumentType = documenttype;
-        ExpirationDate = expirationdate;
+        DocumentNumber = documentNumber;
+        DocumentType = documentType;
+        ExpirationDate = expirationDate;
     }
 
     public override string ToString()
