@@ -269,41 +269,53 @@ public class ChangeSeatingPrice : Toplevel
         foreach (var kvp in SeatPrices) {
             if (pricesTextField.Count == 0) {
                 Label seatLabel = new Label($"{kvp.Key}:"); 
-                TextField priceField = new TextField() {
-                    Text = $"{kvp.Value}",
+
+                Label euroSymbol = new Label("€") {
                     X = allignOffset,
-                    Width = 6,
+                    Y = Pos.Top(seatLabel),
                 };
+
+                TextField priceField = new TextField() {
+                    Text = kvp.Value.ToString("0.00"),
+                    X = Pos.Right(euroSymbol),
+                    Width = 8,
+                };
+
 
                 priceField.TextChanged += (text) => {
                     if (!double.TryParse(priceField.Text == "" ? "0" : (string)priceField.Text, out _))
                         priceField.Text = text == "" ? "" : text;
-                    else if (priceField.Text.Length > 5)
+                    else if (priceField.Text.Length > 9)
                         priceField.Text = text;
                     priceField.CursorPosition = priceField.Text.Length;};
 
-                Add(seatLabel, priceField);
+                Add(seatLabel, euroSymbol ,priceField);
                 pricesTextField.Add(kvp.Key, priceField);
             } else {                    
                 Label seatLabel = new Label($"{kvp.Key}:") {
                     Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
                 };
 
-                TextField priceField = new TextField() {
-                    Text = $"{kvp.Value}",
+                Label euroSymbol = new Label("€") {
                     X = allignOffset,
                     Y = Pos.Top(seatLabel),
-                    Width = 6,
+                };
+
+                TextField priceField = new TextField() {
+                    Text = kvp.Value.ToString("0.00"),
+                    X = Pos.Right(euroSymbol),
+                    Y = Pos.Top(seatLabel),
+                    Width = 8,
                 };
 
                 priceField.TextChanged += (text) => {
                     if (!double.TryParse(priceField.Text == "" ? "0" : (string)priceField.Text, out _))
                         priceField.Text = text == "" ? "" : text;
-                    else if (priceField.Text.Length > 5)
+                    else if (priceField.Text.Length > 9)
                         priceField.Text = text;
                     priceField.CursorPosition = priceField.Text.Length;};
 
-                Add(seatLabel, priceField);
+                Add(seatLabel, euroSymbol, priceField);
                 pricesTextField.Add(kvp.Key, priceField); 
             }
         }
@@ -313,16 +325,24 @@ public class ChangeSeatingPrice : Toplevel
             Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
         };
 
-        updatePrices.Clicked += () => { UpdatePrices(SeatPrices, pricesTextField); WindowManager.GoBackOne(this);};       
+        updatePrices.Clicked += () => { UpdatePrices(SeatPrices, pricesTextField);};
+
+        Button exitButton = new Button() {
+            Text = "Annuleren",
+            X = Pos.Right(updatePrices) + 1,
+            Y = Pos.Top(updatePrices),
+        };
+
+        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
         
-        Add(updatePrices);               
+        Add(updatePrices, exitButton);
    }
 
 
     private void UpdatePrices(Dictionary<string, double> seatPrices, Dictionary<string, TextField> changes) {
         foreach (var kvp in changes) {
             if (kvp.Value.Text.Length == 0) {
-                // MessageBox toevoegen
+                MessageBox.ErrorQuery("Stoel Prijzen", $"Prijs voor stoel {kvp.Key} niet correct ingevuld.", "Ok");
                 return;
             }
             seatPrices[kvp.Key] = double.Parse((string)kvp.Value.Text);
@@ -330,6 +350,7 @@ public class ChangeSeatingPrice : Toplevel
 
         using (StreamWriter writer = new StreamWriter("SeatingPrice.json")) {
             writer.Write(JsonConvert.SerializeObject(seatPrices));
-        }    
+        }
+        WindowManager.GoBackOne(this);
     }
 }
