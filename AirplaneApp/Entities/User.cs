@@ -3,52 +3,52 @@ using System.Net.Mail;
 namespace Entities;
 public class User
 {
-    public int IdUser;
-    public string FirstName;
-    public string Preposition;
-    public string LastName;
-    public string Password;
-    public MailAddress Email;
-    public string PhoneNumber;
-    public DateTime DateOfBirth;
-    public string Nationality;
-    public string? DocumentNumber;
-    public  string? DocumentType;
-    public DateTime? ExpirationDate;
+    public int IdUser { get; set; }
+    public string FirstName { get; set; }
+    public string Preposition { get; set; }
+    public string LastName { get; set; }
+    public string Password { get; set; }
+    public MailAddress Email { get; set; }
+    public string PhoneNumber { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public string Nationality { get; set; }
+    public string? DocumentNumber { get; set; }
+    public  string? DocumentType { get; set; }
+    public DateTime? ExpirationDate { get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
-    
 
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality)
+
+    public User (int idUser, string firstName, string preposition, string lastName,
+                 string password, MailAddress email, string phoneNumber,
+                 DateTime dateOfBirth, string nationality)
     {
-        IdUser = id;
-        FirstName = firtstname;
+        IdUser = idUser;
+        FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Password = password;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
     }
-    public User (int id, string firtstname, string preposition, string lastname, 
-                 string password, MailAddress email, string phonenumber, 
-                 DateTime dateofbirth, string  nationality, string documentnumber,
-                 string documenttype, DateTime expirationdate)
+    public User (int idUser, string firstName, string preposition, string lastName, 
+                 string password, MailAddress email, string phoneNumber, 
+                 DateTime dateOfBirth, string  nationality, string documentNumber,
+                 string documentType, DateTime expirationDate)
     {
-        IdUser = id;
-        FirstName = firtstname;
+        IdUser = idUser;
+        FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Password = password;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
-        DocumentNumber = documentnumber;
-        DocumentType = documenttype;
-        ExpirationDate = expirationdate;
+        DocumentNumber = documentNumber;
+        DocumentType = documentType;
+        ExpirationDate = expirationDate;
     }
 
     public override string ToString()
