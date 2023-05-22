@@ -32,11 +32,11 @@ public class MainMenu : Toplevel
 
         Button Test = new Button()
         {
-            Text = "Vliegtuig plattegronden",
+            Text = "Test",
             Y = 10,
         };
 
-        Test.Clicked += () => { WindowManager.GoForwardOne(new SeattingPlan()); };
+        Test.Clicked += () => { WindowManager.GoForwardOne(new Booking()); };
 
         Button exitButton = new Button()
         {
