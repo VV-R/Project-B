@@ -7,13 +7,10 @@ using Entities;
 namespace Windows;
 public class UserMenu : Toplevel
 {
-    private User user;
-
     public UserMenu(User user)
     {
-        this.user = user;
         Label nameLabel = new Label(){
-            Text = $"Welkom {WindowManager.CurrentUser.FirstName}!",
+            Text = $"Welkom {user.UserInfo.FirstName}!",
         };
 
         Button bookingButton = new Button()
@@ -35,11 +32,11 @@ public class UserMenu : Toplevel
         };
 
         searchReservation.Clicked += () => {WindowManager.GoForwardOne(new SeattingPlan()); };
-
+        
         Button airplaneInformationButton = new Button()
         {
             Text = "Vliegtuig Informatie",
-            Y = Pos.Bottom(searchReservation) + 1,
+            Y = Pos.Bottom(flightScheduleButton) + 1,
         };
         airplaneInformationButton.Clicked += () => { WindowManager.GoForwardOne(new AirplaneInformation()); };
 
@@ -65,7 +62,6 @@ public class UserMenu : Toplevel
         };
 
         exitButton.Clicked += () => { Application.RequestStop(); };
-
         Button Test2 = new Button()
         {
             Text = "Test",

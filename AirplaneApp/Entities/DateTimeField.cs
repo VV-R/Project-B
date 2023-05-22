@@ -75,4 +75,3 @@ public class DateTimeField : View
         _dayComboBox.SelectedItem = date.Day - 1;
     }
 }
-

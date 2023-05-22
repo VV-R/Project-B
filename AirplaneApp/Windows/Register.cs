@@ -361,13 +361,13 @@ public class RegisterMenu : Toplevel
             return null;
         }
         string phonenumber = $"{dialCodesComboBox.Text}|{phoneText.Text}";
-        User user = new User(0, (string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, (string)passwordText.Text,
-                            address, phonenumber, dateOfBirth, (string)nationalityComboBox.Text);
+        User user = new User(0, new Entities.UserInfo((string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, new MailAddress((string)emailText.Text), phonenumber, dateOfBirth, (string)nationalityComboBox.Text, (string)documentNumber.Text, (string)documentTypeComboBox.Text, expireDate), (string)passwordText.Text);
+
 
         if (documentNumber.Text != "") {
-            user.DocumentNumber = (string)documentNumber.Text;
-            user.DocumentType = (string)documentTypeComboBox.Text;
-            user.ExpirationDate = expireDate;
+            user.UserInfo.DocumentNumber = (string)documentNumber.Text;
+            user.UserInfo.DocumentType = (string)documentTypeComboBox.Text;
+            user.UserInfo.ExpirationDate = expireDate;
         }
 
         return user;

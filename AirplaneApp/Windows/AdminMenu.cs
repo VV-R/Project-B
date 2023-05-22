@@ -61,9 +61,11 @@ public class SearchUsers : Toplevel
         };
 
         // Want a list of users from the database
-        List<User> users = new List<User>() {new User(1, "Levi", "van", "Daalen", "1234", new MailAddress("2004levi@gmail.com"), "+31|613856964", new DateTime(2004, 1, 19), "Nederland") {
-            Reservations = new List<Ticket>() { new Ticket(1, 1, 1, "B3", DateTime.Now.AddDays(2))}},
-            new User(2, "Steyn", "", "Hellendoorn", "password", new MailAddress("idk@gmail.com"), "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands")
+        List<User> users = new List<User>() {new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
+                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland")) {
+            Reservations = new List<Ticket>() { new Ticket(WindowManager.Flights.First(), 1, "B3", DateTime.Now.AddDays(2))}},
+            new User(2, new Entities.UserInfo("Steyn", "", "Hellendoorn", new MailAddress("idk@gmail.com"),
+                               "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"))
         };
 
 
@@ -213,7 +215,7 @@ public class ReservationPanel : Toplevel
         string subject = $"Vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
 
-        EmailManager.SendOneEmail(subject, body, CurrentUser.Email);
+        SendEmail(CurrentUser.UserInfo.Email, subject, body);
         CurrentTicket.SeatNumber = (string)SeatnumberText.Text;
         WindowManager.GoBackOne(this);
     }
@@ -238,8 +240,8 @@ public class ReservationPanel : Toplevel
             Text = "Versturen",
             Y = Pos.Bottom(textField) + 1
         };
-
-        sendButton.Clicked += () => { EmailManager.SendOneEmail($"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text, CurrentUser.Email); WindowManager.GoBackOne(this); };
+        
+        sendButton.Clicked += () => { SendEmail(CurrentUser.UserInfo.Email ,$"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
 
         Button goBack = new Button() {
             Text = "Terug",

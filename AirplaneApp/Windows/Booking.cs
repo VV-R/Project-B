@@ -488,5 +488,3 @@ public class Booking : Toplevel
         }
     }
 }
-
-
