@@ -38,13 +38,6 @@ public class MainMenu : Toplevel
 
         Test.Clicked += () => { WindowManager.GoForwardOne(new SeattingPlan()); };
 
-        Button ExtraBooking = new Button()
-        {
-            Text = "Test",
-            Y = Pos.Bottom(Test)
-        };
-        ExtraBooking.Clicked += () => {WindowManager.GoForwardOne(new Booking());};
-
         Button exitButton = new Button()
         {
             Text = "Afsluiten",
@@ -53,6 +46,6 @@ public class MainMenu : Toplevel
 
         exitButton.Clicked += () => { Application.RequestStop(); };
 
-        Add(bookingButton, flightScheduleButton, airplaneInformationButton, exitButton, Test, ExtraBooking);
+        Add(bookingButton, flightScheduleButton, airplaneInformationButton, exitButton, Test);
     }
 }

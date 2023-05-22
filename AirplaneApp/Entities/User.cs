@@ -42,7 +42,6 @@ public class UserInfo
                     string lastname, MailAddress email, string phonenumber, 
                     DateTime dateofbirth, string  nationality, string documentNumber, string documenttype, DateTime expirationDate)
     {
-
         FirstName = firstName;
         Preposition = preposition;
         LastName = lastname;
