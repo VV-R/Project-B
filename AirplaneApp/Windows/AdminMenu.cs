@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using Terminal.Gui;
+using Newtonsoft.Json;
 using Entities;
 using Managers;
 
@@ -35,7 +36,14 @@ public class AdminMenu : Toplevel
 
         flightSchedule.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelAdmin(WindowManager.Flights));};
 
-        Add(nameLabel, searchUsers, searchReservation, flightSchedule);
+        Button changeSeatingPrice = new Button() {
+            Text = "Stoel prijzen",
+            Y = Pos.Bottom(flightSchedule) + 1,
+        };
+        
+        changeSeatingPrice.Clicked += () => { WindowManager.GoForwardOne(new ChangeSeatingPrice()); };
+
+        Add(nameLabel, searchUsers, searchReservation, flightSchedule, changeSeatingPrice);
     }
 }
 
@@ -242,5 +250,106 @@ public class ReservationPanel : Toplevel
         goBack.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(textField, sendButton, goBack);
+    }
+}
+
+public class ChangeSeatingPrice : Toplevel
+{
+    public ChangeSeatingPrice()
+    {
+
+        Dictionary<string, double> SeatPrices = new();
+        using (StreamReader reader = new StreamReader("SeatingPrice.json")) {
+            SeatPrices = JsonConvert.DeserializeObject<Dictionary<string, double>>(reader.ReadToEnd())!;
+        }
+
+        Dictionary<string, TextField>  pricesTextField = new();
+        int allignOffset = SeatPrices.Keys.Max().Length + 2;
+        foreach (var kvp in SeatPrices) {
+            if (pricesTextField.Count == 0) {
+                Label seatLabel = new Label($"{kvp.Key}:"); 
+
+                Label euroSymbol = new Label("€") {
+                    X = allignOffset,
+                    Y = Pos.Top(seatLabel),
+                };
+
+                TextField priceField = new TextField() {
+                    Text = kvp.Value.ToString("0.00"),
+                    X = Pos.Right(euroSymbol),
+                    Width = 8,
+                };
+
+
+                priceField.TextChanged += (text) => {
+                    if (!double.TryParse(priceField.Text == "" ? "0" : (string)priceField.Text, out _))
+                        priceField.Text = text == "" ? "" : text;
+                    else if (priceField.Text.Length > 9)
+                        priceField.Text = text;
+                    priceField.CursorPosition = priceField.Text.Length;};
+
+                Add(seatLabel, euroSymbol ,priceField);
+                pricesTextField.Add(kvp.Key, priceField);
+            } else {                    
+                Label seatLabel = new Label($"{kvp.Key}:") {
+                    Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
+                };
+
+                Label euroSymbol = new Label("€") {
+                    X = allignOffset,
+                    Y = Pos.Top(seatLabel),
+                };
+
+                TextField priceField = new TextField() {
+                    Text = kvp.Value.ToString("0.00"),
+                    X = Pos.Right(euroSymbol),
+                    Y = Pos.Top(seatLabel),
+                    Width = 8,
+                };
+
+                priceField.TextChanged += (text) => {
+                    if (!double.TryParse(priceField.Text == "" ? "0" : (string)priceField.Text, out _))
+                        priceField.Text = text == "" ? "" : text;
+                    else if (priceField.Text.Length > 9)
+                        priceField.Text = text;
+                    priceField.CursorPosition = priceField.Text.Length;};
+
+                Add(seatLabel, euroSymbol, priceField);
+                pricesTextField.Add(kvp.Key, priceField); 
+            }
+        }
+        
+        Button updatePrices = new Button() {
+            Text = "Prijzen Updaten",
+            Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
+        };
+
+        updatePrices.Clicked += () => { UpdatePrices(SeatPrices, pricesTextField);};
+
+        Button exitButton = new Button() {
+            Text = "Annuleren",
+            X = Pos.Right(updatePrices) + 1,
+            Y = Pos.Top(updatePrices),
+        };
+
+        exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
+        
+        Add(updatePrices, exitButton);
+   }
+
+
+    private void UpdatePrices(Dictionary<string, double> seatPrices, Dictionary<string, TextField> changes) {
+        foreach (var kvp in changes) {
+            if (kvp.Value.Text.Length == 0) {
+                MessageBox.ErrorQuery("Stoel Prijzen", $"Prijs voor stoel {kvp.Key} niet correct ingevuld.", "Ok");
+                return;
+            }
+            seatPrices[kvp.Key] = double.Parse((string)kvp.Value.Text);
+        }
+
+        using (StreamWriter writer = new StreamWriter("SeatingPrice.json")) {
+            writer.Write(JsonConvert.SerializeObject(seatPrices));
+        }
+        WindowManager.GoBackOne(this);
     }
 }
