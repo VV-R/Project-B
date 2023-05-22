@@ -32,7 +32,7 @@ public class UserMenu : Toplevel
         };
 
         searchReservation.Clicked += () => {WindowManager.GoForwardOne(new SeattingPlan()); };
-        
+
         Button airplaneInformationButton = new Button()
         {
             Text = "Vliegtuig Informatie",
@@ -52,7 +52,7 @@ public class UserMenu : Toplevel
             Text = "Mijn gegevens",
             Y = Pos.Bottom(Test) + 1,
         };
-        
+
         infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo(WindowManager.CurrentUser)); };
 
         Button exitButton = new Button()
