@@ -1,7 +1,7 @@
-namespace test;
+namespace AirplaneAppTest;
 
 [TestClass]
-public class UnitTest1
+public class FlightGenTest
 {
     [TestMethod]
     public void TestRemoveOldFlights()

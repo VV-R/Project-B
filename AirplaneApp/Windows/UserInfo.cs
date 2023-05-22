@@ -112,9 +112,6 @@ public class UserInfo : Toplevel
         #endregion
 
         #region Date of birth
-        int[] differentDays = {4, 6, 9, 11};
-        int increaseDay = 1;
-
         Label dateOfBirthLabel = new Label() {
             Text = "Geboortedatum:",
             X = Pos.Left(emailLabel),

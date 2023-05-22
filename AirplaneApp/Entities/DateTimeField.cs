@@ -60,7 +60,7 @@ public class DateTimeField : View
         _monthComboBox.SelectedItem = 0;
         _dayComboBox.SelectedItem = 0;
 
-        Width = _dayComboBox.Width + _monthComboBox.Width + _monthComboBox.Width + (3 * 2);
+        Width = _dayComboBox.Width + _monthComboBox.Width + _monthComboBox.Width + 3;
         Height = _dayComboBox.Height;
 
         Add(_dayComboBox, _monthComboBox, _yearComboBox);

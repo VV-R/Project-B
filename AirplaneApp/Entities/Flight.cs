@@ -3,12 +3,12 @@ using System.Collections;
 namespace Entities;
 public class Flight : IComparable<Flight>
 {
-    public int FlightNumber;
-    public string DepartureLocation;
-    public DateTime DepartureTime;
-    public string ArrivalLocation;
-    public DateTime ArrivalTime;
-    public string Airplane;
+    public int FlightNumber { get; set; }
+    public string DepartureLocation { get; set; }
+    public DateTime DepartureTime { get; set; }
+    public string ArrivalLocation { get; set; }
+    public DateTime ArrivalTime { get; set; }
+    public string Airplane { get; set; }
 
     public Flight(int flightNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane)
     {
@@ -21,10 +21,10 @@ public class Flight : IComparable<Flight>
     }
     
     public override string ToString() {
-        string flightString = $"Bestemming: {ArrivalLocation};".PadRight(23);
-        flightString += $"Tijd van Aankomst: {ArrivalTime};".PadRight(42);
-        flightString += $"Vertrek Locatie: {DepartureLocation};".PadRight(28);
-        flightString += $"Vertrek Tijd: {DepartureTime};".PadRight(36);
+        string flightString = $"Bestemming: {ArrivalLocation};" .PadRight(23);
+        flightString += $"Tijd van Aankomst: {ArrivalTime.ToString("dd/MM/yyyy HH:mm")}; ";
+        flightString += $"Vertrek Locatie: {DepartureLocation}; ".PadRight(28);
+        flightString += $"Vertrek Tijd: {DepartureTime.ToString("dd/MM/yyyy HH:mm")}; ";
         flightString += $" Vliegtuig: {Airplane}";
         return flightString;
     }
