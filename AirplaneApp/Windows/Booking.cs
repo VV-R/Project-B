@@ -338,7 +338,7 @@ public class Booking : Toplevel
             #endregion
 
             Button flightScheduleButton = new Button() {
-                Text = "Vlucht Schemas",
+                Text = "Volgende",
                 Y = Pos.Bottom(ExpireDateLabel) + 1,
             };
             flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
@@ -658,10 +658,10 @@ public class Booking : Toplevel
     }
 }
 
-public class test : Toplevel
+public class Test : Toplevel
 {
     Toplevel currentWindow;
-    public test(int stoelen)
+    public Test(int stoelen)
     {
         currentWindow = new ExtraBooking();
         Add(currentWindow);
@@ -689,24 +689,6 @@ public class ExtraBooking : Toplevel
 
     public ExtraBooking()
     {
-
-        // currentWindow = new RegisterMenu();
-        // Add(currentWindow);
-
-        // Button test = new Button(){
-        //     Text = "Next Window",
-        //     Y = 30,
-        // };  
-
-        // Button goBack = new Button(){
-        //     Text = "Afsluiten",
-        //     Y = Pos.Bottom(test),
-        // };  
-        // goBack.Clicked += () => {Application.RequestStop();};
-        // Add(test, goBack);
-
-        // test.Clicked += () => {if (seats == 0) WindowManager.GoForwardOne(new FlightInfo()); else seats--;};
-
         #region Name
         Label extraPassenger = new Label() {
             Text = "Passagier 1:",
