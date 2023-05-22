@@ -88,7 +88,7 @@ public class Booking : Toplevel
             };
             Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
             #endregion
-            
+
             #region User
             Label emailLabel = new Label() {
                 Text = "E-mailadres:",
@@ -531,7 +531,7 @@ public class Booking : Toplevel
         #endregion
 
         #region Document Information
-        
+
         Label documentNumberLabel = new Label() {
             Text = "Document nummer:",
             X = Pos.Left(emailLabel),
@@ -634,15 +634,18 @@ public class Booking : Toplevel
             Height = 4,
             Width = 8,
         };
-        extraPassangerComboBox.SetSource(Enumerable.Range(1,8).ToList());
-        extraPassangerComboBox.SelectedItemChanged += (e) => {int test = Convert.ToInt32(e.Value);};
-        
-    
+        extraPassangerComboBox.SetSource(Enumerable.Range(0,9).ToList());
+        int extraSeats = 3;
+        extraPassangerComboBox.SelectedItem = 0;
+        extraPassangerComboBox.SelectedItemChanged += (x) => {Console.WriteLine(x.Value);};
+
+
         Button backButton = new Button() {
             Text = "Terug",
             Y = Pos.Bottom(extraPassanger),
         };
         backButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
 
         Button goNextPage = new Button() {
             Text = "Volgende pagina",
@@ -650,7 +653,7 @@ public class Booking : Toplevel
             X = Pos.Right(backButton),
         };
 
-        goNextPage.Clicked += () => {if (extraSeats == 1) WindowManager.GoForwardOne(new SeattingPlan());};
+        goNextPage.Clicked += () => {if (extraSeats == 1) WindowManager.GoForwardOne(new SeattingPlan()); else WindowManager.GoForwardOne(new test(extraSeats));};
 
 
         Add(extraPassanger, extraPassangerComboBox, backButton, goNextPage);
@@ -668,9 +671,14 @@ public class test : Toplevel
         Button cool = new Button() {
             Text = "Volgende",
             Y = 22,
-        };                  
-        cool.Clicked += () => {if (stoelen == 0) return; else stoelen--; WindowManager.GoForwardOne(new Booking());};
+        };
+        cool.Clicked += () => {if (stoelen == 0) {WindowManager.GoForwardOne(new SeattingPlan()); return; } stoelen--; /* Get info check if not null... dan ga je verder*/ Remove(currentWindow); currentWindow = new ExtraBooking() {Height = 20}; Add(currentWindow);};
         Add(cool);
+    }
+
+    public void ChangeUserInfo(int seats)
+    {
+
     }
 }
 
@@ -689,6 +697,7 @@ public class ExtraBooking : Toplevel
 
     public ExtraBooking()
     {
+        ColorScheme = Colors.Base;
 
         // currentWindow = new RegisterMenu();
         // Add(currentWindow);
@@ -696,12 +705,12 @@ public class ExtraBooking : Toplevel
         // Button test = new Button(){
         //     Text = "Next Window",
         //     Y = 30,
-        // };  
+        // };
 
         // Button goBack = new Button(){
         //     Text = "Afsluiten",
         //     Y = Pos.Bottom(test),
-        // };  
+        // };
         // goBack.Clicked += () => {Application.RequestStop();};
         // Add(test, goBack);
 
@@ -757,17 +766,17 @@ public class ExtraBooking : Toplevel
         #endregion
 
         #region Date of birth
-        
+
         Label dateOfBirthLabel = new Label() {
             Text = "Geboortedatum:",
             Y = Pos.Bottom(firstnameLabel) + 1,
         };
-        
+
          DateTimeField dateofBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList()) {
             X = Pos.Right(dateOfBirthLabel) + 10,
             Y = Pos.Top(dateOfBirthLabel),
         };
-        
+
         Add(dateOfBirthLabel, dateofBirthField);
         #endregion
 
@@ -896,27 +905,11 @@ public class ExtraBooking : Toplevel
         };
 
         Add(optionalLabel, optionalLine);
+    }
 
-        Button GoBack = new Button()
-        {
-            Text = "terug",
-            Y = 15,
-        };
-        GoBack.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Button test = new Button(){
-            Text = "Next Window",
-            Y = 30,
-        };  
-
-        Button goBack = new Button(){
-            Text = "Afsluiten",
-            Y = Pos.Bottom(test),
-        };  
-        goBack.Clicked += () => {Application.RequestStop();};
-        Add(test, goBack);
-
-
-        Add(GoBack);
+    public UserInfo? GetUserInfo()
+    {
+        // alles
+        return null;
     }
 }
