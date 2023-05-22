@@ -54,7 +54,7 @@ public class SearchUsers : Toplevel
 
         // Want a list of users from the database
         List<User> users = new List<User>() {new User(1, "Levi", "van", "Daalen", "1234", new MailAddress("2004levi@gmail.com"), "+31|613856964", new DateTime(2004, 1, 19), "Nederland") {
-            Reservations = new List<Ticket>() { new Ticket(WindowManager.Flights.First(), 1, "B3", DateTime.Now.AddDays(2))}},
+            Reservations = new List<Ticket>() { new Ticket(1, 1, 1, "B3", DateTime.Now.AddDays(2))}},
             new User(2, "Steyn", "", "Hellendoorn", "password", new MailAddress("idk@gmail.com"), "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands")
         };
 
@@ -145,7 +145,7 @@ public class ReservationPanel : Toplevel
         CurrentUser = user;
         CurrentTicket = ticket;
         Label flightLabel = new Label() {
-            Text = $"Vlucht:\n{ticket.Flight.ToNewLineString()}",
+            Text = $"Vlucht:\n{ticket.TheFlight.ToNewLineString()}",
         };
 
         Label userLabel = new Label() {
@@ -202,8 +202,8 @@ public class ReservationPanel : Toplevel
         // Check if seat number is really an seat in the plane and if its not occupied
         // if (!plane.Seat.Contain(SeatnumberText.Text)) return
 
-        string subject = $"Vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation}";
-        string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.Flight.DepartureLocation} - {CurrentTicket.Flight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+        string subject = $"Vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation}";
+        string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
 
         EmailManager.SendOneEmail(subject, body, CurrentUser.Email);
         CurrentTicket.SeatNumber = (string)SeatnumberText.Text;
@@ -213,7 +213,7 @@ public class ReservationPanel : Toplevel
     private void CancelTicket()
     {
         CurrentUser.Reservations.Remove(CurrentTicket);
-        SpecialEmail(CurrentTicket.Flight);
+        SpecialEmail(CurrentTicket.TheFlight);
     }
 
     private void SpecialEmail(Flight flight)
