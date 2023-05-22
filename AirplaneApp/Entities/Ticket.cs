@@ -1,18 +1,22 @@
 namespace Entities;
 public class Ticket
 {
-    public Flight Flight;
-    public int UserId;
-    public string SeatNumber;
-    public DateTime BoardingTime; // Departure time - x amount of time
+    public int Id { get; set; }
+    public int FlightId { get; set; }
+    public Flight TheFlight { get; set; }
+    public int UserId { get; set; }
+    public User TheUser { get; set; }
+    public string SeatNumber { get; set; }
+    public DateTime BoardingTime { get; set; } // Departure time - x amount of time
 
-    public Ticket(Flight flight, int userId, string seatNumber, DateTime boardingTime)
+    public Ticket(int id, int flightId, int userId, string seatNumber, DateTime boardingTime)
     {
-        Flight = flight;
+        Id = id;
+        FlightId = flightId;
         UserId = userId;
         SeatNumber = seatNumber;
         BoardingTime = boardingTime;
     }
 
-    public override string ToString() => $"Vlucht: {Flight.DepartureLocation} - {Flight.ArrivalLocation}; UserID: {UserId}; Stoelnummer: {SeatNumber}; Boarding tijd: {BoardingTime}";
+    public override string ToString() => $"Vlucht: {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}; UserID: {UserId}; Stoelnummer: {SeatNumber}; Boarding tijd: {BoardingTime}";
 }

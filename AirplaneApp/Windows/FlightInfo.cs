@@ -8,21 +8,12 @@ namespace Windows;
 public class FlightInfo : Toplevel
 {
     public ComboBox DepartureLocationCombo;
-    public ComboBox DepartureDayComboBox;
-    public ComboBox DepartureMonthComboBox;
-    public ComboBox DepartureYearComboBox;
+    public DateTimeField DepatureDateField;
     public TimeField DepatureTime;
-    public ComboBox ArrivalLocationCombo;
-    public ComboBox ArrivalDayComboBox;
-    public ComboBox ArrivalMonthComboBox;
-    public ComboBox ArrivalYearComboBox;
-    public TimeField ArrivalTime;
+    public Label ArrivalLocationLabel;
     public ComboBox AirplaneCombobox;
     public FlightInfo()
     {
-        int[] differentDays = {4, 6, 9, 11};
-        int increaseDay = 1;
-
         #region Departure
         Label departureLocationLabel = new Label() {
             Text = "Vertrek Locatie:",
@@ -44,160 +35,40 @@ public class FlightInfo : Toplevel
             Y = Pos.Bottom(departureLocationLabel) + 1,
         };
 
-        DepartureDayComboBox = new ComboBox(){
+        DepatureDateField = new DateTimeField(Enumerable.Range(DateTime.Now.Year, 10).ToList()) {
             Y = Pos.Top(departureTimeLabel),
             X = Pos.Left(DepartureLocationCombo),
-            Height = 4,
-            Width = 8,
         };
 
-        DepartureDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-
-        DepartureMonthComboBox = new ComboBox(){
-            X = Pos.Right(DepartureDayComboBox) + 1,
-            Y = Pos.Top(DepartureDayComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        DepartureMonthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
-
-        DepartureMonthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
-            DepartureDayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
-            } else if (differentDays.Contains(month)) {
-                DepartureDayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
-             }
-            else {
-                DepartureDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-            } DepartureDayComboBox.SelectedItem = 0; };
-
-        DepartureYearComboBox = new ComboBox(){
-            X = Pos.Right(DepartureMonthComboBox) + 1 ,
-            Y = Pos.Top(DepartureMonthComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        DepartureYearComboBox.SetSource(Enumerable.Range(DateTime.Now.Year, 10).ToList());
-
-        DepartureYearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
-            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
-                increaseDay = 1;
-                DepartureMonthComboBox.SelectedItem = 0;
-            }
-            else increaseDay = 0;
-            };
-
-        DepartureYearComboBox.SelectedItem = 0;
-        DepartureMonthComboBox.SelectedItem = 0;
-        DepartureDayComboBox.SelectedItem = 0;
-
-        Add(departureTimeLabel, DepartureDayComboBox, DepartureMonthComboBox, DepartureYearComboBox);
+        Add(departureTimeLabel, DepatureDateField);
 
         DepatureTime = new TimeField() {
-            X = Pos.Right(DepartureYearComboBox) + 1,
-            Y = Pos.Top(DepartureMonthComboBox),
+            X = Pos.Right(DepatureDateField) + 1,
+            Y = Pos.Top(DepatureDateField),
         };
 
         Label depatureTimeHelper = new Label() {
             Text = "*       *Format: HH:mm:ss",
             X = Pos.Right(DepatureTime),
-            Y = Pos.Top(DepartureMonthComboBox),
+            Y = Pos.Top(DepatureDateField),
         };
 
         Add(DepatureTime, depatureTimeHelper);
         #endregion
 
         #region Arrival
-        Label arrivalLocationLabel = new Label() {
+        ArrivalLocationLabel = new Label() {
             Text = "Bestemming:",
             Y = Pos.Bottom(departureTimeLabel) + 1
         };
 
-        ArrivalLocationCombo = new ComboBox() {
-            Y = Pos.Top(arrivalLocationLabel),
-            X = Pos.Left(DepartureLocationCombo),
-            Width = Dim.Percent(20),
-            Height = 4,
-        };
-
-        ArrivalLocationCombo.SetSource(WindowManager.Locations);
-
-        Add(arrivalLocationLabel, ArrivalLocationCombo);
-
-        Label arrivalTimeLabel = new Label() {
-            Text = "Tijd van Aankomst:",
-            Y = Pos.Bottom(arrivalLocationLabel) + 1,
-        };
-
-        ArrivalDayComboBox = new ComboBox(){
-            Y = Pos.Top(arrivalTimeLabel),
-            X = Pos.Left(DepartureLocationCombo),
-            Height = 4,
-            Width = 8,
-        };
-
-        ArrivalDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-
-        ArrivalMonthComboBox = new ComboBox(){
-            X = Pos.Right(ArrivalDayComboBox) + 1,
-            Y = Pos.Top(ArrivalDayComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        ArrivalMonthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
-
-        ArrivalMonthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
-            ArrivalDayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
-            } else if (differentDays.Contains(month)) {
-                ArrivalDayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
-             }
-            else {
-                ArrivalDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-            } ArrivalDayComboBox.SelectedItem = 0; };
-
-        ArrivalYearComboBox = new ComboBox(){
-            X = Pos.Right(ArrivalMonthComboBox) + 1 ,
-            Y = Pos.Top(ArrivalMonthComboBox),
-            Height = 4,
-            Width = 8,
-        };
-
-        ArrivalYearComboBox.SetSource(Enumerable.Range(DateTime.Now.Year, 10).ToList());
-
-        ArrivalYearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
-            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
-                increaseDay = 1;
-                ArrivalMonthComboBox.SelectedItem = 0;
-            }
-            else increaseDay = 0;
-            };
-
-        ArrivalYearComboBox.SelectedItem = 0;
-        ArrivalMonthComboBox.SelectedItem = 0;
-        ArrivalDayComboBox.SelectedItem = 0;
-
-        Add(arrivalTimeLabel, ArrivalDayComboBox, ArrivalMonthComboBox, ArrivalYearComboBox);
-
-        ArrivalTime = new TimeField() {
-            X = Pos.Right(ArrivalYearComboBox) + 1,
-            Y = Pos.Top(ArrivalMonthComboBox),
-        };
-
-        Label arrivalTimeHelper = new Label() {
-            Text = "*       *Format: HH:mm:ss",
-            X = Pos.Right(ArrivalTime),
-            Y = Pos.Top(ArrivalMonthComboBox),
-        };
-
-        Add(ArrivalTime, arrivalTimeHelper);
+        Add(ArrivalLocationLabel);
         #endregion
 
         #region Airplane
         Label airplaneLabel = new Label() {
             Text = "Vliegtuig:",
-            Y = Pos.Bottom(arrivalTimeLabel) + 1,
+            Y = Pos.Bottom(ArrivalLocationLabel) + 1,
         };
 
         AirplaneCombobox = new ComboBox() {
@@ -218,16 +89,17 @@ public class FlightInfoEdit : FlightInfo
 {
     public FlightInfoEdit(Flight flight)
     {
+        Label arrivalLocation = new Label() {
+            Text = flight.ArrivalLocation,
+            X = Pos.Left(DepartureLocationCombo),
+            Y = Pos.Top(ArrivalLocationLabel),
+        };
+
+        Add(arrivalLocation);
+
         DepartureLocationCombo.SelectedItem = DepartureLocationCombo.Source.ToList().IndexOf(flight.DepartureLocation);
-        DepartureYearComboBox.SelectedItem = DepartureYearComboBox.Source.ToList().IndexOf(flight.DepartureTime.Year);
-        DepartureMonthComboBox.SelectedItem = flight.DepartureTime.Month - 1;
-        DepartureDayComboBox.SelectedItem = flight.DepartureTime.Day - 1;
-        DepatureTime.Time = new TimeSpan(flight.DepartureTime.Hour, flight.DepartureTime.Minute, flight.DepartureTime.Second);;
-        ArrivalLocationCombo.SelectedItem = ArrivalLocationCombo.Source.ToList().IndexOf(flight.ArrivalLocation);
-        ArrivalYearComboBox.SelectedItem = ArrivalYearComboBox.Source.ToList().IndexOf(flight.ArrivalTime.Year);
-        ArrivalMonthComboBox.SelectedItem = flight.ArrivalTime.Month - 1;
-        ArrivalDayComboBox.SelectedItem = flight.ArrivalTime.Day - 1;
-        ArrivalTime.Time = new TimeSpan(flight.ArrivalTime.Hour, flight.ArrivalTime.Minute, flight.ArrivalTime.Second);
+        DepatureDateField.SetDateTime(flight.DepartureTime);
+        DepatureTime.Time = new TimeSpan(flight.DepartureTime.Hour, flight.DepartureTime.Minute, flight.DepartureTime.Second);
         AirplaneCombobox.SelectedItem = AirplaneCombobox.Source.ToList().IndexOf(flight.Airplane);
 
         Button updateButton = new Button() {
@@ -236,9 +108,7 @@ public class FlightInfoEdit : FlightInfo
         };
 
         updateButton.Clicked += () => {
-            DateTime departureTime = new DateTime(Convert.ToInt32(DepartureYearComboBox.Text),Convert.ToInt32(DepartureMonthComboBox.Text), Convert.ToInt32(DepartureDayComboBox.Text), DepatureTime.Time.Hours, DepatureTime.Time.Minutes, DepatureTime.Time.Seconds);
-            DateTime arrivalTime = new DateTime(Convert.ToInt32(ArrivalYearComboBox.Text),Convert.ToInt32(ArrivalMonthComboBox.Text), Convert.ToInt32(ArrivalDayComboBox.Text), ArrivalTime.Time.Hours, ArrivalTime.Time.Minutes, ArrivalTime.Time.Seconds);
-            if (UpdateFlight(flight, departureTime, arrivalTime) != null) {
+            if (UpdateFlight(flight, DepatureDateField.GetDateTime().Add(DepatureTime.Time)) != null) {
                 WindowManager.GoBackOne(this);
             }
         };
@@ -249,44 +119,68 @@ public class FlightInfoEdit : FlightInfo
             X = Pos.Right(updateButton) + 1
         };
 
-        cancelFlight.Clicked +=  () => { CancelFlight(flight); };
+        cancelFlight.Clicked += () => { CancelFlight(flight); };
 
-        Button goBackButton = new Button() {
-            Text = "Annuleren",
+        Button delayButton = new Button() {
+            Text = "Vertraging invoeren",
             Y = Pos.Top(updateButton),
             X = Pos.Right(cancelFlight) + 1,
         };
 
+        delayButton.Clicked += () => { DelayFlight(flight); };
+
+        Button goBackButton = new Button() {
+            Text = "Annuleren",
+            Y = Pos.Top(updateButton),
+            X = Pos.Right(delayButton) + 1,
+        };
+
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
-        Add(updateButton, cancelFlight ,goBackButton);
+        Add(updateButton, cancelFlight , delayButton, goBackButton);
     }
 
-    private Flight? UpdateFlight(Flight flight, DateTime departureTime, DateTime arrivalTime)
+    private Flight? UpdateFlight(Flight flight, DateTime departureTime)
     {
-        if (DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
+        if (DepartureLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
             MessageBox.ErrorQuery("Vlucht Updaten", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
         }
 
-        if (DateTime.Now > departureTime || departureTime > arrivalTime) {
+        if (DateTime.Now > departureTime) {
             MessageBox.ErrorQuery("Vlucht Updaten", "Tijden zijn niet juist ingevuld.", "Ok");
             return null;
         }
+
+        TimeSpan flightDuration = (string)DepartureLocationCombo.Text switch {
+            "Parijs" => new TimeSpan(1, 15, 0),
+            "London" => new TimeSpan(0, 55, 0),
+            "München" => new TimeSpan(1, 25, 0),
+            "Wenen" => new TimeSpan(1, 50, 0),
+            "Rome" => new TimeSpan(2, 10, 0),
+            "Barcelona" => new TimeSpan(2, 15, 0),
+            "Brussel" => new TimeSpan(0, 45, 0),
+            "Madrid" => new TimeSpan(2, 35, 0),
+            "Berlijn" => new TimeSpan(1, 20, 0),
+            _ => TimeSpan.Zero
+        };
+
+        DateTime arrivalTime = departureTime.Add(flightDuration);
 
         string subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gewijzigd.\nDit zijn de wijzigingen:\n";
         body += $"Vertrek Locatie:\t {flight.DepartureLocation} --> {(string)DepartureLocationCombo.Text}\n";
         body += $"Tijd van Vertrek:\t {flight.DepartureTime} --> {departureTime}\n";
-        body += $"Bestemming:\t\t {flight.ArrivalLocation} --> {(string)ArrivalLocationCombo.Text}\n";
-        body += $"Tijd van Aankomst:\t{flight.ArrivalTime} --> {arrivalTime}\n";
+         body += $"Tijd van Aankomst:\t{flight.ArrivalTime} --> {arrivalTime}\n";
         body += $"Vliegtuig:\t\t\t{flight.Airplane} --> {(string)AirplaneCombobox.Text}\n\n";
         body += "Met vriendelijke groeten,\nRotterdam Airline Service";
 
         SendEmails(subject, body);
+
+        // Update the rest of the DB
+
         flight.DepartureLocation = (string)DepartureLocationCombo.Text;
         flight.DepartureTime = departureTime;
-        flight.ArrivalLocation = (string)ArrivalLocationCombo.Text;
         flight.ArrivalTime = arrivalTime;
         flight.Airplane = (string)AirplaneCombobox.Text;
         return flight;
@@ -326,29 +220,9 @@ public class FlightInfoEdit : FlightInfo
 
     private void SendEmails(string subject, string body)
     {
-         // Set up SMPT client
-        MailAddress fromAddress = new MailAddress("rotterdamairline@outlook.com");
-        SmtpClient smtp = new SmtpClient() {
-            Host = "smtp.office365.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromAddress.Address, "Team1Admin1234")
-        };
-
         // Notify customers via E-Mail
-        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com")};
-        Application.MainLoop.Invoke(async () => {
-            foreach(MailAddress email in emails) {
-                using (MailMessage message = new MailMessage(fromAddress, email) {
-                    Subject = subject,
-                    Body = body,
-                }) {
-                    await smtp.SendMailAsync(message);
-                }
-            }
-        });
+        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com"), new MailAddress("vandaalenlevi@gmail.com")};
+        EmailManager.SendEmails(subject, body, emails);
     }
 
     private void SpecialEmail(Flight flight)
@@ -378,18 +252,58 @@ public class FlightInfoEdit : FlightInfo
 
         Add(textField, sendButton, goBack);
     }
+
+    private void DelayFlight(Flight flight) {
+        TimeSpan delay = TimeSpan.Zero;
+        while (true) {
+            int n = MessageBox.Query("Vertraging", $"Voeg minuten toe\nHudige vertraging: {delay}", "5 Minuten", "10 Minuten", "15 Minuten", "30 Minuten", "60 Minuten reden", "Invoeren","Stoppen");
+            TimeSpan minutes = n switch {
+            0 => new TimeSpan(0, 5, 0),
+            1 => new TimeSpan(0, 10, 0),
+            2 => new TimeSpan(0, 15, 0),
+            3 => new TimeSpan(0, 30, 0),
+            4 => new TimeSpan(1, 0, 0),
+            _ => TimeSpan.Zero
+            };
+
+            delay += minutes;
+
+            if (n == 5)
+                DelayFlight(flight, delay);
+
+            if (minutes == TimeSpan.Zero)
+                break;
+        }
+        WindowManager.GoBackOne(this);
+    }
+
+    private void DelayFlight(Flight flight, TimeSpan delayTime) {
+        flight.ArrivalTime += delayTime;
+        // Shift all next flights with on this course up
+        // Notify customers....
+    }
 }
 
 public class FlightInfoAdd : FlightInfo
 {
+    public ComboBox ArrivalLocationCombo;
+
     public FlightInfoAdd()
     {
-        DepartureMonthComboBox.SelectedItem = DateTime.Now.Month - 1;
-        DepartureDayComboBox.SelectedItem = DateTime.Now.Day - 1;
+
+        ArrivalLocationCombo = new ComboBox() {
+            X = Pos.Left(DepartureLocationCombo),
+            Y = Pos.Top(ArrivalLocationLabel),
+            Width = 25,
+            Height = 4,
+        };
+
+        ArrivalLocationCombo.SetSource(WindowManager.Locations);
+
+        Add(ArrivalLocationCombo);
+
         DepatureTime.Time = TimeSpan.Zero;
-        ArrivalMonthComboBox.SelectedItem = DateTime.Now.Month - 1;
-        ArrivalDayComboBox.SelectedItem = DateTime.Now.Day - 1;
-        ArrivalTime.Time = TimeSpan.Zero;
+        DepatureDateField.SetDateTime(DateTime.Now);
 
         Button addButton = new Button() {
             Text = "Toevoegen",
@@ -397,9 +311,7 @@ public class FlightInfoAdd : FlightInfo
         };
 
         addButton.Clicked += () => {
-            DateTime departureTime = new DateTime(Convert.ToInt32(DepartureYearComboBox.Text),Convert.ToInt32(DepartureMonthComboBox.Text), Convert.ToInt32(DepartureDayComboBox.Text), DepatureTime.Time.Hours, DepatureTime.Time.Minutes, DepatureTime.Time.Seconds);
-            DateTime arrivalTime = new DateTime(Convert.ToInt32(ArrivalYearComboBox.Text),Convert.ToInt32(ArrivalMonthComboBox.Text), Convert.ToInt32(ArrivalDayComboBox.Text), ArrivalTime.Time.Hours, ArrivalTime.Time.Minutes, ArrivalTime.Time.Seconds);
-            Flight? flight = AddFlight(departureTime, arrivalTime);
+            Flight? flight = AddFlight(DepatureDateField.GetDateTime().Add(DepatureTime.Time));
             if (flight != null) {
                 WindowManager.Flights.Add(flight);
                 WindowManager.GoBackOne(this);
@@ -417,19 +329,32 @@ public class FlightInfoAdd : FlightInfo
         Add(addButton, goBackButton);
     }
 
-    private Flight? AddFlight(DateTime departureTime, DateTime arrivalTime)
+    private Flight? AddFlight(DateTime departureTime)
     {
-        if (DepartureLocationCombo.Text == "" || ArrivalLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
+        if (DepartureLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
             MessageBox.ErrorQuery("Vlucht Updaten", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
         }
 
-        if (DateTime.Now > departureTime || departureTime > arrivalTime) {
+        if (DateTime.Now > departureTime) {
             MessageBox.ErrorQuery("Vlucht Updaten", "Tijden zijn niet juist ingevuld.", "Ok");
             return null;
         }
 
-        return new Flight(WindowManager.Flights.Count, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, arrivalTime, (string)AirplaneCombobox.Text);
+        TimeSpan flightDuration = (string)DepartureLocationCombo.Text switch {
+            "Parijs" => new TimeSpan(1, 15, 0),
+            "London" => new TimeSpan(0, 55, 0),
+            "München" => new TimeSpan(1, 25, 0),
+            "Wenen" => new TimeSpan(1, 50, 0),
+            "Rome" => new TimeSpan(2, 10, 0),
+            "Barcelona" => new TimeSpan(2, 15, 0),
+            "Brussel" => new TimeSpan(0, 45, 0),
+            "Madrid" => new TimeSpan(2, 35, 0),
+            "Berlijn" => new TimeSpan(1, 20, 0),
+            _ => TimeSpan.Zero
+        };
+
+        return new Flight(WindowManager.Flights.Count, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, departureTime.Add(flightDuration), (string)AirplaneCombobox.Text);
     }
 }
 

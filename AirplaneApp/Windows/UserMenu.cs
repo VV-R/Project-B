@@ -26,6 +26,13 @@ public class UserMenu : Toplevel
         };
         flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
 
+        Button searchReservation = new Button() {
+            Text = "Reserveringen",
+            Y = Pos.Bottom(flightScheduleButton) + 1,
+        };
+
+        searchReservation.Clicked += () => {WindowManager.GoForwardOne(new SeattingPlan()); };
+        
         Button airplaneInformationButton = new Button()
         {
             Text = "Vliegtuig Informatie",
@@ -55,7 +62,15 @@ public class UserMenu : Toplevel
         };
 
         exitButton.Clicked += () => { Application.RequestStop(); };
+        Button Test2 = new Button()
+        {
+            Text = "Test",
+            Y = 15,
+        };
 
-        Add(nameLabel, bookingButton, flightScheduleButton, airplaneInformationButton,Test, infoButton, exitButton);
+        Test2.Clicked += () => { WindowManager.GoForwardOne(new Booking()); };
+
+
+        Add(nameLabel, bookingButton, flightScheduleButton, searchReservation, airplaneInformationButton,Test, infoButton, exitButton, Test2);
     }
 }
