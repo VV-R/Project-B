@@ -23,7 +23,7 @@ namespace Db {
             modelBuilder.Entity<Ticket>().HasOne(e => e.TheFlight).WithMany().HasForeignKey(e => e.FlightId).IsRequired();
             modelBuilder.Entity<Ticket>().HasOne(e => e.TheUser).WithMany().HasForeignKey(e => e.UserId).IsRequired();
 
-            modelBuilder.Entity<User>().Property(e => e.Email).HasConversion(v => v.ToString(), v => new MailAddress(v));
+            modelBuilder.Entity<User>().Property(e => e.UserInfo.Email).HasConversion(v => v.ToString(), v => new MailAddress(v));
         }
 
         public DbSet<Flight> Flights { get; set; }

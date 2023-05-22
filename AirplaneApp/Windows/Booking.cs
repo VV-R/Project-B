@@ -49,7 +49,7 @@ public class Booking : Toplevel
                 Text = "Voornaam*:",
             };
 
-            FirstnameText = new TextField(user.FirstName)
+            FirstnameText = new TextField(user.UserInfo.FirstName)
             {
                 X = Pos.Right(firstnameLabel) + 1,
                 Width = Dim.Percent(10),
@@ -61,7 +61,7 @@ public class Booking : Toplevel
                 X = Pos.Right(FirstnameText) + 1
             };
 
-            PrepositionText = new TextField(user.Preposition)
+            PrepositionText = new TextField(user.UserInfo.Preposition)
             {
                 X = Pos.Right(prepositionLabel) + 1,
                 Width = 10,
@@ -73,7 +73,7 @@ public class Booking : Toplevel
                 X = Pos.Right(PrepositionText) + 1
             };
 
-            LastnameText = new TextField(user.LastName)
+            LastnameText = new TextField(user.UserInfo.LastName)
             {
                 X = Pos.Right(lastnameLabel) + 1,
                 Width = Dim.Percent(10),
@@ -94,7 +94,7 @@ public class Booking : Toplevel
                 Y = Pos.Bottom(firstnameLabel) + 1,
             };
 
-            EmailText = new TextField(user.Email.Address)
+            EmailText = new TextField(user.UserInfo.Email.Address)
             {
                 X = Pos.Right(emailLabel) + 8,
                 Y = Pos.Top(emailLabel),
@@ -123,9 +123,9 @@ public class Booking : Toplevel
             };
 
             DialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
-            DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.PhoneNumber.Split("|")[0]);
+            DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.UserInfo.PhoneNumber.Split("|")[0]);
 
-            PhoneText = new TextField(user.PhoneNumber.Split("|")[1])
+            PhoneText = new TextField(user.UserInfo.PhoneNumber.Split("|")[1])
             {
                 X = Pos.Right(DialCodesComboBox) + 1,
                 Y = Pos.Top(phoneLabel),
@@ -181,7 +181,7 @@ public class Booking : Toplevel
             };
 
             NationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
-            NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.Nationality);
+            NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.UserInfo.Nationality);
 
             Add(nationalityLabel, NationalityComboBox);
             #endregion
@@ -194,7 +194,7 @@ public class Booking : Toplevel
                 Y = Pos.Bottom(nationalityLabel) + 1,
             };
 
-            DocumentNumber = new TextField(user.DocumentNumber != null ? user.DocumentNumber : "")
+            DocumentNumber = new TextField(user.UserInfo.DocumentNumber != null ? user.UserInfo.DocumentNumber : "")
             {
                 X = Pos.Left(EmailText),
                 Y = Pos.Top(documentNumberLabel),
@@ -226,7 +226,7 @@ public class Booking : Toplevel
             };
             DocumentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
 
-            DocumentTypeComboBox.SelectedItem = user.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.DocumentType) : 0;
+            DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
 
             ExpireDateLabel = new Label()
             {
