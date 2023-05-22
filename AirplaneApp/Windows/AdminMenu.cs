@@ -68,8 +68,6 @@ public class SearchUsers : Toplevel
                                "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"), "1234")
         };
 
-
-
         ListView usersView = new ListView() {
             Y = Pos.Bottom(searchBox) + 1,
             Height = 5,

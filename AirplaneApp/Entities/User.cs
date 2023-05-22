@@ -18,10 +18,11 @@ public class User
 
     public override string ToString()
     {
-        return $"ID: {IdUser}; Name: {UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}; Email: {UserInfo.Email}; Number: {UserInfo.PhoneNumber}";
+        return $"ID: {IdUser}; Name: {FullName()}; Email: {UserInfo.Email}; Number: {UserInfo.PhoneNumber}";
     }
-
     public string ToNewLineString() => $"ID: {IdUser}\nName: {UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}\nEmail: {UserInfo.Email}\nNumber: {UserInfo.PhoneNumber}";
+
+    public string FullName() => $"{UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}";
 }
 public class UserInfo
 {
