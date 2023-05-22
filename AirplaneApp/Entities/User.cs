@@ -3,7 +3,7 @@ namespace Entities;
 public class User
 {
     public int IdUser;
-    public UserInfo UserInfo{get; set;}
+    public UserInfo UserInfo;
     public string? Password;
     public List<Ticket> Reservations = new List<Ticket>();
     
@@ -36,7 +36,7 @@ public class UserInfo
     public DateTime DateOfBirth;
     public string Nationality;
     public string? DocumentNumber;
-    public  string? DocumentType;
+    public string? DocumentType;
     public DateTime? ExpirationDate;
    public UserInfo(string firstName, string preposition, 
                     string lastname, MailAddress email, string phonenumber, 
