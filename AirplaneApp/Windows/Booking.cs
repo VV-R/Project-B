@@ -8,6 +8,7 @@ using Entities;
 namespace Windows;
 public class Booking : Toplevel
 {
+    public int extraSeats;
     public User? User { get; set; }
     public UserInfo? userinfo;
     public Flight Flight { get; set; }
@@ -36,18 +37,19 @@ public class Booking : Toplevel
     TextField? passwordText;
     TextField? passwordRepeat;
     TextField? emailText;
+    TextField? ExtraPassagier;
+    ComboBox? ExtraPassagierComboBox;
     ComboBox? dialCodesComboBox;
     TextField? phoneText;
     ComboBox? nationalityComboBox;
     TextField? documentNumber;
     ComboBox? documentTypeComboBox;
 
-    public Booking(Flight flight, Seat[] seatNumber)
+    public Booking()
     {
-
-        WindowManager.CurrentUser = user;
-        Flight = flight;
-        SeatNumber = seatNumber;
+        User user = WindowManager.CurrentUser;
+        // Flight = flight;
+        // SeatNumber = seatNumber;
         if (user != null)
         {
                 #region Name
@@ -620,165 +622,301 @@ public class Booking : Toplevel
         Add(documentNumberLabel, documentNumber, documentTypeComboBox, documentTypeLabel);
         Add(expireDateLabel, exipreDayComboBox, expireMonthComboBox, expireYearComboBox);
         #endregion
-        
-        // Button flightScheduleButton = new Button() {
-        //     Text = "Vlucht Schemas",
-        //     Y = Pos.Bottom(ExpireDateLabel) + 1,
-        // };
-        // flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
 
-        Button backButton = new Button() {
-            Text = "Terug",
-            Y = Pos.Bottom(exipreDayComboBox),
+        Label extraPassanger = new Label() {
+            Text = "Aantal personen",
+            Y = Pos.Bottom(expireMonthComboBox)
         };
 
+        ComboBox extraPassangerComboBox = new ComboBox() {
+            X = Pos.Right(extraPassanger) + 1,
+            Y = Pos.Top(extraPassanger),
+            Height = 4,
+            Width = 8,
+        };
+        extraPassangerComboBox.SetSource(Enumerable.Range(1,8).ToList());
+        extraPassangerComboBox.SelectedItemChanged += (e) => {int test = Convert.ToInt32(e.Value);};
+        
+    
+        Button backButton = new Button() {
+            Text = "Terug",
+            Y = Pos.Bottom(extraPassanger),
+        };
         backButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
-        Add(backButton);
+        Button goNextPage = new Button() {
+            Text = "Volgende pagina",
+            Y = Pos.Top(backButton),
+            X = Pos.Right(backButton),
+        };
+
+        goNextPage.Clicked += () => {if (extraSeats == 1) WindowManager.GoForwardOne(new SeattingPlan());};
+
+
+        Add(extraPassanger, extraPassangerComboBox, backButton, goNextPage);
         }
     }
-public class UserSearch : Toplevel
-{
-    public UserSearch(bool isReservation = false)
-    {
-        Label searchBoxLabel = new Label() {
-            Text = "Zoeken:"
-        };
-        TextField searchBox = new TextField("") {
-            Width = 20,
-            X = Pos.Right(searchBoxLabel) + 1,
-        };
-
-        // Want a list of users from the database
-        List<User> users = new List<User>() {new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
-                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "password"){
-            Reservations = new List<Ticket>() { new Ticket(WindowManager.Flights.First(), 1, "B3", DateTime.Now.AddDays(2))}},
-            new User(2, new Entities.UserInfo("Steyn", "", "Hellendoorn", new MailAddress("idk@gmail.com"),
-                               "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"), "password")
-
-        };
-
-
-
-        ListView usersView = new ListView() {
-            Y = Pos.Bottom(searchBox) + 1,
-            Height = 5,
-            Width = Dim.Fill(),
-        };
-
-        usersView.SetSource(users);
-        if (isReservation)
-            usersView.OpenSelectedItem += (item) => {  WindowManager.GoForwardOne(new SearchReservationn((User)item.Value)); };
-        else
-            usersView.OpenSelectedItem += (item) => { WindowManager.GoForwardOne(new SearchReservationn((User)item.Value)); };
-
-        searchBox.TextChanged += (text) => {usersView.SetSource(users.FindAll((x) => {
-            if (x.ToString().ToLower().Contains((string)searchBox.Text.ToLower()))
-                return true;
-            else return false;
-        }));};
-
-        Button goBackButton = new Button() {
-            Text = "Terug",
-            Y = Pos.Bottom(usersView) + 1,
-        };
-
-        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Add(searchBoxLabel, searchBox, usersView, goBackButton);
-    }
 }
-public class SearchReservationn : Toplevel
+
+public class test : Toplevel
 {
-    public SearchReservationn(User user)
+    Toplevel currentWindow;
+    public test(int stoelen)
     {
-        List<Ticket> reservations = user.Reservations;
-
-        if (reservations == null)
-            WindowManager.GoBackOne(this);
-
-        Label searchBoxLabel = new Label() {
-            Text = "Zoeken:"
-        };
-
-        TextField searchBox = new TextField("") {
-            Width = 20,
-            X = Pos.Right(searchBoxLabel) + 1,
-        };
-
-        ListView usersView = new ListView() {
-            Y = Pos.Bottom(searchBox) + 1,
-            Height = 5,
-            Width = Dim.Fill(),
-        };
-
-        usersView.SetSource(reservations);
-
-        usersView.OpenSelectedItem += (item) => { if (reservations != null)
-            WindowManager.GoForwardOne(new ReservationPanell(user, reservations[item.Item])); };
-
-        searchBox.TextChanged += (text) => {usersView.SetSource(reservations?.FindAll((x) => {
-            if (x.ToString().ToLower().Contains((string)searchBox.Text.ToLower()))
-                return true;
-            else return false;
-        }));};
-
-        Button goBackButton = new Button() {
-            Text = "Terug",
-            Y = Pos.Bottom(usersView) + 1,
-        };
-
-        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Add(searchBoxLabel, searchBox, usersView, goBackButton);
+        currentWindow = new ExtraBooking();
+        Add(currentWindow);
+        Button cool = new Button() {
+            Text = "Volgende",
+            Y = 22,
+        };                  
+        cool.Clicked += () => {if (stoelen == 0) return; else stoelen--; WindowManager.GoForwardOne(new Booking());};
+        Add(cool);
     }
 }
 
-public class ReservationPanell : Toplevel
+public class ExtraBooking : Toplevel
 {
-    public User CurrentUser;
-    public Ticket CurrentTicket;
-    public TextField SeatnumberText;
-    public ReservationPanell(User user, Ticket ticket)
+    TextField firstnameText;
+    TextField prepositionText;
+    TextField lastnameText;
+    ComboBox nationalityComboBox;
+    TextField documentNumber;
+    ComboBox documentTypeComboBox;
+    public Label? ExpireDateLabel;
+    public ComboBox? exipreDayComboBox;
+    public ComboBox? expireMonthComboBox;
+    public ComboBox? expireYearComboBox;
+
+    public ExtraBooking()
     {
-        CurrentUser = user;
-        CurrentTicket = ticket;
-        Label flightLabel = new Label() {
-            Text = $"Vlucht:\n{ticket.Flight.ToNewLineString()}",
+
+        // currentWindow = new RegisterMenu();
+        // Add(currentWindow);
+
+        // Button test = new Button(){
+        //     Text = "Next Window",
+        //     Y = 30,
+        // };  
+
+        // Button goBack = new Button(){
+        //     Text = "Afsluiten",
+        //     Y = Pos.Bottom(test),
+        // };  
+        // goBack.Clicked += () => {Application.RequestStop();};
+        // Add(test, goBack);
+
+        // test.Clicked += () => {if (seats == 0) WindowManager.GoForwardOne(new FlightInfo()); else seats--;};
+
+        #region Name
+        Label extraPassenger = new Label() {
+            Text = "Passagier 1:",
         };
 
-        Label userLabel = new Label() {
-            Text = $"User:\n{user.ToNewLineString()}",
-            Y = Pos.Bottom(flightLabel) + 1,
+        Label firstnameLabel = new Label() {
+            Text = "Voornaam*:",
+            Y = Pos.Bottom(extraPassenger) + 1
         };
 
-        Label seatnumberLabel = new Label() {
-            Text = "Ticket:\nStoelnummer:",
-            Y = Pos.Bottom(userLabel) + 1,
+        firstnameText = new TextField("") {
+            X = Pos.Right(firstnameLabel) + 1,
+            Y = Pos.Top(firstnameLabel),
+            Width = 22,
         };
 
-        SeatnumberText = new TextField(ticket.SeatNumber) {
-            X = Pos.Right(seatnumberLabel) + 3,
-            Y = Pos.Top(seatnumberLabel) + 1,
-            Width = 5,
+        Label prepositionLabel = new Label() {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(firstnameText) + 1,
+            Y = Pos.Top(firstnameLabel),
         };
 
-        Label boardingTimeLabel = new Label() {
-            Text = $"Boarding tijd: {ticket.BoardingTime}",
-            Y = Pos.Bottom(seatnumberLabel),
+        prepositionText = new TextField("") {
+            X = Pos.Right(prepositionLabel) + 1,
+            Y = Pos.Top(firstnameLabel),
+            Width = 10,
         };
 
-        Add(flightLabel, userLabel, seatnumberLabel, SeatnumberText, boardingTimeLabel);
-
-        Button backButton = new Button() {
-            Text = "Terug",
-            Y = Pos.Bottom(boardingTimeLabel)
+        Label lastnameLabel = new Label() {
+            Text = "Achternaam:",
+            X = Pos.Right(prepositionText) + 1,
+            Y = Pos.Top(firstnameLabel),
         };
 
-        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
+        lastnameText = new TextField("") {
+            X = Pos.Right(lastnameLabel) + 1,
+            Y = Pos.Top(firstnameLabel),
+            Width = 22,
+        };
 
-        Add(backButton);
+        Label attentionLabel = new Label {
+            Text = "*voornaam zoals op het paspoort",
+            X = Pos.Right(lastnameText) + 2,
+            Y = Pos.Top(firstnameLabel),
+        };
+
+        Add(extraPassenger, firstnameLabel, firstnameText, prepositionLabel, prepositionText, lastnameLabel, lastnameText, attentionLabel);
+        #endregion
+
+        #region Date of birth
+        
+        Label dateOfBirthLabel = new Label() {
+            Text = "Geboortedatum:",
+            Y = Pos.Bottom(firstnameLabel) + 1,
+        };
+        
+         DateTimeField dateofBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList()) {
+            X = Pos.Right(dateOfBirthLabel) + 10,
+            Y = Pos.Top(dateOfBirthLabel),
+        };
+        
+        Add(dateOfBirthLabel, dateofBirthField);
+        #endregion
+
+        #region Nationality
+        StreamReader reader = new StreamReader("countries.json");
+        string countriesFile = reader.ReadToEnd();
+
+        Label nationalityLabel = new Label() {
+            Text = "Nationaliteit:",
+            Y = Pos.Bottom(dateOfBirthLabel) + 1,
+        };
+
+        nationalityComboBox = new ComboBox() {
+            X = Pos.Left(dateofBirthField),
+            Y = Pos.Top(nationalityLabel),
+            Width = 47,
+            Height = 8,
+        };
+
+        nationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
+
+        Add(nationalityLabel, nationalityComboBox);
+        #endregion
+
+        #region Document Information
+        int[] differentDays = {4, 6, 9, 11};
+        int increaseDay = 1;
+
+        Label documentNumberLabel = new Label() {
+            Text = "Document nummer:",
+            Y = Pos.Bottom(nationalityLabel) + 1,
+        };
+
+        documentNumber = new TextField("") {
+            X = Pos.Left(dateofBirthField),
+            Y = Pos.Top(documentNumberLabel),
+            Width = Dim.Percent(20) - 2,
+        };
+
+        documentNumber.TextChanged += (text) => {
+        if (!int.TryParse(documentNumber.Text == "" ? "0" : (string)documentNumber.Text, out _))
+            documentNumber.Text = text == "" ? "" : text;
+        else if (documentNumber.Text.Length > 9)
+            documentNumber.Text = text;
+        documentNumber.CursorPosition = documentNumber.Text.Length;};
+
+        Label documentTypeLabel = new Label() {
+            Text = "Type:",
+            X = Pos.Right(documentNumber) + 1,
+            Y = Pos.Top(documentNumberLabel),
+        };
+
+        documentTypeComboBox = new ComboBox() {
+            X = Pos.Right(documentTypeLabel) + 1,
+            Y = Pos.Top(documentNumberLabel),
+            Width = 10,
+            Height = 4,
+        };
+        documentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
+
+        Label expireDateLabel = new Label() {
+            Text = "Verval datum:",
+            Y = Pos.Bottom(documentNumberLabel) + 1,
+        };
+
+        ComboBox exipreDayComboBox = new ComboBox(){
+            X = Pos.Left(dateofBirthField),
+            Y = Pos.Top(expireDateLabel),
+            Height = 4,
+            Width = 8,
+        };
+
+        exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
+
+        ComboBox expireMonthComboBox = new ComboBox(){
+            X = Pos.Right(exipreDayComboBox) + 1,
+            Y = Pos.Top(exipreDayComboBox),
+            Height = 4,
+            Width = 8,
+        };
+
+        expireMonthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
+
+        expireMonthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
+            exipreDayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
+            } else if (differentDays.Contains(month)) {
+                exipreDayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
+             }
+            else {
+                exipreDayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
+            } exipreDayComboBox.SelectedItem = 0; };
+
+        ComboBox expireYearComboBox = new ComboBox(){
+            X = Pos.Right(expireMonthComboBox) + 1 ,
+            Y = Pos.Top(expireMonthComboBox),
+            Height = 4,
+            Width = 8,
+        };
+
+        expireYearComboBox.SetSource(Enumerable.Range(DateTime.Now.Year, 10).ToList());
+
+        expireYearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
+            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+                increaseDay = 1;
+                expireMonthComboBox.SelectedItem = 0;
+            }
+            else increaseDay = 0;
+            };
+
+        expireYearComboBox.SelectedItem = 0;
+        expireMonthComboBox.SelectedItem = 0;
+        exipreDayComboBox.SelectedItem = 0;
+
+        Add(documentNumberLabel, documentNumber, documentTypeLabel, documentTypeComboBox);
+        Add(expireDateLabel, exipreDayComboBox, expireMonthComboBox, expireYearComboBox);
+        #endregion
+        Label optionalLabel = new Label() {
+            Text = "",
+            X = Pos.Left(dateOfBirthLabel),
+            Y = Pos.Bottom(expireDateLabel) + 1,
+        };
+
+        LineView optionalLine = new LineView() {
+            X = Pos.Right(optionalLabel),
+            Y = Pos.Top(optionalLabel),
+        };
+
+        Add(optionalLabel, optionalLine);
+
+        Button GoBack = new Button()
+        {
+            Text = "terug",
+            Y = 15,
+        };
+        GoBack.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Button test = new Button(){
+            Text = "Next Window",
+            Y = 30,
+        };  
+
+        Button goBack = new Button(){
+            Text = "Afsluiten",
+            Y = Pos.Bottom(test),
+        };  
+        goBack.Clicked += () => {Application.RequestStop();};
+        Add(test, goBack);
+
+
+        Add(GoBack);
     }
 }
-}
-
