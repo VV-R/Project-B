@@ -8,10 +8,7 @@ using Entities;
 namespace Windows;
 public class Booking : Toplevel
 {
-    public User User { get; set; }
     public Flight Flight { get; set; }
-    public Seat[] SeatNumber { get; set; }
-    private User user;
     public TextField FirstnameText;
     public TextField PrepositionText;
     public TextField LastnameText;
@@ -22,469 +19,252 @@ public class Booking : Toplevel
     public ComboBox NationalityComboBox;
     public TextField DocumentNumber;
     public ComboBox DocumentTypeComboBox;
-    public Label ExpireDateLabel;
     public DateTimeField ExpireDateField;
 
-    TextField firstnameText;
-    TextField prepositionText;
-    TextField lastnameText;
-    TextField passwordText;
-    TextField passwordRepeat;
-    TextField emailText;
-    ComboBox dialCodesComboBox;
-    TextField phoneText;
-    ComboBox nationalityComboBox;
-    TextField documentNumber;
-    ComboBox documentTypeComboBox;
-
-    public Booking() // Flight flight
+    public Booking(Flight flight)
     {
-        User user = WindowManager.CurrentUser;
-        //Flight = flight;
-        if (user != null)
+        Flight = flight;
+        #region Name
+        Label firstnameLabel = new Label()
         {
-            #region Name
-            Label firstnameLabel = new Label()
-            {
-                Text = "Voornaam*:",
-            };
+            Text = "Voornaam*:",
+        };
 
-            FirstnameText = new TextField(user.UserInfo.FirstName)
-            {
-                X = Pos.Right(firstnameLabel) + 1,
-                Width = Dim.Percent(10),
-            };
+        FirstnameText = new TextField("")
+        {
+            X = Pos.Right(firstnameLabel) + 1,
+            Width = 22,
+        };
 
-            Label prepositionLabel = new Label()
-            {
-                Text = "Tussenvoegsel:",
-                X = Pos.Right(FirstnameText) + 1
-            };
+        Label prepositionLabel = new Label()
+        {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(FirstnameText) + 1
+        };
+        Label PrepositionLabel = new Label()
+        {
+            Text = "Tussenvoegsel:",
+            X = Pos.Right(FirstnameText) + 1
+        };
 
-            PrepositionText = new TextField(user.UserInfo.Preposition)
-            {
-                X = Pos.Right(prepositionLabel) + 1,
-                Width = 10,
-            };
+        PrepositionText = new TextField("")
+        {
+            X = Pos.Right(prepositionLabel) + 1,
+            Width = 10,
+        };
 
-            Label lastnameLabel = new Label()
-            {
-                Text = "Achternaam:",
-                X = Pos.Right(PrepositionText) + 1
-            };
+        Label lastnameLabel = new Label()
+        {
+            Text = "Achternaam:",
+            X = Pos.Right(PrepositionText) + 1
+        };
 
-            LastnameText = new TextField(user.UserInfo.LastName)
-            {
-                X = Pos.Right(lastnameLabel) + 1,
-                Width = Dim.Percent(10),
-            };
+        LastnameText = new TextField("")
+        {
+            X = Pos.Right(lastnameLabel) + 1,
+            Width = 22,
+        };
 
-            Label attentionLabel = new Label
-            {
-                Text = "*voornaam zoals op het paspoort",
-                X = Pos.Right(LastnameText) + 2,
-            };
-            Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
-            #endregion
+        Label attentionLabel = new Label
+        {
+            Text = "*voornaam zoals op het paspoort",
+            X = Pos.Right(LastnameText) + 2,
+        };
 
-            #region User
-            Label emailLabel = new Label()
-            {
-                Text = "E-mailadres:",
-                Y = Pos.Bottom(firstnameLabel) + 1,
-            };
+        #endregion
+        Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
 
-            EmailText = new TextField(user.UserInfo.Email.Address)
-            {
-                X = Pos.Right(emailLabel) + 8,
-                Y = Pos.Top(emailLabel),
-                Width = Dim.Percent(20),
-            };
+        #region User
+        Label emailLabel = new Label()
+        {
+            Text = "E-mailadres:",
+            Y = Pos.Bottom(firstnameLabel) + 1,
+        };
 
-            Add(emailLabel, EmailText);
-            #endregion
+        EmailText = new TextField()
+        {
+            X = Pos.Right(emailLabel) + 8,
+            Y = Pos.Top(emailLabel),
+            Width = Dim.Percent(20),
+        };
 
-            #region Phonenumber
-            StreamReader dialcodesReader = new StreamReader("dial_codes.json");
-            string dialcodesFile = dialcodesReader.ReadToEnd();
+        Add(emailLabel, EmailText);
+        #endregion
 
-            Label phoneLabel = new Label()
-            {
-                Text = "Telefoonnummer:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(emailLabel) + 1,
-            };
-            DialCodesComboBox = new ComboBox()
-            {
-                X = Pos.Left(EmailText),
-                Y = Pos.Top(phoneLabel),
-                Width = 7,
-                Height = 4,
-            };
 
-            DialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
+        #region Phonenumber
+        StreamReader dialcodesReader = new StreamReader("dial_codes.json");
+        string dialcodesFile = dialcodesReader.ReadToEnd();
+
+        Label phoneLabel = new Label()
+        {
+            Text = "Telefoonnummer:",
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(EmailText) + 1,
+        };
+        DialCodesComboBox = new ComboBox()
+        {
+            X = Pos.Left(EmailText),
+            Y = Pos.Top(phoneLabel),
+            Width = 7,
+            Height = 4,
+        };
+
+        DialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
+
+        PhoneText = new TextField("")
+        {
+            X = Pos.Right(DialCodesComboBox) + 1,
+            Y = Pos.Top(phoneLabel),
+            Width = 39
+        };
+
+        PhoneText.TextChanged += (text) =>
+        {
+            if (!int.TryParse(PhoneText.Text == "" ? "0" : (string)PhoneText.Text, out _))
+                PhoneText.Text = text == "" ? "" : text;
+            else if (PhoneText.Text.Length > 10)
+                PhoneText.Text = text;
+            PhoneText.CursorPosition = PhoneText.Text.Length;
+        };
+
+        Add(phoneLabel, DialCodesComboBox, PhoneText);
+        #endregion
+
+        #region Date of birth
+        Label dateOfBirthLabel = new Label()
+        {
+            Text = "Geboortedatum:",
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(phoneLabel) + 1,
+        };
+
+        DateOfBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList())
+        {
+            X = Pos.Right(dateOfBirthLabel) + 6,
+            Y = Pos.Top(dateOfBirthLabel),
+        };
+
+        Add(dateOfBirthLabel, DateOfBirthField);
+        #endregion
+
+        #region Nationality
+        StreamReader reader = new StreamReader("countries.json");
+        string countriesFile = reader.ReadToEnd();
+
+        Label nationalityLabel = new Label()
+        {
+            Text = "Nationaliteit:",
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(dateOfBirthLabel) + 1,
+        };
+
+        NationalityComboBox = new ComboBox()
+        {
+            X = Pos.Right(nationalityLabel) + 6,
+            Y = Pos.Top(nationalityLabel),
+            Width = 47,
+            Height = 8,
+        };
+
+        NationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
+
+        Add(nationalityLabel, NationalityComboBox);
+        #endregion
+
+        #region Document Information
+
+        Label documentNumberLabel = new Label()
+        {
+            Text = "Document nummer:",
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(nationalityLabel) + 1,
+        };
+
+        DocumentNumber = new TextField("")
+        {
+            X = Pos.Right(documentNumberLabel) + 4,
+            Y = Pos.Top(documentNumberLabel),
+            Width = Dim.Percent(20) - 2,
+        };
+
+        DocumentNumber.TextChanged += (text) =>
+        {
+            if (!int.TryParse(DocumentNumber.Text == "" ? "0" : (string)DocumentNumber.Text, out _))
+                DocumentNumber.Text = text == "" ? "" : text;
+            else if (DocumentNumber.Text.Length > 9)
+                DocumentNumber.Text = text;
+            DocumentNumber.CursorPosition = DocumentNumber.Text.Length;
+        };
+
+        Label documentTypeLabel = new Label()
+        {
+            Text = "Type:",
+            X = Pos.Right(DocumentNumber) + 1,
+            Y = Pos.Top(documentNumberLabel),
+        };
+
+        DocumentTypeComboBox = new ComboBox()
+        {
+            X = Pos.Right(documentTypeLabel) + 1,
+            Y = Pos.Top(DocumentNumber),
+            Width = 10,
+            Height = 4,
+        };
+        DocumentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
+
+        Label expireDateLabel = new Label()
+        {
+            Text = "Verval datum:",
+            X = Pos.Left(emailLabel),
+            Y = Pos.Bottom(documentNumberLabel) + 1,
+        };
+
+        ExpireDateField = new DateTimeField(Enumerable.Range(DateTime.Now.Year, 10).ToList())
+        {
+            X = Pos.Right(expireDateLabel) + 7,
+            Y = Pos.Top(expireDateLabel),
+        };
+
+        Add(documentNumberLabel, DocumentNumber, DocumentTypeComboBox, documentTypeLabel);
+        Add(expireDateLabel, ExpireDateField);
+        #endregion
+
+        Button forwardButton = new Button()
+        {
+            Text = "Volgende",
+            Y = Pos.Bottom(expireDateLabel) + 1
+        };
+
+        forwardButton.Clicked += () =>
+        {
+
+        };
+
+        Button backButton = new Button()
+        {
+            Text = "Terug",
+            X = Pos.Right(forwardButton) + 1,
+            Y = Pos.Bottom(expireDateLabel) + 1,
+        };
+
+        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(forwardButton, backButton);
+
+        if (WindowManager.CurrentUser != null) {
+            User user = WindowManager.CurrentUser;
+            FirstnameText.Text = user.UserInfo.FirstName;
+            PrepositionText.Text = user.UserInfo.Preposition;
+            LastnameText.Text = user.UserInfo.LastName;
+            EmailText.Text = user.UserInfo.Email.Address;
+            DateOfBirthField.SetDateTime(user.UserInfo.DateOfBirth);
             DialCodesComboBox.SelectedItem = DialCodesComboBox.Source.ToList().IndexOf(user.UserInfo.PhoneNumber.Split("|")[0]);
-
-            PhoneText = new TextField(user.UserInfo.PhoneNumber.Split("|")[1])
-            {
-                X = Pos.Right(DialCodesComboBox) + 1,
-                Y = Pos.Top(phoneLabel),
-                Width = 39
-            };
-
-            PhoneText.TextChanged += (text) =>
-            {
-                if (!int.TryParse(PhoneText.Text == "" ? "0" : (string)PhoneText.Text, out _))
-                    PhoneText.Text = text == "" ? "" : text;
-                else if (PhoneText.Text.Length > 10)
-                    PhoneText.Text = text;
-                PhoneText.CursorPosition = PhoneText.Text.Length;
-            };
-
-            Add(phoneLabel, DialCodesComboBox, PhoneText);
-            #endregion
-
-            #region Date of birth
-            Label dateOfBirthLabel = new Label()
-            {
-                Text = "Geboortedatum:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(phoneLabel) + 1,
-            };
-
-            DateOfBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList())
-            {
-                X = Pos.Right(dateOfBirthLabel) + 6,
-                Y = Pos.Bottom(phoneLabel) + 1
-            };
-
-            Add(dateOfBirthLabel, DateOfBirthField);
-            #endregion
-
-            #region Nationality
-            StreamReader reader = new StreamReader("countries.json");
-            string countriesFile = reader.ReadToEnd();
-
-            Label nationalityLabel = new Label()
-            {
-                Text = "Nationaliteit:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(dateOfBirthLabel) + 1,
-            };
-
-            NationalityComboBox = new ComboBox()
-            {
-                X = Pos.Left(DialCodesComboBox),
-                Y = Pos.Bottom(dateOfBirthLabel) + 1,
-                Width = 47,
-                Height = 8,
-            };
-
-            NationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
+            PhoneText.Text = user.UserInfo.PhoneNumber.Split("|")[1];
             NationalityComboBox.SelectedItem = NationalityComboBox.Source.ToList().IndexOf(user.UserInfo.Nationality);
-
-            Add(nationalityLabel, NationalityComboBox);
-            #endregion
-
-            #region Document Information
-            Label documentNumberLabel = new Label()
-            {
-                Text = "Document nummer:",
-                X = Pos.Left(nationalityLabel),
-                Y = Pos.Bottom(nationalityLabel) + 1,
-            };
-
-            DocumentNumber = new TextField(user.UserInfo.DocumentNumber != null ? user.UserInfo.DocumentNumber : "")
-            {
-                X = Pos.Left(EmailText),
-                Y = Pos.Top(documentNumberLabel),
-                Width = Dim.Percent(20) - 2,
-            };
-
-            DocumentNumber.TextChanged += (text) =>
-            {
-                if (!int.TryParse(DocumentNumber.Text == "" ? "0" : (string)DocumentNumber.Text, out _))
-                    DocumentNumber.Text = text == "" ? "" : text;
-                else if (DocumentNumber.Text.Length > 9)
-                    DocumentNumber.Text = text;
-                DocumentNumber.CursorPosition = DocumentNumber.Text.Length;
-            };
-
-            Label documentTypeLabel = new Label()
-            {
-                Text = "Type:",
-                X = Pos.Right(DocumentNumber) + 1,
-                Y = Pos.Top(documentNumberLabel),
-            };
-
-            DocumentTypeComboBox = new ComboBox()
-            {
-                X = Pos.Right(documentTypeLabel) + 1,
-                Y = Pos.Top(documentNumberLabel),
-                Width = 10,
-                Height = 4,
-            };
-            DocumentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
-
+            DocumentNumber.Text = user.UserInfo.DocumentNumber != null ? user.UserInfo.DocumentNumber : "";
             DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
-
-            ExpireDateLabel = new Label()
-            {
-                Text = "Verval datum:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(documentNumberLabel) + 1,
-            };
-
-            ExpireDateField = new DateTimeField(Enumerable.Range(1960, 46).ToList())
-            {
-                X = Pos.Left(EmailText),
-                Y = Pos.Top(ExpireDateLabel),
-            };
-
-            Add(documentNumberLabel, DocumentNumber, documentTypeLabel, DocumentTypeComboBox);
-            Add(ExpireDateLabel, ExpireDateField);
-            #endregion
-
-            Button backButton = new Button()
-            {
-                Text = "Terug",
-                X = 0,
-                Y = Pos.Bottom(ExpireDateLabel) + 4
-            };
-
-            backButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-            Add(backButton);
-        }
-        else
-        {
-            #region Name
-            Label firstnameLabel = new Label()
-            {
-                Text = "Voornaam*:",
-            };
-
-            FirstnameText = new TextField("")
-            {
-                X = Pos.Right(firstnameLabel) + 1,
-                Width = 22,
-            };
-
-            Label prepositionLabel = new Label()
-            {
-                Text = "Tussenvoegsel:",
-                X = Pos.Right(FirstnameText) + 1
-            };
-            Label PrepositionLabel = new Label()
-            {
-                Text = "Tussenvoegsel:",
-                X = Pos.Right(FirstnameText) + 1
-            };
-
-            PrepositionText = new TextField("")
-            {
-                X = Pos.Right(prepositionLabel) + 1,
-                Width = 10,
-            };
-
-            Label lastnameLabel = new Label()
-            {
-                Text = "Achternaam:",
-                X = Pos.Right(PrepositionText) + 1
-            };
-
-            LastnameText = new TextField("")
-            {
-                X = Pos.Right(lastnameLabel) + 1,
-                Width = 22,
-            };
-
-            Label attentionLabel = new Label
-            {
-                Text = "*voornaam zoals op het paspoort",
-                X = Pos.Right(LastnameText) + 2,
-            };
-
-            #endregion
-            Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
-
-            #region User
-            Label emailLabel = new Label()
-            {
-                Text = "E-mailadres:",
-                Y = Pos.Bottom(firstnameLabel) + 1,
-            };
-
-            EmailText = new TextField()
-            {
-                X = Pos.Right(emailLabel) + 8,
-                Y = Pos.Top(emailLabel),
-                Width = Dim.Percent(20),
-            };
-
-            Add(emailLabel, EmailText);
-            #endregion
-
-
-            #region Phonenumber
-            StreamReader dialcodesReader = new StreamReader("dial_codes.json");
-            string dialcodesFile = dialcodesReader.ReadToEnd();
-
-            Label phoneLabel = new Label()
-            {
-                Text = "Telefoonnummer:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(EmailText) + 1,
-            };
-            dialCodesComboBox = new ComboBox()
-            {
-                X = Pos.Left(EmailText),
-                Y = Pos.Top(phoneLabel),
-                Width = 7,
-                Height = 4,
-            };
-
-            dialCodesComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(dialcodesFile));
-
-            phoneText = new TextField("")
-            {
-                X = Pos.Right(dialCodesComboBox) + 1,
-                Y = Pos.Top(phoneLabel),
-                Width = 39
-            };
-
-            phoneText.TextChanged += (text) =>
-            {
-                if (!int.TryParse(phoneText.Text == "" ? "0" : (string)phoneText.Text, out _))
-                    phoneText.Text = text == "" ? "" : text;
-                else if (phoneText.Text.Length > 10)
-                    phoneText.Text = text;
-                phoneText.CursorPosition = phoneText.Text.Length;
-            };
-
-            Add(phoneLabel, dialCodesComboBox, phoneText);
-            #endregion
-
-            #region Date of birth
-            Label dateOfBirthLabel = new Label()
-            {
-                Text = "Geboortedatum:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(phoneLabel) + 1,
-            };
-
-            DateOfBirthField = new DateTimeField(Enumerable.Range(1960, 46).ToList())
-            {
-                X = Pos.Right(dateOfBirthLabel) + 6,
-                Y = Pos.Top(dateOfBirthLabel),
-            };
-
-            Add(dateOfBirthLabel, DateOfBirthField);
-            #endregion
-
-            #region Nationality
-            StreamReader reader = new StreamReader("countries.json");
-            string countriesFile = reader.ReadToEnd();
-
-            Label nationalityLabel = new Label()
-            {
-                Text = "Nationaliteit:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(dateOfBirthLabel) + 1,
-            };
-
-            nationalityComboBox = new ComboBox()
-            {
-                X = Pos.Right(nationalityLabel) + 6,
-                Y = Pos.Top(nationalityLabel),
-                Width = 47,
-                Height = 8,
-            };
-
-            nationalityComboBox.SetSource(JsonConvert.DeserializeObject<List<string>>(countriesFile));
-
-            Add(nationalityLabel, nationalityComboBox);
-            #endregion
-
-            #region Document Information
-
-            Label documentNumberLabel = new Label()
-            {
-                Text = "Document nummer:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(nationalityLabel) + 1,
-            };
-
-            documentNumber = new TextField("")
-            {
-                X = Pos.Right(documentNumberLabel) + 4,
-                Y = Pos.Top(documentNumberLabel),
-                Width = Dim.Percent(20) - 2,
-            };
-
-            documentNumber.TextChanged += (text) =>
-            {
-                if (!int.TryParse(documentNumber.Text == "" ? "0" : (string)documentNumber.Text, out _))
-                    documentNumber.Text = text == "" ? "" : text;
-                else if (documentNumber.Text.Length > 9)
-                    documentNumber.Text = text;
-                documentNumber.CursorPosition = documentNumber.Text.Length;
-            };
-
-            Label documentTypeLabel = new Label()
-            {
-                Text = "Type:",
-                X = Pos.Right(documentNumber) + 1,
-                Y = Pos.Top(documentNumberLabel),
-            };
-
-            documentTypeComboBox = new ComboBox()
-            {
-                X = Pos.Right(documentTypeLabel) + 1,
-                Y = Pos.Top(documentNumber),
-                Width = 10,
-                Height = 4,
-            };
-            documentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
-
-            Label expireDateLabel = new Label()
-            {
-                Text = "Verval datum:",
-                X = Pos.Left(emailLabel),
-                Y = Pos.Bottom(documentNumberLabel) + 1,
-            };
-
-            ExpireDateField = new DateTimeField(Enumerable.Range(1960, 46).ToList())
-            {
-                X = Pos.Right(expireDateLabel) + 7,
-                Y = Pos.Top(expireDateLabel),
-            };
-
-            Add(documentNumberLabel, documentNumber, documentTypeComboBox, documentTypeLabel);
-            Add(expireDateLabel, ExpireDateField);
-            #endregion
-
-            Button forwardButton = new Button()
-            {
-                Text = "Volgende",
-                Y = Pos.Bottom(expireDateLabel) + 1
-            };
-
-            forwardButton.Clicked += () =>
-            {
-
-            };
-
-            Button backButton = new Button()
-            {
-                Text = "Terug",
-                X = Pos.Right(forwardButton) + 1,
-                Y = Pos.Bottom(expireDateLabel) + 1,
-            };
-
-            backButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-            Add(forwardButton, backButton);
+            ExpireDateField.SetDateTime(user.UserInfo.ExpirationDate != null ? (DateTime)user.UserInfo.ExpirationDate : DateTime.Now);
         }
     }
 }

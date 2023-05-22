@@ -82,7 +82,7 @@ public class FlightPanelUser : FlightPanel
 {
     public FlightPanelUser(List<Flight> flights) : base(flights)
     {
-        FlightsListView.OpenSelectedItem += (flight) => { WindowManager.GoForwardOne(new SeattingPlan((Flight)flight.Value)); };
+        FlightsListView.OpenSelectedItem += (flight) => { WindowManager.GoForwardOne(new Booking((Flight)flight.Value)); };
         Button goBackButton = new Button()
         {
             Y = Pos.Bottom(CategoryListView) + 3,

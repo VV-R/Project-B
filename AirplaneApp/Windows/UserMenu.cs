@@ -68,7 +68,7 @@ public class UserMenu : Toplevel
             Y = 15,
         };
 
-        Test2.Clicked += () => { WindowManager.GoForwardOne(new Booking()); };
+        Test2.Clicked += () => { WindowManager.GoForwardOne(new Booking(WindowManager.Flights[0])); };
 
 
         Add(nameLabel, bookingButton, flightScheduleButton, searchReservation, airplaneInformationButton,Test, infoButton, exitButton, Test2);
