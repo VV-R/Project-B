@@ -2,9 +2,10 @@ using System.Net.Mail;
 namespace Entities;
 public class User
 {
-    public int IdUser;
-    public UserInfo UserInfo;
-    public string? Password;
+    public int IdUser {get; set; }
+    public UserInfo UserInfo {get; set; }
+    public string Password {get; set; }
+    public string Role {get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
     
     public User (int id, UserInfo userInfo, string password)
@@ -12,11 +13,7 @@ public class User
         IdUser = id;
         UserInfo = userInfo;
         Password = password;
-    }
-    public User(int id, UserInfo userInfo)
-    {
-        IdUser = id;
-        UserInfo = userInfo;
+        Role = "Customer";
     }
 
     public override string ToString()
@@ -28,16 +25,16 @@ public class User
 }
 public class UserInfo
 {
-    public string FirstName;
-    public string Preposition;
-    public string LastName;
-    public MailAddress Email;
-    public string PhoneNumber;
-    public DateTime DateOfBirth;
-    public string Nationality;
-    public string? DocumentNumber;
-    public string? DocumentType;
-    public DateTime? ExpirationDate;
+    public string FirstName {get; set;}
+    public string Preposition {get; set;}
+    public string LastName {get; set;}
+    public MailAddress Email {get; set;}
+    public string PhoneNumber {get; set;}
+    public DateTime DateOfBirth {get; set;}
+    public string Nationality {get; set;}
+    public string? DocumentNumber {get; set;}
+    public string? DocumentType {get; set;}
+    public DateTime? ExpirationDate {get; set;}
    public UserInfo(string firstName, string preposition, 
                     string lastname, MailAddress email, string phonenumber, 
                     DateTime dateofbirth, string  nationality, string documentNumber, string documenttype, DateTime expirationDate)

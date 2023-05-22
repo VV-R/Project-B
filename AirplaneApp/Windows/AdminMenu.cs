@@ -62,10 +62,10 @@ public class SearchUsers : Toplevel
 
         // Want a list of users from the database
         List<User> users = new List<User>() {new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
-                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland")) {
+                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "1234") {
             Reservations = new List<Ticket>() { new Ticket(0, WindowManager.Flights.First().FlightNumber, 1, "B3", DateTime.Now.AddDays(2))}},
             new User(2, new Entities.UserInfo("Steyn", "", "Hellendoorn", new MailAddress("idk@gmail.com"),
-                               "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"))
+                               "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"), "1234")
         };
 
 
