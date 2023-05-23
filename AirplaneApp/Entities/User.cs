@@ -29,14 +29,15 @@ public class UserInfo
     public string FirstName {get; set;}
     public string Preposition {get; set;}
     public string LastName {get; set;}
-    public MailAddress Email {get; set;}
-    public string PhoneNumber {get; set;}
+    public MailAddress? Email {get; set;}
+    public string? PhoneNumber {get; set;}
     public DateTime DateOfBirth {get; set;}
     public string Nationality {get; set;}
     public string? DocumentNumber {get; set;}
     public string? DocumentType {get; set;}
     public DateTime? ExpirationDate {get; set;}
-   public UserInfo(string firstName, string preposition, 
+    public string? IBAN {get; set; }
+    public UserInfo(string firstName, string preposition,
                     string lastname, MailAddress email, string phonenumber, 
                     DateTime dateofbirth, string  nationality, string documentNumber, string documenttype, DateTime expirationDate)
     {
