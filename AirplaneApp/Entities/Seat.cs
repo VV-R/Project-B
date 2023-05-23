@@ -28,8 +28,6 @@ public class InteraciveSeat : Label
     {
         Seat = seat;
         Text = Seat.Text;
-        X = Seat.X;
-        Y = Seat.Y;
         Occupied = occupied;
         if (Occupied)
         {
