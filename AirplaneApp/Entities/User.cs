@@ -2,18 +2,25 @@ using System.Net.Mail;
 namespace Entities;
 public class User
 {
-    public int IdUser {get; set; }
+    public int IdUser { get; set; }
     public UserInfo UserInfo {get; set; }
+    public int UserInfoId { get; set; }
     public string Password {get; set; }
     public string Role {get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
-    
+
     public User (int id, UserInfo userInfo, string password)
     {
         IdUser = id;
         UserInfo = userInfo;
         Password = password;
         Role = "Customer";
+    }
+
+    public User (int idUser, int userInfoId, string password) {
+        IdUser = idUser;
+        UserInfoId = userInfoId;
+        Password = password;
     }
 
     public override string ToString()
@@ -25,6 +32,7 @@ public class User
 }
 public class UserInfo
 {
+    public int Id {get; set; }
     public string FirstName {get; set;}
     public string Preposition {get; set;}
     public string LastName {get; set;}
@@ -37,31 +45,31 @@ public class UserInfo
     public DateTime? ExpirationDate {get; set;}
     public string? IBAN {get; set; }
     public UserInfo(string firstName, string preposition,
-                    string lastname, MailAddress email, string phonenumber, 
-                    DateTime dateofbirth, string  nationality, string documentNumber, string documenttype, DateTime expirationDate)
+                    string lastName, MailAddress email, string phoneNumber, 
+                    DateTime dateOfBirth, string  nationality, string documentNumber, string documentType, DateTime expirationDate)
     {
         FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
         DocumentNumber = documentNumber;
-        DocumentType = documenttype;
+        DocumentType = documentType;
         ExpirationDate = expirationDate;
     }
     public UserInfo(string firstName, string preposition, 
-                    string lastname, MailAddress email, string phonenumber, 
-                    DateTime dateofbirth, string  nationality)
+                    string lastName, MailAddress email, string phoneNumber, 
+                    DateTime dateOfBirth, string  nationality)
     {
 
         FirstName = firstName;
         Preposition = preposition;
-        LastName = lastname;
+        LastName = lastName;
         Email = email;
-        PhoneNumber = phonenumber;
-        DateOfBirth = dateofbirth;
+        PhoneNumber = phoneNumber;
+        DateOfBirth = dateOfBirth;
         Nationality = nationality;
     }
 }
