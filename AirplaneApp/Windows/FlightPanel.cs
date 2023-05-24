@@ -82,7 +82,7 @@ public class FlightPanelUser : FlightPanel
 {
     public FlightPanelUser(List<Flight> flights) : base(flights)
     {
-        FlightsListView.OpenSelectedItem += (flight) => { WindowManager.GoForwardOne(new Booking((Flight)flight.Value)); };
+        FlightsListView.OpenSelectedItem += (flight) => { var n = MessageBox.Query("Passagiers", "Met hoeveel personen reist u?", "1", "2", "3", "4", "5", "6", "7", "8", "Annuleren"); if (n == 8) return; WindowManager.GoForwardOne(new BookingProcess(n + 1,(Flight)flight.Value)); };
         Button goBackButton = new Button()
         {
             Y = Pos.Bottom(CategoryListView) + 3,
