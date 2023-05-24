@@ -9,6 +9,8 @@ public class User
     public string Role {get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
 
+    public User() {}
+
     public User (int id, UserInfo userInfo, string password)
     {
         IdUser = id;
@@ -43,7 +45,10 @@ public class UserInfo
     public string? DocumentNumber {get; set;}
     public string? DocumentType {get; set;}
     public DateTime? ExpirationDate {get; set;}
-    public string? IBAN {get; set; }
+    public string? IBAN {get; set;}
+
+    public UserInfo() {}
+
     public UserInfo(string firstName, string preposition,
                     string lastName, MailAddress email, string phoneNumber, 
                     DateTime dateOfBirth, string  nationality, string documentNumber, string documentType, DateTime expirationDate)
