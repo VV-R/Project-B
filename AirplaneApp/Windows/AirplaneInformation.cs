@@ -33,7 +33,7 @@ public class AirplaneInformation : Toplevel
             X = Pos.Right(boeing_787) + 10
         };
 
-        terug.Clicked += () => { WindowManager.GoToFirst(); };
+        terug.Clicked += () => { WindowManager.GoBackOne(this); };
 
         boeing_737.Clicked += () =>
         {
