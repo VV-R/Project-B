@@ -236,17 +236,13 @@ public class EditUserInfo : UserInfoWindow
 
         editButton.Clicked += () =>
         {
-            try {
-                User? currentUser = WindowManager.CurrentUser;
-                if (currentUser != null)
-                {
-                    User? user = EditInfo(currentUser, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime());
-                    if (user != null) {
-                        WindowManager.GoBackOne(this);
-                    }
+            User? currentUser = WindowManager.CurrentUser;
+            if (currentUser != null)
+            {
+                User? user = EditInfo(currentUser, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime());
+                if (user != null) {
+                    WindowManager.GoBackOne(this);
                 }
-            } catch (FormatException e) {
-                Console.WriteLine(e.Message);
             }
         };
 
@@ -324,9 +320,33 @@ public class EditUserInfoAdmin : UserInfoWindow
 {
     public EditUserInfoAdmin(User user) : base(user)
     {
+        Label roleLabel = new Label() {
+            Text = "Rol:",
+            Y = Pos.Bottom(ExpireDateLabel) + 2,
+        };
+
+        ComboBox roleComboBox = new ComboBox() {
+            Y = Pos.Top(roleLabel),
+            X = Pos.Left(EmailText),
+            Width = 12,
+            Height = 3,
+        };
+
+        roleComboBox.SetSource(new List<string>() {"Customer", "Admin"});
+        roleComboBox.SelectedItem = roleComboBox.Source.ToList().IndexOf(user.Role);
+
+        Add(roleLabel, roleComboBox);
+
         Button editButton = new Button() {
             Text = "Aanpassen",
-            Y = Pos.Bottom(ExpireDateLabel) + 1,
+            Y = Pos.Bottom(roleLabel) + 4,
+        };
+
+        editButton.Clicked += () => {
+                User? userChanged = EditInfo(user, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime(), (string)roleComboBox.Text);
+                if (userChanged != null) {
+                    WindowManager.GoBackOne(this);
+                }
         };
 
         Button deleteButton = new Button() {
@@ -334,6 +354,8 @@ public class EditUserInfoAdmin : UserInfoWindow
             X = Pos.Right(editButton) + 1,
             Y = Pos.Top(editButton),
         };
+
+        deleteButton.Clicked += () => { if (DeleteUser(user)) WindowManager.GoBackOne(this); };
 
         Button exitButton = new Button() {
             Text = "Annuleren",
@@ -344,5 +366,78 @@ public class EditUserInfoAdmin : UserInfoWindow
         exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(editButton, deleteButton, exitButton);
+    }
+
+    private User? EditInfo(User user, DateTime dateOfBirth, DateTime expireDate, string role)
+    {
+        if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
+        EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
+            MessageBox.ErrorQuery("Aanpassen", "Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+        }
+
+        MailAddress address;
+        bool isValid = false;
+        try {
+            address = new MailAddress((string)EmailText.Text);
+            isValid = (address.Address == (string)EmailText.Text);
+        } catch (FormatException) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
+
+        if (!isValid) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
+            return null;
+        }
+
+        if (PhoneText.Text.Length < 9) {
+            MessageBox.ErrorQuery("Aanpassen", "Onjuist telefoonnummer", "Ok");
+            return null;
+        }
+
+        DateTime currentDate = DateTime.Today;
+        int age =  currentDate.Year - dateOfBirth.Year;
+        if (currentDate < dateOfBirth.AddYears(age))
+            age--;
+
+        if (age < 18) {
+            MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Ok");
+            return null;
+        }
+
+        if (DocumentTypeComboBox.Text == "" && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", "Document type niet ingevuld", "Ok");
+            return null;
+        } else if (currentDate > expireDate && DocumentNumber.Text != "") {
+            MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
+            return null;
+        } else if (DocumentNumber.Text != "") {
+            user.UserInfo.ExpirationDate = expireDate;
+            user.UserInfo.DocumentNumber = (string)DocumentNumber.Text;
+            user.UserInfo.DocumentType = (string)DocumentTypeComboBox.Text;
+        }
+        string phonenumber = $"{DialCodesComboBox.Text}|{PhoneText.Text}";
+        user.UserInfo.FirstName = (string)FirstnameText.Text;
+        user.UserInfo.Preposition = (string)PrepositionText.Text;
+        user.UserInfo.LastName = (string)LastnameText.Text;
+        user.UserInfo.Email = new MailAddress((string)EmailText.Text);
+        user.UserInfo.PhoneNumber = phonenumber;
+        user.UserInfo.DateOfBirth = dateOfBirth;
+        user.UserInfo.Nationality = (string)NationalityComboBox.Text;
+        user.Role = role;
+        return user;
+    }
+
+    private bool DeleteUser(User user)
+    {
+        int n = MessageBox.ErrorQuery("Verwijderen", $"Weet u zeker dat u klant {user.FullName()} wilt verwijderen", "Ja", "Nee");
+        if (n == 1)
+            return false;
+        // ToDo:
+        // Remove from the database
+        // Should be a few lines
+        return true;
+
     }
 }
