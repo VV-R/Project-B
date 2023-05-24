@@ -72,4 +72,18 @@ public class UserInfo
         DateOfBirth = dateOfBirth;
         Nationality = nationality;
     }
+
+    public UserInfo(string firstName, string preposition,
+                    string lastname,DateTime dateofbirth, string nationality,
+                    string documentNumber, DateTime expirationDate, string documentType)
+    {
+        FirstName = firstName;
+        Preposition = preposition;
+        LastName = lastname;
+        DateOfBirth = dateofbirth;
+        Nationality = nationality;
+        DocumentNumber = documentNumber;
+        DocumentType = documentType;
+        ExpirationDate = expirationDate;
+    }
 }
