@@ -23,4 +23,5 @@ Dit een console applicatie voor het reserveren vluchten en het checken van vluch
 ## Documentation
 
 [Terminal.Gui](https://github.com/gui-cs/Terminal.Gui)
-
+[Newtonsoft.Json](https://www.newtonsoft.com/json)
+[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
