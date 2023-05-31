@@ -308,7 +308,7 @@ public class BookingProcess : Toplevel
     {
         currentFlight = flight;
         maxSeats = seats;
-        SeatManager.MaxSeats = maxSeats;
+        InteraciveSeat.MaxSeats = maxSeats;
         seatsCount = seats;
         currentWindow = new MainBooking() { ColorScheme = WindowManager.CurrentColor };
         Add(currentWindow);

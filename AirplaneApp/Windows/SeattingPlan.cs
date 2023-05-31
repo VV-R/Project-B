@@ -266,7 +266,7 @@ public class SeattingPlan : Toplevel
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
             if (seats.Count == 0)
                 MessageBox.ErrorQuery("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-            else if (SeatManager.SeatCount < SeatManager.MaxSeats)
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
                 MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
             List<string> selectedSeats = new List<string>();
             seats.ForEach(s => selectedSeats.Add((string)s.Text));
@@ -519,7 +519,7 @@ public class SeattingPlan : Toplevel
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-            else if (SeatManager.SeatCount < SeatManager.MaxSeats)
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
                 MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
             List<string> selectedSeats = new List<string>();
             seats.ForEach(s => selectedSeats.Add((string)s.Text));
@@ -738,7 +738,7 @@ public class SeattingPlan : Toplevel
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-            else if (SeatManager.SeatCount < SeatManager.MaxSeats)
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
                 MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
             List<string> selectedSeats = new List<string>();
             seats.ForEach(s => selectedSeats.Add((string)s.Text));
