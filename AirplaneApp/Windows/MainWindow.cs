@@ -6,22 +6,21 @@ using Terminal.Gui;
 namespace Windows;
 public class MainWindow : Window
 {
-    public StringBuilder AirlineText;
     public static Button LoginButton = new Button();
 
     public MainWindow()
     {
         Title = "Rotterdam Airline";
-        AirlineText = new StringBuilder();
-        AirlineText.AppendLine(@" _____       _   _               _                            _      _ _");
-        AirlineText.AppendLine(@"|  __ \     | | | |             | |                     /\   (_)    | (_)");
-        AirlineText.AppendLine(@"| |__) |___ | |_| |_ ___ _ __ __| | __ _ _ __ ___      /  \   _ _ __| |_ _ __   ___");
-        AirlineText.AppendLine(@"|  _  // _ \| __| __/ _ \ '__/ _` |/ _` | '_ ` _ \    / /\ \ | | '__| | | '_ \ / _ \");
-        AirlineText.AppendLine(@"| | \ \ (_) | |_| ||  __/ | | (_| | (_| | | | | | |  / ____ \| | |  | | | | | |  __/");
-        AirlineText.AppendLine(@"|_|  \_\___/ \__|\__\___|_|  \__,_|\__,_|_| |_| |_| /_/    \_\_|_|  |_|_|_| |_|\___|");
+        var airlineText = new StringBuilder();
+        airlineText.AppendLine(@" _____       _   _               _                            _      _ _");
+        airlineText.AppendLine(@"|  __ \     | | | |             | |                     /\   (_)    | (_)");
+        airlineText.AppendLine(@"| |__) |___ | |_| |_ ___ _ __ __| | __ _ _ __ ___      /  \   _ _ __| |_ _ __   ___");
+        airlineText.AppendLine(@"|  _  // _ \| __| __/ _ \ '__/ _` |/ _` | '_ ` _ \    / /\ \ | | '__| | | '_ \ / _ \");
+        airlineText.AppendLine(@"| | \ \ (_) | |_| ||  __/ | | (_| | (_| | | | | | |  / ____ \| | |  | | | | | |  __/");
+        airlineText.AppendLine(@"|_|  \_\___/ \__|\__\___|_|  \__,_|\__,_|_| |_| |_| /_/    \_\_|_|  |_|_|_| |_|\___|");
 
         Label airlineTextLabel = new Label() {
-            Text = AirlineText.ToString(),
+            Text = airlineText.ToString(),
         };
 
         Label currentTime = new Label() {
