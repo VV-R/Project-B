@@ -1,0 +1,36 @@
+[
+    {
+        "UserInfo": {
+            "FirstName": "Henk",
+            "Preposition": "de",
+            "LastName": "Groot",
+            "MailAddress": "henk@aircraft.sh",
+            "PhoneNumber": "+31 12345678",
+            "DateOfBirth": "1995-05-22",
+            "Nationality": "NL",
+            "DocumentNumber": "12345",
+            "DocumentType": "PassPort",
+            "ExpirationDate": "2025-05-22",
+            "IBAN": "NL CGTY 241414"
+        },
+        "Role": "User",
+        "Password": "geheim"
+    },
+    {
+        "UserInfo": {
+            "FirstName": "Freek",
+            "Preposition": "",
+            "LastName": "Vonk",
+            "MailAddress": "Freekie@hr.nl",
+            "PhoneNumber": "+31 87654321",
+            "DateOfBirth": "1995-05-22",
+            "Nationality": "NL",
+            "DocumentNumber": "12346",
+            "DocumentType": "PassPort",
+            "ExpirationDate": "2025-05-22",
+            "IBAN": "NL CGTY 241441"
+        },
+        "Role": "Admin",
+        "Password": "geheim123"
+    }
+]

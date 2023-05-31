@@ -4,3 +4,6 @@ obj
 bin
 .vscode
 .config
+*.db
+*.db-shm
+*.db-wal

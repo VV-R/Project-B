@@ -6,15 +6,15 @@ namespace Db {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
-    class ApplicationDbContext : DbContext {
-        private readonly IConfiguration _config;
+    public class ApplicationDbContext : DbContext {
+        private string _connectionString;
 
-        //public ApplicationDbContext(IConfiguration config) {
-        //    _config = config;
-        //}
+        public ApplicationDbContext(string connectionString = "Data Source=./airport.db;") {
+            _connectionString = connectionString;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlite("Data Source=./airport.db;");
+            optionsBuilder.UseSqlite(_connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
