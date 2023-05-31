@@ -38,6 +38,9 @@ public static class WindowManager
         Application.MainLoop.Invoke(() => {
             Application.Current.Remove(oldWindow);
             newWindow.Y = 8;
+            // Set newWindow.Width and newWindow.Height to ints first
+            // or the user needs to rezise the window first in order to see
+            // any content.
             newWindow.Width = 238;
             newWindow.Height = 53;
             newWindow.Width = Dim.Fill();
