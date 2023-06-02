@@ -17,4 +17,4 @@ U kunt het programma als normaal uitvoeren, maar het heeft wel twee argumenten n
 
 In deze repository staat al een map met test data die u kunt gebruiken: TestData.
 
-Een voorbeeld hoe u het programma kan uitvoeren: `dotnet run -- ../AirplaneApp/airport.db ../TestData`.
+Een voorbeeld hoe u het programma kan uitvoeren: `dotnet run -- ../TestData/ "Data Source=../AirplaneApp/airport.db"`.
