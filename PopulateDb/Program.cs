@@ -9,8 +9,6 @@ class Program {
         string data = args[0];
         string db = args[1]; 
 
-        Console.WriteLine(db);
-
         using (var context = new ApplicationDbContext(db)) {
            AddEntities<User>(data, "Users.json", context.Users);
            AddEntities<Flight>(data, "Flights.json", context.Flights);
