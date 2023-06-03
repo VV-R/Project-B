@@ -22,17 +22,19 @@ try
     try {
         Application.Run<MainWindow>();
     }
-    catch (Exception e) {
-        string path = $"logs/{DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss")}.log";
-        if (!Directory.Exists("logs")) {
-            Directory.CreateDirectory("logs");
-        }
-        using (var writer = new StreamWriter(path)) {
-            writer.Write(e.ToString());
-        }
+    finally
+    {
+        Application.Shutdown();
     }
 }
-finally
-{
-    Application.Shutdown();
+catch (Exception e) {
+    string path = $"logs/{DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss")}.log";
+    if (!Directory.Exists("logs")) {
+        Directory.CreateDirectory("logs");
+    }
+    using (var writer = new StreamWriter(path)) {
+        writer.Write(e.ToString());
+    }
+    Console.WriteLine($"The program crashed, please read '{path}' for more info.");
 }
+
