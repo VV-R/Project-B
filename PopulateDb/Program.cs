@@ -1,13 +1,20 @@
 ﻿using System.Text.Json;
+using System.Globalization;
+using System.Text.Json.Serialization;
 using System.IO;
 using Db;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
 class Program {
+    static JsonSerializerOptions DeserializeOptions;
+
     public static void Main(string[] args) {
         string data = args[0];
         string db = args[1]; 
+
+        DeserializeOptions = new ();
+        DeserializeOptions.Converters.Add(new EmailJsonConverter());
 
         using (var context = new ApplicationDbContext(db)) {
            AddEntities<User>(data, "Users.json", context.Users);
@@ -25,7 +32,7 @@ class Program {
             jsonString = sr.ReadToEnd();
         }
 
-        List<T>? objs = JsonSerializer.Deserialize<List<T>>(jsonString);
+        List<T>? objs = JsonSerializer.Deserialize<List<T>>(jsonString, DeserializeOptions);
         foreach (var obj in objs) {
             set.Add(obj);
         }
