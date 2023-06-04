@@ -7,9 +7,13 @@ using Microsoft.EntityFrameworkCore;
 class Program {
     public static void Main(string[] args) {
         string data = args[0];
-        string db = args[1]; 
+        string db = args[1];
 
         Console.WriteLine(db);
+        if (data.ToLower() == "flights"){
+            PopulateFlights.Start(db);
+            return;
+        }
 
         using (var context = new ApplicationDbContext(db)) {
            AddEntities<User>(data, "Users.json", context.Users);
