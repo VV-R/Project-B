@@ -19,6 +19,13 @@ public class Flight : IComparable<Flight>
         ArrivalTime = arrivalTime;
         Airplane = airplane;
     }
+    public Flight(string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane) {
+        DepartureLocation = departureLocation;
+        DepartureTime = departureTime;
+        ArrivalLocation = arrivalLocation;
+        ArrivalTime = arrivalTime;
+        Airplane = airplane;
+    }
     
     public override string ToString() {
         string flightString = $"Bestemming: {ArrivalLocation};" .PadRight(23);

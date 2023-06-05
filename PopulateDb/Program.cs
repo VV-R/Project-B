@@ -11,8 +11,12 @@ class Program {
 
     public static void Main(string[] args) {
         string data = args[0];
-        string db = args[1]; 
+        string db = args[1];
 
+        if (data.ToLower() == "flights"){
+            PopulateFlights.Start(db);
+            return;
+        }
         DeserializeOptions = new ();
         DeserializeOptions.Converters.Add(new EmailJsonConverter());
 
