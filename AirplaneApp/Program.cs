@@ -1,5 +1,6 @@
 ﻿using Terminal.Gui;
 using Windows;
+using System.IO;
 
 Application.Init();
 
@@ -18,9 +19,22 @@ try
     Colors.ColorSchemes.Add("TextCorrect", new ColorScheme() { Focus = Terminal.Gui.Attribute.Make(Color.Green, Color.Gray)});
     Colors.ColorSchemes.Add("TextIncorrect", new ColorScheme() { Focus = Terminal.Gui.Attribute.Make(Color.Red, Color.Gray)});
     Colors.TopLevel.Focus = Application.Driver.MakeAttribute(Color.Black, Color.Gray);
-    Application.Run<MainWindow>();
+    try {
+        Application.Run<MainWindow>();
+    }
+    finally
+    {
+        Application.Shutdown();
+    }
 }
-finally
-{
-    Application.Shutdown();
+catch (Exception e) {
+    string path = $"logs/{DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss")}.log";
+    if (!Directory.Exists("logs")) {
+        Directory.CreateDirectory("logs");
+    }
+    using (var writer = new StreamWriter(path)) {
+        writer.Write(e.ToString());
+    }
+    Console.WriteLine($"The program crashed, please read '{path}' for more info.");
 }
+

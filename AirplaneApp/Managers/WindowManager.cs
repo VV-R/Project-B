@@ -38,8 +38,8 @@ public static class WindowManager
         Application.MainLoop.Invoke(() => {
             Application.Current.Remove(oldWindow);
             newWindow.Y = 8;
-            newWindow.Width = 238;
-            newWindow.Height = 53;
+            newWindow.Width = Console.WindowWidth;
+            newWindow.Height = Console.WindowHeight;
             newWindow.Width = Dim.Fill();
             newWindow.Height = Dim.Fill();
             newWindow.ColorScheme = CurrentColor;
