@@ -3,6 +3,7 @@ using System.Net.Mail;
 using Terminal.Gui;
 using Managers;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Windows;
 public class LoginScreen : Toplevel
@@ -87,8 +88,9 @@ public class LoginScreen : Toplevel
     private User? CheckLogin(string email, string password)
     {
         using (var context = new Db.ApplicationDbContext()) {
-            //User? user = context.Users.Single(u => u.UserInfo.Email.Equals(email) && u.Password == password);
-            User? user = context.Users.Single(u => u.IdUser == 1);
+            User? user = context.Users.Include(u => u.UserInfo).SingleOrDefault(
+                u => u.UserInfo.Email == new MailAddress(email) & u.Password == password
+            );
             return user;
         }
     }
