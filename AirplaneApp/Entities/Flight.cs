@@ -1,4 +1,5 @@
 using System.Collections;
+using Newtonsoft.Json;
 
 namespace Entities;
 public class Flight : IComparable<Flight>
@@ -9,7 +10,8 @@ public class Flight : IComparable<Flight>
     public string ArrivalLocation { get; set; }
     public DateTime ArrivalTime { get; set; }
     public string Airplane { get; set; }
-
+    
+    [JsonConstructor]
     public Flight(int flightNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane)
     {
         FlightNumber = flightNumber;
