@@ -61,7 +61,7 @@ public class UserInfoWindow : Toplevel
         Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
         #endregion
 
-        #region User
+        #region Email
         Label emailLabel = new Label() {
             Text = "E-mailadres:",
             Y = Pos.Bottom(firstnameLabel) + 1,
