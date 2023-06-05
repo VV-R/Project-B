@@ -86,14 +86,10 @@ public class LoginScreen : Toplevel
 
     private User? CheckLogin(string email, string password)
     {
-        // TODO: Add database check here
-
-        if (email == "admin@admin.com" && password == "password")
-            return new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
-                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "password");
-        if (email == "user@user.com" && password == "password")
-            return new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
-                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "password");
-        return null;
+        using (var context = new Db.ApplicationDbContext()) {
+            //User? user = context.Users.Single(u => u.UserInfo.Email.Equals(email) && u.Password == password);
+            User? user = context.Users.Single(u => u.IdUser == 1);
+            return user;
+        }
     }
 }
