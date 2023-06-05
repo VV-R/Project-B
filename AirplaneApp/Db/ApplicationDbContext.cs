@@ -21,6 +21,7 @@ namespace Db {
             modelBuilder.Entity<Flight>().HasKey(c => c.FlightNumber);
             modelBuilder.Entity<User>().HasKey(c => c.IdUser);
             modelBuilder.Entity<UserInfo>().HasKey(c => c.Id);
+            modelBuilder.Entity<UserInfo>().HasIndex(c => c.Email).IsUnique();
             modelBuilder.Entity<Ticket>().HasKey(c => c.Id);
             modelBuilder.Entity<Ticket>().HasOne(e => e.TheFlight).WithMany().HasForeignKey(e => e.FlightId).IsRequired();
             modelBuilder.Entity<Ticket>().HasOne(e => e.TheUser).WithMany().HasForeignKey(e => e.UserId).IsRequired();
