@@ -1,8 +1,6 @@
 using System.Net;
 using System.Net.Mail;
 using Terminal.Gui;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Entities;
 
 namespace Managers;
@@ -48,31 +46,22 @@ public static class EmailManager
         });
     }
 
-    public static void SendInvoice(UserInfo userInfo, decimal totalAmount) {
-        string fullName =  $"{userInfo.FirstName}{(userInfo.Preposition != "" ? $" {userInfo.Preposition}" : "")} {userInfo.LastName}";
-        string date = DateTime.Now.ToString("dd-MM-yyyy");
+    public static bool SendInvoice(string subject, string body, UserInfo userInfo, List<Seat> seats, Flight flight) {
+        SmtpClient client = SetupSmtp();
+        if (userInfo.Email == null)
+            return false;
+        Application.MainLoop.Invoke(async () => {
+            string invoice = InvoiceManager.MakeInvoicePdf(userInfo, seats, flight);
+            using (MailMessage message = new MailMessage(_fromMailaddress, userInfo.Email) {
+                Subject = subject,
+                Body = body,
+            })  {
+                message.Attachments.Add(new Attachment(invoice));
+                await client.SendMailAsync(message);
+            }
+            File.Delete(invoice);
+        });
 
-        Document document = new Document();
-        PdfWriter writer = PdfWriter.GetInstance(document, new FileStream("factuur.pdf", FileMode.Create));
-        document.Open();
-        
-        Font bedrijfsnaamFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 20);
-        Font adressFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
-        Font phoneFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
-        Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 32);
-
-
-        Paragraph header = new Paragraph("Factuur", headerFont);
-        Paragraph companyParagraph = new Paragraph("Rotterdam Airline", bedrijfsnaamFont) {Alignment = Element.ALIGN_RIGHT};;
-        Paragraph companyAddress = new Paragraph("Rotterdamn", adressFont) {Alignment = Element.ALIGN_RIGHT};;
-        Paragraph companyPhone = new Paragraph("06 123456789", phoneFont) {Alignment = Element.ALIGN_RIGHT};
-
-        companyParagraph.Add(companyAddress);
-        companyParagraph.Add(companyPhone);
-        header.Add(new Paragraph("Same row") { Alignment = Element.ALIGN_LEFT });
-        header.Add(companyParagraph);
-        document.Add(header);
-
-        document.Close();
+        return true;
     }
 }
