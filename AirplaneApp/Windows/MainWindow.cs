@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using System.Text;
 using Managers;
 using Terminal.Gui;
@@ -67,6 +68,9 @@ public class MainWindow : Window
         LineView line = new LineView() {
             Y = 7,
         };
+        
+        EmailManager.SendInvoice(new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
+                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), 102.20m);
 
         Application.RootKeyEvent += (key) => {if (key.Key == Key.Esc)  {WindowManager.GoBackOne(); return true; } return false; };
 
