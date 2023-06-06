@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using System.Text;
 using Managers;
 using Terminal.Gui;

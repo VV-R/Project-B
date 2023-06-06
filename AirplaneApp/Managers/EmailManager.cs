@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using Terminal.Gui;
+using Entities;
 
 namespace Managers;
 public static class EmailManager
@@ -43,5 +44,24 @@ public static class EmailManager
                 }
             }
         });
+    }
+
+    public static bool SendInvoice(string subject, string body, UserInfo userInfo, List<Seat> seats, Flight flight) {
+        SmtpClient client = SetupSmtp();
+        if (userInfo.Email == null)
+            return false;
+        Application.MainLoop.Invoke(async () => {
+            string invoice = InvoiceManager.MakeInvoicePdf(userInfo, seats, flight);
+            using (MailMessage message = new MailMessage(_fromMailaddress, userInfo.Email) {
+                Subject = subject,
+                Body = body,
+            })  {
+                message.Attachments.Add(new Attachment(invoice));
+                await client.SendMailAsync(message);
+            }
+            File.Delete(invoice);
+        });
+
+        return true;
     }
 }
