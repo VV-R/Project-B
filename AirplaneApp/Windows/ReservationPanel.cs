@@ -6,56 +6,72 @@ using Managers;
 namespace Windows;
 public class SearchReservation : Toplevel
 {
-    public ListView UsersView;
-    public SearchReservation(User user)
+    public ListView ReservationsView;
+    public TextField SearchBox;
+    public SearchReservation(User? user)
     {
-        List<Ticket> reservations = user.Reservations;
-
-        if (reservations == null)
+        if (user == null || user.Reservations == null)
             WindowManager.GoBackOne(this);
 
         Label searchBoxLabel = new Label() {
             Text = "Zoeken:"
         };
 
-        TextField searchBox = new TextField("") {
+        SearchBox = new TextField("") {
             Width = 20,
             X = Pos.Right(searchBoxLabel) + 1,
         };
 
-        UsersView = new ListView() {
-            Y = Pos.Bottom(searchBox) + 1,
+        ReservationsView = new ListView() {
+            Y = Pos.Bottom(SearchBox) + 1,
             Height = 5,
             Width = Dim.Fill(),
         };
 
-        UsersView.SetSource(reservations);
-
-        searchBox.TextChanged += (text) => {UsersView.SetSource(reservations?.FindAll((x) => {
-            return x.ToString().ToLower().Contains((string)searchBox.Text.ToLower());
-        }));};
-
         Button goBackButton = new Button() {
             Text = "Terug",
-            Y = Pos.Bottom(UsersView) + 1,
+            Y = Pos.Bottom(ReservationsView) + 1,
         };
 
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
-        Add(searchBoxLabel, searchBox, UsersView, goBackButton);
+        Add(searchBoxLabel, SearchBox, ReservationsView, goBackButton);
     }
 }
 
-public class SearchReservationAdmin : SearchReservation {
+public class SearchReservationAdmin : SearchReservation
+{
     public SearchReservationAdmin(User user) : base(user) {
-        UsersView.OpenSelectedItem += (item) => { if (user.Reservations != null)
-            WindowManager.GoForwardOne(new ReservationPanelAdmin(user, user.Reservations[item.Item])); };
+        List<Ticket> reservations = user.Reservations;
+        ReservationsView.SetSource(reservations);
+
+        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(reservations?.FindAll((x) => {
+            return x.ToString().ToLower().Contains((string)SearchBox.Text.ToLower());
+        }));};
+
+        ReservationsView.OpenSelectedItem += (item) => { if (reservations != null)
+            WindowManager.GoForwardOne(new ReservationPanelAdmin(user, reservations[item.Item])); };
     }
 }
 
-public class SearchReservationUser : SearchReservation {
+public class SearchReservationUser : SearchReservation
+{
     public SearchReservationUser() : base(WindowManager.CurrentUser) {
+        List<Flight> flights = new List<Flight>();
+        foreach (Ticket ticket in WindowManager.CurrentUser.Reservations) {
+            if (!flights.Contains(ticket.TheFlight))
+                flights.Add(ticket.TheFlight);
+        }
+        ReservationsView.SetSource(flights);
 
+        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(flights?.FindAll((x) => {
+            return x.ToString().ToLower().Contains((string)SearchBox.Text.ToLower());
+        }));};
+
+        ReservationsView.OpenSelectedItem += (item) => {
+            WindowManager.GoForwardOne(new ReservationPanelUser(
+                WindowManager.CurrentUser.Reservations.Where(t => t.FlightId == ((Flight)item.Value).FlightNumber).ToList()));
+        };
     }
 }
 
@@ -125,9 +141,12 @@ public class ReservationPanelAdmin : Toplevel
     {
         // Check if seat number is really an seat in the plane and if its not occupied
         // if (!plane.Seat.Contain(SeatnumberText.Text)) return
+        if (CurrentUser.UserInfo.Email == null)
+            return;
 
         string subject = $"Vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation}";
         string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+
 
         EmailManager.SendOneEmail(subject, body, CurrentUser.UserInfo.Email);
         CurrentTicket.SeatNumber = (string)SeatnumberText.Text;
@@ -166,5 +185,44 @@ public class ReservationPanelAdmin : Toplevel
         goBack.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(textField, sendButton, goBack);
+    }
+}
+
+public class ReservationPanelUser : Toplevel
+{
+    public ReservationPanelUser(List<Ticket> tickets)
+    {
+        Label flightLabel = new Label() {
+            Text = $"Vlucht:\n{tickets[0].TheFlight.ToNewLineString()}",
+        };
+        Add(flightLabel);
+
+        int xOffset = 40;
+        int rows = 2;
+        int labelHeight = 6;
+        for (int i = 0; i < tickets.Count; i++) {
+            Label ticketLabel = new Label() {
+                Text = $"Stoelnummer: {tickets[i].SeatNumber}\nBoarding tijd: {tickets[i].BoardingTime}",
+                Y = Pos.Bottom(flightLabel) + (labelHeight * (i / rows)) + 1,
+                X = xOffset * (i % rows)
+            };
+            UserInfo userInfo = tickets[i].TheUserInfo;
+            Label userLabel = new Label() {
+                Text = $"{userInfo.FirstName} {userInfo.Preposition} {userInfo.LastName}",
+                Y = Pos.Bottom(ticketLabel) + 1,
+                X = Pos.Left(ticketLabel),
+            };
+
+            Add(ticketLabel, userLabel);
+        }
+
+        Button goBackButton = new Button() {
+            Y = Pos.Bottom(flightLabel) + 1 + labelHeight * ((tickets.Count + 1) / rows),
+            Text = "Terug",
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
+
+        Add(goBackButton);
     }
 }
