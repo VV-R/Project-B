@@ -5,6 +5,7 @@ using Terminal.Gui;
 using Newtonsoft.Json;
 using Entities;
 using Managers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Windows;
 public class AdminMenu : Toplevel
@@ -40,7 +41,7 @@ public class AdminMenu : Toplevel
             Text = "Stoel prijzen",
             Y = Pos.Bottom(flightSchedule) + 1,
         };
-        
+
         changeSeatingPrice.Clicked += () => { WindowManager.GoForwardOne(new ChangeSeatingPrice()); };
 
         Add(nameLabel, searchUsers, searchReservation, flightSchedule, changeSeatingPrice);
@@ -60,13 +61,10 @@ public class SearchUsers : Toplevel
             X = Pos.Right(searchBoxLabel) + 1,
         };
 
-        // Want a list of users from the database
-        List<User> users = new List<User>() {new User(0, new Entities.UserInfo("Levi", "van", "Daalen", new MailAddress("admin@admin.com"),
-                               "+31|613856964", new DateTime(2004, 1, 19), "Nederland"), "1234") {
-                    Reservations = new List<Ticket>() { new Ticket(0, WindowManager.Flights.First().FlightNumber, 1, "B3", DateTime.Now.AddDays(2)) {TheFlight = WindowManager.Flights.First()}}},
-            new User(2, new Entities.UserInfo("Steyn", "", "Hellendoorn", new MailAddress("idk@gmail.com"),
-                               "+31|012345678", DateTime.Now.AddYears(-21), "Nederlands"), "1234")
-        };
+        List<User> users;
+        using (var context = new Db.ApplicationDbContext()) {
+            users = context.Users.Include(u => u.UserInfo).ToList();
+        }
 
         ListView usersView = new ListView() {
             Y = Pos.Bottom(searchBox) + 1,
@@ -318,7 +316,7 @@ public class ChangeSeatingPrice : Toplevel
                 pricesTextField.Add(kvp.Key, priceField); 
             }
         }
-        
+
         Button updatePrices = new Button() {
             Text = "Prijzen Updaten",
             Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
@@ -333,7 +331,7 @@ public class ChangeSeatingPrice : Toplevel
         };
 
         exitButton.Clicked += () => { WindowManager.GoBackOne(this); };
-        
+
         Add(updatePrices, exitButton);
    }
 
