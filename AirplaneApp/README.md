@@ -7,6 +7,7 @@ Lees verder voor instructies om het programma zelf te compileren.
     - Terminal.Gui
     - Newtonsoft.Json
     - Microsoft.EntityFrameworkCore.Sqlite
+    - iTextSharp
 
 Als u de bovengenoemde requirements hebt geïnstalleerd kunt u de app compileren en uitvoeren op uw computer.
 
