@@ -125,9 +125,7 @@ public class SearchReservation : Toplevel
             WindowManager.GoForwardOne(new ReservationPanel(user, reservations[item.Item])); };
 
         searchBox.TextChanged += (text) => {usersView.SetSource(reservations?.FindAll((x) => {
-            if (x.ToString().ToLower().Contains((string)searchBox.Text.ToLower()))
-                return true;
-            else return false;
+            return x.ToString().ToLower().Contains((string)searchBox.Text.ToLower());
         }));};
 
         Button goBackButton = new Button() {
@@ -236,7 +234,7 @@ public class ReservationPanel : Toplevel
             Text = "Versturen",
             Y = Pos.Bottom(textField) + 1
         };
-        
+
         sendButton.Clicked += () => { EmailManager.SendOneEmail($"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text, CurrentUser.UserInfo.Email); WindowManager.GoBackOne(this); };
 
         Button goBack = new Button() {
