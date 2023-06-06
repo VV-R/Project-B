@@ -6,7 +6,7 @@ using iTextSharp.text.pdf;
 namespace Managers;
 public static class InvoiceManager
 {
-    const double PRICE_COEFFICIENT = 0.25;
+    public const double PRICE_COEFFICIENT = 0.50;
     public static string MakeInvoicePdf(UserInfo userInfo, List<Seat> seats, Flight flight) {
         string invoceNumber = $"FN-{flight.FlightNumber.ToString("X4")}{userInfo.Id.ToString("X4")}";
         string fileName = $"{invoceNumber}.pdf";
@@ -47,7 +47,7 @@ public static class InvoiceManager
 
         TimeSpan flightDuration = flight.ArrivalTime - flight.DepartureTime;
         Phrase flightPhrase = new Phrase("\nVlucht:\n", header2Font);
-        flightPhrase.Add(new Phrase($"{flight.DepartureLocation}-{flight.ArrivalLocation}\n", normalText));
+        flightPhrase.Add(new Phrase($"{flight.DepartureLocation} - {flight.ArrivalLocation}\n", normalText));
         flightPhrase.Add(new Phrase($"{flight.Airplane}\nDuur (minuten): {flightDuration.TotalMinutes}", normalText));
 
         PdfPCell invoceInfoCell = new PdfPCell() { Border = Rectangle.NO_BORDER };
