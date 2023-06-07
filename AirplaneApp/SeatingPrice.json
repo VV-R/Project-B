@@ -2,8 +2,8 @@
     "Economy": 21.0,
     "Economy Plus": 25.0,
     "Comfort": 30.0,
-    "Front Seat": 22.5,
-    "Duo Seat": 40.0,
+    "Front cabin seat": 22.5,
+    "Duo seats": 40.0,
     "Club Class": 70.0,
     "United BusinessFirst": 80.0
 }
