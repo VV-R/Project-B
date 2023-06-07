@@ -29,7 +29,9 @@ public static class WindowManager
         Locations.Sort();
         _windows.Add(_firstWindow);
         StreamReader reader = new StreamReader("Flights.json");
-        Flights = JsonConvert.DeserializeObject<List<Flight>>(reader.ReadToEnd())!;
+        using (var context = new Db.ApplicationDbContext()) {
+            Flights = context.Flights.ToList();
+        }
         reader.Close();
         reader.Dispose();
     }
