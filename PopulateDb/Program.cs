@@ -22,7 +22,7 @@ class Program {
 
         using (var context = new ApplicationDbContext(db)) {
            AddEntities<User>(data, "Users.json", context.Users);
-           AddEntities<Flight>(data, "Flights.json", context.Flights);
+           PopulateFlights.Start(db);
            context.SaveChanges();
         }
 
