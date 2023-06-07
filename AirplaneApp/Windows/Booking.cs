@@ -341,8 +341,7 @@ public class BookingProcess : Toplevel
         userInfos.Add(userInfo);
 
         if (seatsCount == 1) {
-            // Do something with userInfos
-            WindowManager.GoForwardOne(new SeattingPlan(currentFlight));
+            WindowManager.GoForwardOne(new SeattingPlan(currentFlight, userInfos, maxSeats));
             return;
         }
         seatsCount--;

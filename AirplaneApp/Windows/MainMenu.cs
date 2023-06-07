@@ -6,9 +6,9 @@ using Entities;
 namespace Windows;
 public class MainMenu : Toplevel
 {
-    private User? user = null;
     public MainMenu()
     {
+        
         Button bookingButton = new Button()
         {
             Text = "Vlucht Boeken",
