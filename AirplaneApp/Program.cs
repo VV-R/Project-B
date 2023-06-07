@@ -3,7 +3,6 @@ using Windows;
 using System.IO;
 
 Application.Init();
-
 try
 {
     Application.Driver.SetCursorVisibility(CursorVisibility.Underline);

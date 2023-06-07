@@ -13,6 +13,9 @@ public class SeattingPlan : Toplevel
     public StringBuilder LeftWing;
     public StringBuilder Cockpit;
     public StringBuilder Back;
+    private int seatsCount;
+    private Flight flight;
+    private List<UserInfo> userInfos;
     public SeattingPlan()
     {
 
@@ -56,8 +59,9 @@ public class SeattingPlan : Toplevel
         Add(goBackButton, testButton, PlaneType);
     }
 
-    public SeattingPlan(Flight flight)
+    public SeattingPlan(Flight flight, List<UserInfo> userInfos, int seatsCount)
     {
+        this.seatsCount = seatsCount;
         if (flight.Airplane == "Boeing 737")
             PlanBoeing_737();
         else if (flight.Airplane == "Airbus 330")
@@ -264,11 +268,16 @@ public class SeattingPlan : Toplevel
         reservation.Clicked += () =>
         {
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            List<string> selectedSeats = new List<string>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-
-            List<string> selectedSeats = new List<string>();
-            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            else if (seats.Count != seatsCount)
+                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
+            else
+            {
+                WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
+                seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            }
         };
         Add(reservation);
     }
@@ -516,11 +525,16 @@ public class SeattingPlan : Toplevel
         reservation.Clicked += () =>
         {
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            List<string> selectedSeats = new List<string>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-
-            List<string> selectedSeats = new List<string>();
-            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            else if (seats.Count != seatsCount)
+                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
+            else
+            {
+                WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
+                seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            }
         };
         Add(reservation);
     }
@@ -734,11 +748,17 @@ public class SeattingPlan : Toplevel
         reservation.Clicked += () =>
         {
             var seats = activeSeats.Where(seat => seat.IsClicked).ToList();
+            List<string> selectedSeats = new List<string>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
 
-            List<string> selectedSeats = new List<string>();
-            seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            else if (seats.Count != seatsCount)
+                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
+            else
+            {
+                WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
+                seats.ForEach(s => selectedSeats.Add((string)s.Text));
+            }
         };
         Add(reservation);
     }
