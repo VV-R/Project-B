@@ -91,6 +91,9 @@ public class LoginScreen : Toplevel
             User? user = context.Users.Include(u => u.UserInfo).SingleOrDefault(
                 u => u.UserInfo.Email == new MailAddress(email) & u.Password == password
             );
+            if (user != null) {
+                user.Reservations = context.Tickets.Where(t => t.UserId == user.UserInfoId).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
+            }
             return user;
         }
     }

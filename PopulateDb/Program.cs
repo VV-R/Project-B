@@ -26,6 +26,19 @@ class Program {
            context.SaveChanges();
         }
 
+        // Code to create a few tickets for testing
+        // using (var context = new ApplicationDbContext(db)) {
+        //     var user = context.Users.First(u => u.Role == "User");
+        //     var flight1 = context.Flights.First(f => f.ArrivalLocation == "Parijs");
+        //     var flight2 = context.Flights.First(f => f.ArrivalLocation == "London");
+
+        //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B3", flight1.DepartureTime.AddMinutes(-30)));
+        //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B2", flight1.DepartureTime.AddMinutes(-30)));
+        //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B1", flight1.DepartureTime.AddMinutes(-30)));
+        //     context.Tickets.Add(new Ticket(flight2.FlightNumber, user.UserInfoId, "C1", flight2.DepartureTime.AddMinutes(-30)));
+        //     context.Tickets.Add(new Ticket(flight2.FlightNumber, user.UserInfoId, "C2", flight2.DepartureTime.AddMinutes(-30)));
+        //     context.SaveChanges();
+        // }
     }
 
 

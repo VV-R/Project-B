@@ -24,7 +24,7 @@ namespace Db {
             modelBuilder.Entity<UserInfo>().HasIndex(c => c.Email).IsUnique();
             modelBuilder.Entity<Ticket>().HasKey(c => c.Id);
             modelBuilder.Entity<Ticket>().HasOne(e => e.TheFlight).WithMany().HasForeignKey(e => e.FlightId).IsRequired();
-            modelBuilder.Entity<Ticket>().HasOne(e => e.TheUser).WithMany().HasForeignKey(e => e.UserId).IsRequired();
+            modelBuilder.Entity<Ticket>().HasOne(e => e.TheUserInfo).WithMany().HasForeignKey(e => e.UserId).IsRequired();
 
             modelBuilder.Entity<UserInfo>().Property(e => e.Email).HasConversion(v => v.ToString(), v => new MailAddress(v));
 
