@@ -188,6 +188,7 @@ public class FlightInfoEdit : FlightInfo
 
     private void CancelFlight(Flight flight)
     {
+        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {{0}}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
         var n = MessageBox.Query("Annuleren", "Wat is de reden van Annuleren", "Weer", "Storing", "Staking", "Vertraging", "Bijzondere reden", "Stoppen");
         string reason;
         switch(n) {
@@ -204,14 +205,14 @@ public class FlightInfoEdit : FlightInfo
                 reason = "een opgelopen vertraging";
                 break;
             case 4:
-                SpecialEmail(flight);
+                SpecialEmail(flight, string.Format(body, "%%"));
                 return;
             default:
                 WindowManager.GoBackOne(this);
                 return;
         };
-        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {reason}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
-        SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", body);
+
+        SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", String.Format(body, reason));
 
         // Remove it from the DB
         WindowManager.Flights.Remove(flight);
@@ -225,11 +226,11 @@ public class FlightInfoEdit : FlightInfo
         EmailManager.SendEmails(subject, body, emails);
     }
 
-    private void SpecialEmail(Flight flight)
+    private void SpecialEmail(Flight flight, string body)
     {
         RemoveAll();
         TextView textField = new TextView() {
-            Text = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege %%.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service",
+            Text = body,
             Width = Dim.Percent(50),
             Height = Dim.Percent(30),
             Y = 1,

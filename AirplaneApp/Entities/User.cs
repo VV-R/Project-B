@@ -29,9 +29,9 @@ public class User
     {
         return $"ID: {IdUser}; Name: {FullName()}; Email: {UserInfo.Email}; Number: {UserInfo.PhoneNumber}";
     }
-    public string ToNewLineString() => $"ID: {IdUser}\nName: {UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}\nEmail: {UserInfo.Email}\nNumber: {UserInfo.PhoneNumber}";
+    public string ToNewLineString() => $"ID: {IdUser}\nName: {UserInfo.FirstName} {UserInfo.Preposition} {UserInfo.LastName}\nEmail: {UserInfo.Email}\nNumber: {UserInfo.PhoneNumber}";
 
-    public string FullName() => $"{UserInfo.FirstName}{(UserInfo.Preposition != "" ? $" {UserInfo.Preposition}" : "")} {UserInfo.LastName}";
+    public string FullName() => $"{UserInfo.FirstName} {UserInfo.Preposition} {UserInfo.LastName}";
 }
 public class UserInfo
 {

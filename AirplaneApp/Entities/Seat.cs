@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Managers;
 
 namespace Entities;
 public class Seat
@@ -23,6 +24,8 @@ public class InteraciveSeat : Label
     public bool IsClicked = false;
     public bool Occupied;
     public Seat Seat;
+    public static int MaxSeats;
+    public static int SeatCount = 0;
 
     public InteraciveSeat(Seat seat, bool occupied)
     {
@@ -58,10 +61,17 @@ public class InteraciveSeat : Label
         IsClicked = !IsClicked;
         if (!Occupied)
         {
-            if (IsClicked)
+            if (IsClicked && InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
+            {
                 ColorScheme = Colors.ColorSchemes["SeatSelected"];
-            else if (!IsClicked)
+                InteraciveSeat.SeatCount++;
+            }
+            else if (!IsClicked && InteraciveSeat.SeatCount <= InteraciveSeat.MaxSeats)
+            {
+                if (ColorScheme != DefualtColor)
+                    InteraciveSeat.SeatCount--;
                 ColorScheme = DefualtColor;
+            }
         }
     }
 }

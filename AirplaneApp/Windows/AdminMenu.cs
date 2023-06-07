@@ -64,6 +64,9 @@ public class SearchUsers : Toplevel
         List<User> users;
         using (var context = new Db.ApplicationDbContext()) {
             users = context.Users.Include(u => u.UserInfo).ToList();
+            foreach (var user in users) {
+                user.Reservations = context.Tickets.Where(t => t.UserId == user.UserInfoId).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
+            }
         }
 
         ListView usersView = new ListView() {
@@ -74,7 +77,7 @@ public class SearchUsers : Toplevel
 
         usersView.SetSource(users);
         if (isReservation)
-            usersView.OpenSelectedItem += (item) => {  WindowManager.GoForwardOne(new SearchReservation((User)item.Value)); };
+            usersView.OpenSelectedItem += (item) => {  WindowManager.GoForwardOne(new SearchReservationAdmin((User)item.Value)); };
         else
             usersView.OpenSelectedItem += (item) => { WindowManager.GoForwardOne(new EditUserInfoAdmin((users[item.Item]))); };
 
@@ -95,160 +98,6 @@ public class SearchUsers : Toplevel
     }
 }
 
-public class SearchReservation : Toplevel
-{
-    public SearchReservation(User user)
-    {
-        List<Ticket> reservations = user.Reservations;
-
-        if (reservations == null)
-            WindowManager.GoBackOne(this);
-
-        Label searchBoxLabel = new Label() {
-            Text = "Zoeken:"
-        };
-
-        TextField searchBox = new TextField("") {
-            Width = 20,
-            X = Pos.Right(searchBoxLabel) + 1,
-        };
-
-        ListView usersView = new ListView() {
-            Y = Pos.Bottom(searchBox) + 1,
-            Height = 5,
-            Width = Dim.Fill(),
-        };
-
-        usersView.SetSource(reservations);
-
-        usersView.OpenSelectedItem += (item) => { if (reservations != null)
-            WindowManager.GoForwardOne(new ReservationPanel(user, reservations[item.Item])); };
-
-        searchBox.TextChanged += (text) => {usersView.SetSource(reservations?.FindAll((x) => {
-            return x.ToString().ToLower().Contains((string)searchBox.Text.ToLower());
-        }));};
-
-        Button goBackButton = new Button() {
-            Text = "Terug",
-            Y = Pos.Bottom(usersView) + 1,
-        };
-
-        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Add(searchBoxLabel, searchBox, usersView, goBackButton);
-    }
-}
-
-public class ReservationPanel : Toplevel
-{
-    public User CurrentUser;
-    public Ticket CurrentTicket;
-    public TextField SeatnumberText;
-    public ReservationPanel(User user, Ticket ticket)
-    {
-        CurrentUser = user;
-        CurrentTicket = ticket;
-        Label flightLabel = new Label() {
-            Text = $"Vlucht:\n{ticket.TheFlight.ToNewLineString()}",
-        };
-
-        Label userLabel = new Label() {
-            Text = $"User:\n{user.ToNewLineString()}",
-            Y = Pos.Bottom(flightLabel) + 1,
-        };
-
-        Label seatnumberLabel = new Label() {
-            Text = "Ticket:\nStoelnummer:",
-            Y = Pos.Bottom(userLabel) + 1,
-        };
-
-        SeatnumberText = new TextField(ticket.SeatNumber) {
-            X = Pos.Right(seatnumberLabel) + 3,
-            Y = Pos.Top(seatnumberLabel) + 1,
-            Width = 5,
-        };
-
-        Label boardingTimeLabel = new Label() {
-            Text = $"Boarding tijd: {ticket.BoardingTime}",
-            Y = Pos.Bottom(seatnumberLabel),
-        };
-
-        Add(flightLabel, userLabel, seatnumberLabel, SeatnumberText, boardingTimeLabel);
-
-        Button editButton = new Button() {
-            Text = "Aanpassen",
-            Y = Pos.Bottom(boardingTimeLabel) + 1,
-        };
-
-        editButton.Clicked += () => { EditTicket();};
-
-        Button cancelButton = new Button() {
-            Text = "Ticket Annuleren",
-            X = Pos.Right(editButton) + 1,
-            Y = Pos.Top(editButton),
-        };
-
-        cancelButton.Clicked += () => { CancelTicket(); };
-
-        Button backButton = new Button() {
-            Text = "Terug",
-            X = Pos.Right(cancelButton) + 1,
-            Y = Pos.Top(editButton),
-        };
-
-        backButton.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Add(editButton, cancelButton, backButton);
-    }
-
-    private void EditTicket()
-    {
-        // Check if seat number is really an seat in the plane and if its not occupied
-        // if (!plane.Seat.Contain(SeatnumberText.Text)) return
-
-        string subject = $"Vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation}";
-        string body = $"Beste Klant,\n\nUw zitplek van vlucht {CurrentTicket.TheFlight.DepartureLocation} - {CurrentTicket.TheFlight.ArrivalLocation} is aangepast.\nUw zitplek gaat van {CurrentTicket.SeatNumber} naar {SeatnumberText.Text}.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
-
-        EmailManager.SendOneEmail(subject, body, CurrentUser.UserInfo.Email);
-        CurrentTicket.SeatNumber = (string)SeatnumberText.Text;
-        WindowManager.GoBackOne(this);
-    }
-
-    private void CancelTicket()
-    {
-        CurrentUser.Reservations.Remove(CurrentTicket);
-        SpecialEmail(CurrentTicket.TheFlight);
-    }
-
-    private void SpecialEmail(Flight flight)
-    {
-        RemoveAll();
-        TextView textField = new TextView() {
-            Text = $"Beste Klant,\n\nUw ticket van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege %%.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service",
-            Width = Dim.Percent(50),
-            Height = Dim.Percent(30),
-            Y = 1,
-        };
-
-        Button sendButton = new Button() {
-            Text = "Versturen",
-            Y = Pos.Bottom(textField) + 1
-        };
-
-        sendButton.Clicked += () => { EmailManager.SendOneEmail($"Ticket {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text, CurrentUser.UserInfo.Email); WindowManager.GoBackOne(this); };
-
-        Button goBack = new Button() {
-            Text = "Terug",
-            Y = Pos.Top(sendButton),
-            X = Pos.Right(sendButton) + 1,
-        };
-
-        goBack.Clicked += () => { WindowManager.GoBackOne(this); };
-
-        Add(textField, sendButton, goBack);
-    }
-}
-
 public class ChangeSeatingPrice : Toplevel
 {
     public ChangeSeatingPrice()
@@ -263,7 +112,7 @@ public class ChangeSeatingPrice : Toplevel
         int allignOffset = SeatPrices.Keys.Max().Length + 2;
         foreach (var kvp in SeatPrices) {
             if (pricesTextField.Count == 0) {
-                Label seatLabel = new Label($"{kvp.Key}:"); 
+                Label seatLabel = new Label($"{kvp.Key}:");
 
                 Label euroSymbol = new Label("€") {
                     X = allignOffset,
@@ -286,7 +135,7 @@ public class ChangeSeatingPrice : Toplevel
 
                 Add(seatLabel, euroSymbol ,priceField);
                 pricesTextField.Add(kvp.Key, priceField);
-            } else {                    
+            } else {
                 Label seatLabel = new Label($"{kvp.Key}:") {
                     Y = Pos.Bottom(pricesTextField.Values.Last()) + 1,
                 };
@@ -311,7 +160,7 @@ public class ChangeSeatingPrice : Toplevel
                     priceField.CursorPosition = priceField.Text.Length;};
 
                 Add(seatLabel, euroSymbol, priceField);
-                pricesTextField.Add(kvp.Key, priceField); 
+                pricesTextField.Add(kvp.Key, priceField);
             }
         }
 

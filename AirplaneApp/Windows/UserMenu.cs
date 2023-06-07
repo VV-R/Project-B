@@ -26,12 +26,6 @@ public class UserMenu : Toplevel
         };
         flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanel(WindowManager.Flights)); };
 
-        Button searchReservation = new Button() {
-            Text = "Reserveringen",
-            Y = Pos.Bottom(flightScheduleButton) + 1,
-        };
-
-        searchReservation.Clicked += () => {WindowManager.GoForwardOne(new SeattingPlan()); };
 
         Button airplaneInformationButton = new Button()
         {
@@ -40,37 +34,28 @@ public class UserMenu : Toplevel
         };
         airplaneInformationButton.Clicked += () => { WindowManager.GoForwardOne(new AirplaneInformation()); };
 
-        Button Test = new Button()
-        {
-            Text = "Vliegtuig plattegronden",
-            Y = Pos.Bottom(airplaneInformationButton) + 1,
-        };
-
-        Test.Clicked += () => { WindowManager.GoForwardOne(new SeattingPlan()); };
-
         Button infoButton = new Button() {
             Text = "Mijn gegevens",
-            Y = Pos.Bottom(Test) + 1,
+            Y = Pos.Bottom(airplaneInformationButton) + 1,
         };
 
         infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo(WindowManager.CurrentUser)); };
 
+        Button searchReservation = new Button() {
+            Text = "Reserveringen",
+            Y = Pos.Bottom(infoButton) + 1,
+        };
+
+        searchReservation.Clicked += () => {WindowManager.GoForwardOne(new SearchReservationUser()); };
+
         Button exitButton = new Button()
         {
             Text = "Afsluiten",
-            Y = Pos.Bottom(infoButton   ) + 1,
+            Y = Pos.Bottom(searchReservation) + 1,
         };
 
         exitButton.Clicked += () => { Application.RequestStop(); };
-        Button Test2 = new Button()
-        {
-            Text = "Test",
-            Y = 15,
-        };
 
-        Test2.Clicked += () => { WindowManager.GoForwardOne(new BookingProcess(1, WindowManager.Flights[0])); };
-
-
-        Add(nameLabel, bookingButton, flightScheduleButton, searchReservation, airplaneInformationButton,Test, infoButton, exitButton, Test2);
+        Add(nameLabel, bookingButton, flightScheduleButton, airplaneInformationButton, infoButton, searchReservation, exitButton);
     }
 }

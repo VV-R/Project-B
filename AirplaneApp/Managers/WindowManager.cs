@@ -19,7 +19,7 @@ public static class WindowManager
     public static string CurrentTime {get {return DateTime.Now.ToString();}}
     public static Toplevel CurrentWindow {get {return _windows.Last();}}
     public static User? CurrentUser = null;
-
+    
     public static List<Flight> Flights;
 
     public static List<string> Locations = new List<string>() {"London", "Parijs", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Rotterdam", "Madrid"};

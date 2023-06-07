@@ -273,10 +273,9 @@ public class SeattingPlan : Toplevel
             List<Seat> selectedSeats = new List<Seat>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-            else if (seats.Count != seatsCount)
-                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
-            else
-            {
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
+                MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
+            else {            
                 seats.ForEach(s => selectedSeats.Add(s.Seat));
                 WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
             }
@@ -530,10 +529,9 @@ public class SeattingPlan : Toplevel
             List<Seat> selectedSeats = new List<Seat>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-            else if (seats.Count != seatsCount)
-                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
-            else
-            {
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
+                MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
+            else {            
                 seats.ForEach(s => selectedSeats.Add(s.Seat));
                 WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
             }
@@ -753,11 +751,9 @@ public class SeattingPlan : Toplevel
             List<Seat> selectedSeats = new List<Seat>();
             if (seats.Count == 0)
                 MessageBox.Query("Geen stoelen geselecteerd", "U heeft geen stoelen gekozen", "Ok");
-
-            else if (seats.Count != seatsCount)
-                MessageBox.Query("Onjuist aantal stoelen geselecteerd", $"U heeft {seats.Count} stoelen gekozen, maar u moet {seatsCount} stoelen kiezen.", "Ok");
-            else
-            {
+            else if (InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
+                MessageBox.ErrorQuery("Te weinig stoelen geselecteerd", "U heeft te weinig stoelen gekozen", "Ok");
+            else {            
                 seats.ForEach(s => selectedSeats.Add(s.Seat));
                 WindowManager.GoForwardOne(new FlightOverview(flight, userInfos, selectedSeats));
             }
