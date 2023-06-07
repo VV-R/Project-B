@@ -14,14 +14,14 @@ public class FlightOverview : Toplevel
     private List<UserInfo>? userInfos;
     private List<string>? selectedSeats;
 
-    public FlightOverview(Flight flight, List<UserInfo> userInfos, List<string> selectedSeats)
+    public FlightOverview(Flight flight, List<UserInfo> userInfos, List<Seat> selectedSeats)
     {
-        Label FirstnameLabel = new Label()
-        {
-            Text = ""
+        EmailManager.SendInvoice("", "", userInfos[0], selectedSeats, flight);
+        Button closeButton = new Button() {
+            Text = "Afsluiten",
         };
 
-        Add(FirstnameLabel);
+        closeButton.Clicked += () => { WindowManager.GoToFirst(); };
     }
     
 }
