@@ -28,6 +28,9 @@ public class Flight : IComparable<Flight>
         ArrivalTime = arrivalTime;
         Airplane = airplane;
     }
+
+
+    public Flight() {}
     
     public override string ToString() {
         string flightString = $"Bestemming: {ArrivalLocation};" .PadRight(23);
