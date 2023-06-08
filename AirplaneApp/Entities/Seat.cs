@@ -1,5 +1,4 @@
 using Terminal.Gui;
-using Managers;
 
 namespace Entities;
 public class Seat
@@ -34,21 +33,18 @@ public class InteraciveSeat : Label
         X = Seat.X;
         Y = Seat.Y;
         Occupied = occupied;
-        if (Occupied)
-        {
+        if (Occupied) {
             ColorScheme = Colors.ColorSchemes["SeatTaken"];
-        }
-        else
-        {
-            var result = seat.SeatType switch
-            {
-                "Economy" => Colors.ColorSchemes["Economy"],
+            DefualtColor = Colors.ColorSchemes["SeatTaken"];
+        } else {
+            var result = seat.SeatType switch {
                 "Economy Plus" => Colors.ColorSchemes["Economy Plus"],
                 "Comfort" => Colors.ColorSchemes["Comfort"],
-                "Front cabin seat" => Colors.ColorSchemes["Front seats"],
+                "Front cabin seat" => Colors.ColorSchemes["Front cabin seat"],
                 "Duo seats" => Colors.ColorSchemes["Duo seats"],
                 "Club Class" => Colors.ColorSchemes["Club Class"],
                 "United BusinessFirst" => Colors.ColorSchemes["United BusinessFirst"],
+                _ => Colors.ColorSchemes["Economy"],
             };
 
             ColorScheme = result;
