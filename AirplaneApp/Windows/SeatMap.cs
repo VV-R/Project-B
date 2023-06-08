@@ -8,9 +8,8 @@ public class SeatMap : Toplevel
 {
     public Label? LatestLabel;
     private List<InteraciveSeat>? _activeSeats;
-    public SeatMap(string airplane)
-    {
-        ColorScheme = Colors.Base;
+
+    public SeatMap(string airplane) {
         Airplane? plane = null;
         using (StreamReader reader = new StreamReader("Airplanes.json")) {
             var airplanes = JsonConvert.DeserializeObject<Dictionary<string, Airplane>>(reader.ReadToEnd())!;
@@ -22,7 +21,26 @@ public class SeatMap : Toplevel
 
             plane = airplanes[airplane];
         }
+        InteraciveSeat.MaxSeats = 0;
+        InteraciveSeat.SeatCount = 0;
+        foreach (Seat seat in plane.Seats) {
+            Add(new InteraciveSeat(seat, false));
+        }
+        DrawBody(plane);
+    }
+    public SeatMap(Flight flight) {
+        Airplane? plane = null;
+        using (StreamReader reader = new StreamReader("Airplanes.json")) {
+            var airplanes = JsonConvert.DeserializeObject<Dictionary<string, Airplane>>(reader.ReadToEnd())!;
+            if (airplanes == null)
+                return;
 
+            if (!airplanes.ContainsKey(flight.Airplane))
+                return;
+
+            plane = airplanes[flight.Airplane];
+        }
+        // Get all occupied seats for the DB
         List<string> occupied = new List<string>() { "F2", "D5", "A7", "A16" };
         _activeSeats = new();
 
@@ -37,6 +55,11 @@ public class SeatMap : Toplevel
                 _activeSeats.Add(interSeat);
             }
         }
+
+        DrawBody(plane);
+    }
+    private void DrawBody(Airplane plane) {
+        ColorScheme = Colors.Base;
 
         Label rightWing = new Label() {
             Text = plane.RightWing,
@@ -145,6 +168,5 @@ public class SeatMap : Toplevel
 
         Add(takenColor, takenInfo, selectedColor, LatestLabel);
     }
-
     public List<InteraciveSeat>? GetSelectedSeats() => _activeSeats?.Where(s => s.IsClicked).ToList();
 }

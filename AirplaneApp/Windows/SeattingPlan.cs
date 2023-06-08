@@ -18,7 +18,7 @@ public class SeattingPlan : Toplevel
         this.userInfos = userInfos;
         this.flight = flight;
 
-        SeatMap seatMap = new SeatMap(flight.Airplane);
+        SeatMap seatMap = new SeatMap(flight);
         InteraciveSeat.MaxSeats = userInfos.Count;
         InteraciveSeat.SeatCount = 0;
         Add(seatMap);
