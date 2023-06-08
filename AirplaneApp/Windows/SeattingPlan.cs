@@ -70,6 +70,15 @@ public class SeattingPlan : Toplevel
             PlanAirbus_330();
         else if (flight.Airplane == "Boeing 787")
             PlanBoeing_787();
+
+        Label maxSeats = new Label()
+        {
+            Text = $"Maximaal aantal te selecteren stoelen: {InteraciveSeat.MaxSeats}",
+            X = 5,
+            Y = 2
+        };
+
+        Add(maxSeats);
     }
 
     private void PlanBoeing_737()
