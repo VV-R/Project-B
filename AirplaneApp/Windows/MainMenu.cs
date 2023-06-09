@@ -16,17 +16,10 @@ public class MainMenu : Toplevel
 
         bookingButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
 
-        Button flightScheduleButton = new Button()
-        {
-            Text = "Vlucht Schemas",
-            Y = Pos.Bottom(bookingButton) + 1,
-        };
-        flightScheduleButton.Clicked += () => { WindowManager.GoForwardOne(new FlightPanelUser(WindowManager.Flights)); };
-
         Button airplaneInformationButton = new Button()
         {
             Text = "Vliegtuig Informatie",
-            Y = Pos.Bottom(flightScheduleButton) + 1,
+            Y = Pos.Bottom(bookingButton) + 1,
         };
         airplaneInformationButton.Clicked += () => { WindowManager.GoForwardOne(new AirplaneInformation()); };
 
@@ -38,6 +31,6 @@ public class MainMenu : Toplevel
 
         exitButton.Clicked += () => { Application.RequestStop(); };
 
-        Add(bookingButton, flightScheduleButton, airplaneInformationButton, exitButton);
+        Add(bookingButton, airplaneInformationButton, exitButton);
     }
 }

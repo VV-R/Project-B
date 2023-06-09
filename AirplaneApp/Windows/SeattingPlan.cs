@@ -21,10 +21,15 @@ public class SeattingPlan : Toplevel
 
         goBackButton.Clicked += () => { WindowManager.GoBackOne(); };
 
-        Add(goBackButton);
+        Label maxSeats = new Label() {
+            Text = $"Maximaal aantal te selecteren stoelen: {InteraciveSeat.MaxSeats}",
+            X = Pos.Right(goBackButton) + 1,
+            Y = Pos.Top(goBackButton),
+        };
 
-        Button reservation = new Button()
-        {
+        Add(goBackButton, maxSeats);
+
+        Button reservation = new Button() {
             Text = "Reserveer",
             Y = Pos.Top(seatMap.LatestLabel),
             X = Pos.Right(seatMap.LatestLabel) + 18

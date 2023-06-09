@@ -1,7 +1,5 @@
-using System;
-using System.Net.Mail;
 using Terminal.Gui;
-using Newtonsoft.Json;
+using Db;
 using Entities;
 using Windows;
 
@@ -28,12 +26,10 @@ public static class WindowManager
     {
         Locations.Sort();
         _windows.Add(_firstWindow);
-        StreamReader reader = new StreamReader("Flights.json");
-        using (var context = new Db.ApplicationDbContext()) {
-            Flights = context.Flights.ToList();
+        using (var context = new ApplicationDbContext()) {
+            Flights = context.Flights.Where(f => f.ArrivalTime >= DateTime.Now).ToList();
         }
-        reader.Close();
-        reader.Dispose();
+        Flights.Sort();
     }
     private static void SetWindow(Toplevel oldWindow, Toplevel newWindow)
     {
