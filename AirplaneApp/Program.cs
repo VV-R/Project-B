@@ -27,7 +27,8 @@ try
     }
 }
 catch (Exception e) {
-    string path = Managers.LogManager.LogError(e);
-    Console.WriteLine($"The program crashed, please read '{path}' for more info.");
+    string logFile = Managers.LogManager.LogError(e);
+    Console.WriteLine($"A log manager has been written to '{logFile}'.");
+    Console.WriteLine($"{e.ToString()}");
 }
 
