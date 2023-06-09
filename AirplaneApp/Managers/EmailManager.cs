@@ -40,7 +40,12 @@ public static class EmailManager
                     Subject = subject,
                     Body = body,
                 })  {
-                    await client.SendMailAsync(message);
+                    try {
+                        await client.SendMailAsync(message);
+                    }
+                    catch (SmtpException) {
+                        //MessageBox.ErrorQuery("Failed to send Email.");
+                    }
                 }
             }
         });
