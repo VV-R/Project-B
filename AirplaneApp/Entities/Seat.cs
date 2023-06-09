@@ -54,19 +54,20 @@ public class InteraciveSeat : Label
 
     public override void OnClicked()
     {
-        IsClicked = !IsClicked;
         if (!Occupied)
         {
-            if (IsClicked && InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
+            if (!IsClicked && InteraciveSeat.SeatCount < InteraciveSeat.MaxSeats)
             {
                 ColorScheme = Colors.ColorSchemes["SeatSelected"];
                 InteraciveSeat.SeatCount++;
+                IsClicked = !IsClicked;
             }
-            else if (!IsClicked && InteraciveSeat.SeatCount <= InteraciveSeat.MaxSeats)
+            else if (IsClicked && InteraciveSeat.SeatCount <= InteraciveSeat.MaxSeats)
             {
                 if (ColorScheme != DefualtColor)
                     InteraciveSeat.SeatCount--;
                 ColorScheme = DefualtColor;
+                IsClicked = !IsClicked;
             }
         }
     }

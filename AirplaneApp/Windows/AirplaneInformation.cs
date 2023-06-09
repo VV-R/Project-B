@@ -160,7 +160,7 @@ public class PlaneInfo : Toplevel
 
             Label seats = new Label()
             {
-                Text = $"Economy stoelen          = €{SeatPrices["Economy"]} + €0,50 per gevlogen minuut.\nComfort stoelen          = €{SeatPrices["Comfort"]} + €0,50 per gevlogen minuut.\nStoelen voorin de cabine = €{SeatPrices["Front Seat"]} + €0,50 per gevlogen minuut.\nDuo stoelen              = €{SeatPrices["Duo Seat"]} + €0,50 per gevlogen minuut.\nClub Class stoelen       = €{SeatPrices["Club Class"]} + €0,50 per gevlogen minuut.",
+                Text = $"Economy stoelen          = €{SeatPrices["Economy"]} + €0,50 per gevlogen minuut.\nComfort stoelen          = €{SeatPrices["Comfort"]} + €0,50 per gevlogen minuut.\nStoelen voorin de cabine = €{SeatPrices["Front cabin seat"]} + €0,50 per gevlogen minuut.\nDuo stoelen              = €{SeatPrices["Duo seats"]} + €0,50 per gevlogen minuut.\nClub Class stoelen       = €{SeatPrices["Club Class"]} + €0,50 per gevlogen minuut.",
                 Y = Pos.Bottom(price)
             };
 
@@ -181,7 +181,7 @@ public class PlaneInfo : Toplevel
 
             Label seats = new Label()
             {
-                Text = $"Economy stoelen              = €{SeatPrices["Economy"]} + €0,50 per gevlogen minuut.\nComfort stoelen              = €{SeatPrices["EconomyPlus"]} + €0,50 per gevlogen minuut.\nUnited BusinessFirst stoelen = €{SeatPrices["United BusinessFirst"]} + €0,50 per gevlogen minuut.",
+                Text = $"Economy stoelen              = €{SeatPrices["Economy"]} + €0,50 per gevlogen minuut.\nComfort stoelen              = €{SeatPrices["Economy Plus"]} + €0,50 per gevlogen minuut.\nUnited BusinessFirst stoelen = €{SeatPrices["United BusinessFirst"]} + €0,50 per gevlogen minuut.",
                 Y = Pos.Bottom(price)
             };
 

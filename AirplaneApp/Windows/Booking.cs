@@ -23,44 +23,56 @@ public class MainBooking : Toplevel
 
     public MainBooking()
     {
+        Label mainBooker = new Label()
+        {
+            Text = "Hoofdboeker:"
+        };
+
         #region Name
         Label firstnameLabel = new Label()
         {
             Text = "Voornaam*:",
+            Y = Pos.Bottom(mainBooker) + 1
         };
 
         FirstnameText = new TextField("")
         {
             X = Pos.Right(firstnameLabel) + 1,
+            Y = Pos.Bottom(mainBooker) + 1,
             Width = 22,
         };
 
         Label prepositionLabel = new Label()
         {
             Text = "Tussenvoegsel:",
-            X = Pos.Right(FirstnameText) + 1
+            X = Pos.Right(FirstnameText) + 1,
+            Y = Pos.Bottom(mainBooker) + 1
         };
         Label PrepositionLabel = new Label()
         {
             Text = "Tussenvoegsel:",
-            X = Pos.Right(FirstnameText) + 1
+            X = Pos.Right(FirstnameText) + 1,
+            Y = Pos.Bottom(mainBooker) + 1
         };
 
         PrepositionText = new TextField("")
         {
             X = Pos.Right(prepositionLabel) + 1,
+            Y = Pos.Bottom(mainBooker) + 1,
             Width = 10,
         };
 
         Label lastnameLabel = new Label()
         {
             Text = "Achternaam:",
-            X = Pos.Right(PrepositionText) + 1
+            X = Pos.Right(PrepositionText) + 1,
+            Y = Pos.Bottom(mainBooker) + 1
         };
 
         LastnameText = new TextField("")
         {
             X = Pos.Right(lastnameLabel) + 1,
+            Y = Pos.Bottom(mainBooker) + 1,
             Width = 22,
         };
 
@@ -68,10 +80,11 @@ public class MainBooking : Toplevel
         {
             Text = "*voornaam zoals op het paspoort",
             X = Pos.Right(LastnameText) + 2,
+            Y = Pos.Bottom(mainBooker) + 1
         };
 
         #endregion
-        Add(firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
+        Add(mainBooker, firstnameLabel, FirstnameText, prepositionLabel, PrepositionText, lastnameLabel, LastnameText, attentionLabel);
 
         #region User
         Label emailLabel = new Label()

@@ -8,16 +8,8 @@ using Entities;
 namespace Windows;
 public class SeattingPlan : Toplevel
 {
-    private int seatsCount;
-    private Flight flight;
-    private List<UserInfo> userInfos;
-
     public SeattingPlan(Flight flight, List<UserInfo> userInfos, int seatsCount)
     {
-        this.seatsCount = seatsCount;
-        this.userInfos = userInfos;
-        this.flight = flight;
-
         SeatMap seatMap = new SeatMap(flight);
         InteraciveSeat.MaxSeats = userInfos.Count;
         InteraciveSeat.SeatCount = 0;
