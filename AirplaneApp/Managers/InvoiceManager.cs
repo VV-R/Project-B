@@ -26,6 +26,7 @@ public static class InvoiceManager
         Font header2Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
         Font boldNormalText = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
         Font normalText = FontFactory.GetFont(FontFactory.HELVETICA, 12);
+        Font footNoteText = FontFactory.GetFont(FontFactory.HELVETICA, 8);
 
         float leadingHeader = 12f;
         Paragraph header = new Paragraph("Factuur", headerFont);
@@ -47,8 +48,11 @@ public static class InvoiceManager
 
         TimeSpan flightDuration = flight.ArrivalTime - flight.DepartureTime;
         Phrase flightPhrase = new Phrase("\nVlucht:\n", header2Font);
-        flightPhrase.Add(new Phrase($"{flight.DepartureLocation} - {flight.ArrivalLocation}\n", normalText));
-        flightPhrase.Add(new Phrase($"{flight.Airplane}\nDuur (minuten): {flightDuration.TotalMinutes}", normalText));
+        flightPhrase.Add(new Phrase($"Vluchtnummer: {flight.FlightNumber}\n", normalText));
+        flightPhrase.Add(new Phrase($"Van: {flight.DepartureLocation}, Naar: {flight.ArrivalLocation}\n{flight.Airplane}\n", normalText));
+        flightPhrase.Add(new Phrase($"Datum: {flight.DepartureTime.ToString("dd-MM-yyyy HH:mm")}\n", normalText));
+        flightPhrase.Add(new Phrase($"Duur (minuten): {(int)flightDuration.TotalMinutes}", normalText));
+
 
         PdfPCell invoceInfoCell = new PdfPCell() { Border = Rectangle.NO_BORDER };
         invoceInfoCell.AddElement(invocePhrase);
@@ -84,7 +88,7 @@ public static class InvoiceManager
             descriptionCell.AddElement(new Paragraph($"Stoel: {seat.Text}, Type: {seat.SeatType}", normalText));
             priceCell.AddElement(new Paragraph($"€ {seatPrices[seat.SeatType].ToString("0.00")}", normalText));
             double total = PRICE_COEFFICIENT * flightDuration.TotalMinutes + seatPrices[seat.SeatType];
-            totalPriceCell.AddElement(new Paragraph($"€ {total.ToString("0.00")}", normalText));
+            totalPriceCell.AddElement(new Paragraph($"€ {total.ToString("0.00")}*", normalText));
             totalPrice += total;
         }
 
@@ -102,6 +106,12 @@ public static class InvoiceManager
         totalPriceTable.AddCell(new PdfPCell(new Paragraph($"€ {totalPrice.ToString("0.00")}", normalText)) { Border = Rectangle.NO_BORDER});
 
         document.Add(totalPriceTable);
+
+        ColumnText footNote = new ColumnText(writer.DirectContent);
+        footNote.SetSimpleColumn(new Phrase($"*Totaal is de prijs van de stoel + €{PRICE_COEFFICIENT.ToString("0.00")} x het aantal minuten van de vlucht", footNoteText), 36, 36, 559, 20, 10, Element.ALIGN_CENTER);
+
+        footNote.Go();
+         
         document.Close();
         return fileName;
     }
