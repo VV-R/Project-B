@@ -27,7 +27,7 @@ public static class WindowManager
         Locations.Sort();
         _windows.Add(_firstWindow);
         using (var context = new ApplicationDbContext()) {
-            Flights = context.Flights.Where(f => f.ArrivalTime >= DateTime.Now).ToList();
+            Flights = context.Flights.Where(f => f.ArrivalTime.AddMinutes(30) >= DateTime.Now).ToList();
         }
         Flights.Sort();
     }

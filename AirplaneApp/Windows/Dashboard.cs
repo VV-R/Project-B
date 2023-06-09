@@ -97,10 +97,12 @@ public class Dashboard : Toplevel
     {
         if (flight.DepartureTime < DateTime.Now && flight.ArrivalTime > DateTime.Now)
             return "ONDERWEG";
-        else if (flight.DepartureTime > DateTime.Now)
-            return "VERWACHT";
-        else if (flight.DepartureTime.AddMinutes(-30) > DateTime.Now || flight.ArrivalTime.AddMinutes(30) > DateTime.Now)
+        else if (flight.DepartureTime.AddMinutes(-30) < DateTime.Now && flight.DepartureTime > DateTime.Now)
             return "BOARDING";
-        return null;
+        else if (flight.ArrivalTime.AddMinutes(30) > DateTime.Now && flight.ArrivalTime < DateTime.Now)
+            return "DISEMBARK";
+        else if (flight.ArrivalTime.AddMinutes(30) < DateTime.Now)
+            return "COMPLETED";
+        else return "VERWACHT";
     }
 }
