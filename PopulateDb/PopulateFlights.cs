@@ -10,7 +10,9 @@ public static class PopulateFlights
     private static List<string> _locations = new List<string>() {"Parijs", "London", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Madrid"};
     public static ListOfFlight Flights = new ListOfFlight();
     public static List<(int amount, string location)> updateLocation = new();
-    public static int AmountOfFlights = 64;
+    public const int TOTAL_FLIGHTS_TO_GENERATE = 64;
+    public const int MAX_CONCURRENT_FLIGHTS = 3;
+    private static int _totalGenerated = 0;
 
     public static void Start(string db) {
         dbPath = db;
@@ -26,8 +28,8 @@ public static class PopulateFlights
         bool changed = false;
         foreach (string location in _locations) {
             int count = Flights.Where(fl => fl.ArrivalLocation == location || fl.DepartureLocation == location).Count();
-            if (count != AmountOfFlights) {
-                PopulateByAmount(AmountOfFlights - count, location);
+            if (count != TOTAL_FLIGHTS_TO_GENERATE) {
+                PopulateByAmount(TOTAL_FLIGHTS_TO_GENERATE - count, location);
                 changed = true;
             }
         }
@@ -36,7 +38,7 @@ public static class PopulateFlights
         }
     }
 
-    public static void PopulateByLocation(string location)
+    public static void PopulateAll(string location)
     {
         string airplane = _planes[_rng.Next(_planes.Length)];
         TimeSpan flightDuration = location switch {
@@ -55,9 +57,9 @@ public static class PopulateFlights
         if(flightDuration == TimeSpan.Zero)
             return;
 
-        Flight latestFlight = new Flight("Rotterdam", DateTime.Now.AddHours(6), location, DateTime.Now.AddHours(6).Add(flightDuration), airplane);
+        Flight latestFlight = new Flight("Rotterdam", DateTime.Now.AddHours(6 + _totalGenerated / MAX_CONCURRENT_FLIGHTS), location, DateTime.Now.AddHours(6 + _totalGenerated / MAX_CONCURRENT_FLIGHTS).Add(flightDuration), airplane);
         using (var context = new ApplicationDbContext(dbPath)) {
-            for(int i = 0; i < AmountOfFlights / 2; i++) {
+            for(int i = 0; i < TOTAL_FLIGHTS_TO_GENERATE / 2; i++) {
                 if (i != 0)
                     latestFlight = new Flight("Rotterdam", latestFlight.ArrivalTime.AddHours(1), location, latestFlight.ArrivalTime.AddHours(1).Add(flightDuration), airplane);
                 context.Add(latestFlight);
@@ -66,12 +68,13 @@ public static class PopulateFlights
             }
             context.SaveChanges();
         }
+        _totalGenerated++;
     }
 
     private static void PopulateByAmount(int amount, string location)
     {
-        if (amount == AmountOfFlights) {
-            PopulateByLocation(location);
+        if (amount == TOTAL_FLIGHTS_TO_GENERATE) {
+            PopulateAll(location);
             return;
         }
 
@@ -102,6 +105,5 @@ public static class PopulateFlights
             }
             context.SaveChanges();
         }
-
     }
 }
