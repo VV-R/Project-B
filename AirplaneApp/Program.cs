@@ -27,13 +27,7 @@ try
     }
 }
 catch (Exception e) {
-    // string path = $"logs/{DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss")}.log";
-    // if (!Directory.Exists("logs")) {
-    //     Directory.CreateDirectory("logs");
-    // }
-    // using (var writer = new StreamWriter(path)) {
-    //     writer.Write(e.ToString());
-    // }
-    Console.WriteLine($"{e.ToString()}");
+    string path = Managers.LogManager.LogError(e);
+    Console.WriteLine($"The program crashed, please read '{path}' for more info.");
 }
 
