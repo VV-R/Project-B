@@ -474,12 +474,10 @@ public class ExtraBooking : Toplevel
         };
 
         documentNumber.TextChanged += (text) => {
-        if (!int.TryParse(documentNumber.Text == "" ? "0" : (string)documentNumber.Text, out _))
-            documentNumber.Text = text == "" ? "" : text;
-        else if (documentNumber.Text.Length > 9)
-            documentNumber.Text = text;
-        documentNumber.CursorPosition = documentNumber.Text.Length;};
-
+        if (documentNumber.Text.Length > 12)
+                documentNumber.Text = text;
+            documentNumber.CursorPosition = documentNumber.Text.Length;
+        };
         Label documentTypeLabel = new Label() {
             Text = "Type:",
             X = Pos.Right(documentNumber) + 1,
@@ -510,6 +508,26 @@ public class ExtraBooking : Toplevel
     }
     public UserInfo? CheckUserInfo()
     {
+        DateTime dateOfBirth = dateOfBirthField.GetDateTime();
+        DateTime expireDate = expireDateField.GetDateTime();
+        DateTime currentDate = DateTime.Today;
+        int age =  currentDate.Year - dateOfBirth.Year;
+        if (firstnameText.Text == "" || lastnameText.Text == ""||
+            nationalityComboBox.Text == ""){
+            MessageBox.ErrorQuery("Verder gaan niet mogelijk","Sommige velden zijn niet ingevuld.", "Ok");
+            return null;
+            }
+        if (documentNumber.Text.Length != 9) {
+            MessageBox.ErrorQuery("Verder gaan niet mogelijk","Document nummer niet correct ingevuld", "Ok");
+            return null;
+        }
+        if (documentTypeComboBox.Text == "") {
+            MessageBox.ErrorQuery("Verder gaan niet mogelijk","Document type niet ingevuld", "Ok");
+            return null;
+        }else if (currentDate > expireDate) {
+            MessageBox.ErrorQuery("Verder gaan niet mogelijk",$"Uw {documentTypeComboBox.Text} is vervallen", "Ok");
+            return null;
+        }
         return new UserInfo((string)firstnameText.Text, (string)prepositionText.Text, (string)lastnameText.Text, dateOfBirthField.GetDateTime(), (string)nationalityComboBox.Text, (string)documentNumber.Text, expireDateField.GetDateTime(), (string)documentTypeComboBox.Text);
-    }   
+    }
 }
