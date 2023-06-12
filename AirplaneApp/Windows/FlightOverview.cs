@@ -350,14 +350,24 @@ public class FlightOverview : Toplevel
 
             reservationButton.Clicked += () => {
                 EmailManager.SendInvoice("","", userInfos[0], selectedSeats, flight);
-                WindowManager.GoToFirst();};
+                if (WindowManager.CurrentUser == null)
+                    WindowManager.GoToFirst();
+                else
+                    WindowManager.GoForwardOne(new UserMenu(WindowManager.CurrentUser));
+            };
 
             Button closeButton = new Button() {
                 Text = "Afsluiten",
                 Y = Pos.Top(reservationButton),
                 X = Pos.Right(reservationButton) + 1,
             };
-            closeButton.Clicked += () => { WindowManager.GoToFirst(); };
+            
+            closeButton.Clicked += () => { 
+                if (WindowManager.CurrentUser == null)
+                    WindowManager.GoToFirst();
+                else
+                    WindowManager.GoForwardOne(new UserMenu(WindowManager.CurrentUser)); 
+            };
 
             Add(reservationButton, closeButton);
             
