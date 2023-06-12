@@ -46,12 +46,11 @@ public static class EmailManager
         });
     }
 
-    public static bool SendInvoice(string subject, string body, UserInfo userInfo, List<Seat> seats, Flight flight) {
+    public static bool SendInvoice(string subject, string body, UserInfo userInfo, string invoice) {
         SmtpClient client = SetupSmtp();
         if (userInfo.Email == null)
             return false;
         Application.MainLoop.Invoke(async () => {
-            string invoice = InvoiceManager.MakeInvoicePdf(userInfo, seats, flight);
             using (MailMessage message = new MailMessage(_fromMailaddress, userInfo.Email) {
                 Subject = subject,
                 Body = body,

@@ -5,6 +5,7 @@ using Terminal.Gui;
 using Managers;
 using Entities;
 using System.Data;
+using Db;
 
 namespace Windows;
 
@@ -164,19 +165,19 @@ public class FlightOverview : Toplevel
             X = Pos.Left(emailuserLabel) + 1,
             Y = Pos.Top(airplaneType),
         };
-        
+
         Add(flightinformationLabel, flightNumber, userflightNumber, departureLocation, userdepartureLocation, departureTime, userdepartureTime, arrivalLocation, userarrivalLocation, arrivalTime, userarrivalTime, airplaneType, userairplaneType);
         #endregion
 
         #region totaal prijs
-        
+
         DataTable dataTable = new DataTable();
         dataTable.Columns.Add("Stoelnummer");
         dataTable.Columns.Add("StoelType");
         dataTable.Columns.Add("Stoelprijs");
         dataTable.Columns.Add("Vluchtprijs");
         dataTable.Columns.Add("Totaal");
-        
+
         double totalSeatPrice = 0;
         double totalFlightPrice = 0;
 
@@ -186,7 +187,7 @@ public class FlightOverview : Toplevel
         }
         TimeSpan flightDuration = flight.ArrivalTime - flight.DepartureTime;
         double totalPrice = 0;
-        View previousView = airplaneType; 
+        View previousView = airplaneType;
         foreach (Seat seat in selectedSeats)
         {
             double seatPrice = seatPrices[seat.SeatType];
@@ -209,15 +210,15 @@ public class FlightOverview : Toplevel
 
         dataTable.Rows.Add("", "", "----", "----", "----");
         dataTable.Rows.Add("", "", $"€{totalSeatPrice}", $"€{totalFlightPrice}", $"€{totalPrice}");
-      
-        costTable.Table = dataTable;   
+
+        costTable.Table = dataTable;
 
         Add(costTable);
 
         #endregion
-       
+
         #region extrabooking
-       
+
         if (userInfos.Count > 1)
         {
             Label extraBooking = new Label(){
@@ -227,129 +228,76 @@ public class FlightOverview : Toplevel
             };
 
             Add(extraBooking);
-            // View Previousview = extraBooking;
-            // int lol = 1;
-            // foreach (UserInfo user in userInfos.Skip(1))
-            // {
-            //     Label passagierNumber = new Label(){
-            //         Text = $"Extra passagier: {lol}",
-            //         Y = Pos.Bottom(Previousview) + 2,
-            //         X = Pos.Right(firstlastnameLabel) + 30,
-            //     };
-            //     Label extranameLabel = new Label() {
-            //             Text = "Naam:",
-            //             Y = Pos.Bottom(passagierNumber) + 1,
-            //             X = Pos.Right(firstlastnameLabel) + 30,
-            //         };
-            //         Label extrafirstlastnameLabel = new Label(){
-            //             Text = $"{userInfos[lol].FirstName} {userInfos[lol].LastName}",
-            //             Y = Pos.Top(extranameLabel),
-            //             X = Pos.Right(extranameLabel) + 15,
-            //         };
+            int xOffset = 40;
+            int rows = 2;
+            int labelHeight = 9;
+            for (int i = 1; i < userInfos.Count; i++) {
+                Label passagierNumber = new Label(){
+                    Text = $"Extra passagier: {i}",
+                    Y = 2 + (labelHeight * ((i - 1) / rows)) + 1,
+                    X = Pos.Right(firstlastnameLabel) + 30 + (xOffset * ((i - 1) % rows)),
+                };
+                Add(passagierNumber);
+                Label fieldLabel = new Label() {
+                    Text = "Naam:\nGeboortedatum:\nNationaliteit:\nDocument type:\nDocument nummer:\n",
+                    Y = Pos.Bottom(passagierNumber) + 1,
+                    X = Pos.Left(passagierNumber),
+                };
+                Label extrafirstlastnameLabel = new Label(){
+                    Text = $"{userInfos[i].FirstName} {userInfos[i].LastName}",
+                    Y = Pos.Top(fieldLabel),
+                    X = Pos.Right(fieldLabel) + 1,
+                };
+                Label extradateofBirthFielduserLabel = new Label() {
+                    Text = $"{userInfos[i].DateOfBirth}",
+                    X = Pos.Left(extrafirstlastnameLabel),
+                    Y = Pos.Bottom(extrafirstlastnameLabel),
+                };
+                Label extranationalityuserLabel = new Label() {
+                    Text = $"{userInfos[i].Nationality}",
+                    X = Pos.Left(extrafirstlastnameLabel),
+                    Y = Pos.Bottom(extradateofBirthFielduserLabel),
+                };
+                Label extradocumentTypeuserLabel = new Label() {
+                    Text = $"{userInfos[i].DocumentType}",
+                    X = Pos.Left(extrafirstlastnameLabel),
+                    Y = Pos.Bottom(extranationalityuserLabel),
+                };
+                 Label extradocumentNumberuserLabel = new Label() {
+                    Text = $"{userInfos[i].DocumentNumber}",
+                    X = Pos.Left(extrafirstlastnameLabel),
+                    Y = Pos.Bottom(extradocumentTypeuserLabel),
+                };
 
-            //         Label extradateOfBirthLabel = new Label() {
-            //             Text = "Geboortedatum:",
-            //             X = Pos.Left(extranameLabel),
-            //             Y = Pos.Bottom(extranameLabel),
-            //         };
-            //         Label extradateofBirthFielduserLabel = new Label() {
-            //             Text = $"{userInfos[lol].DateOfBirth}",
-            //             X = Pos.Left(extrafirstlastnameLabel),
-            //             Y = Pos.Bottom(extrafirstlastnameLabel),
-            //         };
-
-            //         Label extranationalityLabel = new Label() {
-            //             Text = "Nationaliteit:",
-            //             X = Pos.Left(extranameLabel),
-            //             Y = Pos.Bottom(extradateOfBirthLabel),
-            //         };
-            //         Label extranationalityuserLabel = new Label() {
-            //             Text = $"{userInfos[lol].Nationality}",
-            //             X = Pos.Left(extrafirstlastnameLabel),
-            //             Y = Pos.Top(extranationalityLabel),
-            //         };
-
-            //         Label extradocumentTypeLabel = new Label() {
-            //             Text = "Document type:",
-            //             X = Pos.Left(extranameLabel),
-            //             Y = Pos.Bottom(extranationalityLabel),
-            //         };
-            //         Label extradocumentTypeuserLabel = new Label() {
-            //             Text = $"{userInfos[lol].DocumentType}",
-            //             X = Pos.Left(extrafirstlastnameLabel),
-            //             Y = Pos.Top(extradocumentTypeLabel),
-            //         };
-
-            //         Label extradocumentNumberLabel = new Label() {
-            //             Text = "Document nummer:",
-            //             X = Pos.Left(extranameLabel),
-            //             Y = Pos.Bottom(extradocumentTypeLabel),
-            //         };
-            //         Label extradocumentNumberuserLabel = new Label() {
-            //             Text = $"{userInfos[lol].DocumentNumber}",
-            //             X = Pos.Left(extrafirstlastnameLabel),
-            //             Y = Pos.Top(extradocumentNumberLabel),
-            //         };
-                    
-            //         Add(passagierNumber, extranameLabel, extrafirstlastnameLabel, extradateOfBirthLabel, extradateofBirthFielduserLabel, extranationalityLabel, extranationalityuserLabel, extradocumentTypeLabel, extradocumentTypeuserLabel, extradocumentNumberLabel, extradocumentNumberuserLabel);
-            //         Previousview = extradocumentNumberuserLabel;
-            //         lol++;
-
-                // }
-                int xOffset = 40;
-                int rows = 2;
-                int labelHeight = 9;
-                for (int i = 1; i < userInfos.Count; i++) {
-                    Label passagierNumber = new Label(){
-                        Text = $"Extra passagier: {i}",
-                        Y = 2 + (labelHeight * ((i - 1) / rows)) + 1,
-                        X = Pos.Right(firstlastnameLabel) + 30 + (xOffset * ((i - 1) % rows)),
-                    };
-                    Add(passagierNumber);
-                    Label fieldLabel = new Label() {
-                        Text = "Naam:\nGeboortedatum:\nNationaliteit:\nDocument type:\nDocument nummer:\n",
-                        Y = Pos.Bottom(passagierNumber) + 1,
-                        X = Pos.Left(passagierNumber),
-                    };
-                    Label extrafirstlastnameLabel = new Label(){
-                        Text = $"{userInfos[i].FirstName} {userInfos[i].LastName}",
-                        Y = Pos.Top(fieldLabel),
-                        X = Pos.Right(fieldLabel) + 1,
-                    };
-                    Label extradateofBirthFielduserLabel = new Label() {
-                        Text = $"{userInfos[i].DateOfBirth}",
-                        X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Bottom(extrafirstlastnameLabel),
-                    };
-                    Label extranationalityuserLabel = new Label() {
-                        Text = $"{userInfos[i].Nationality}",
-                        X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Bottom(extradateofBirthFielduserLabel),
-                    };
-                    Label extradocumentTypeuserLabel = new Label() {
-                        Text = $"{userInfos[i].DocumentType}",
-                        X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Bottom(extranationalityuserLabel),
-                    };
-                     Label extradocumentNumberuserLabel = new Label() {
-                        Text = $"{userInfos[i].DocumentNumber}",
-                        X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Bottom(extradocumentTypeuserLabel),
-                    };
-
-                    Add(fieldLabel, extrafirstlastnameLabel, extradateofBirthFielduserLabel, extranationalityuserLabel, extradocumentTypeuserLabel, extradocumentNumberuserLabel);
+                Add(fieldLabel, extrafirstlastnameLabel, extradateofBirthFielduserLabel, extranationalityuserLabel, extradocumentTypeuserLabel, extradocumentNumberuserLabel);
 
                 }
             }
             #endregion
             Button reservationButton = new Button(){
-            Text = "Reserveren",
-            Y = Pos.Top(personalinformationLabel),
-            X = Pos.Center(),
+                Text = "Reserveren",
+                Y = Pos.Top(personalinformationLabel),
+                X = Pos.Center(),
             };
 
             reservationButton.Clicked += () => {
-                EmailManager.SendInvoice("","", userInfos[0], selectedSeats, flight);
+                using (var context = new ApplicationDbContext()) {
+                    for (int i = 0; i < userInfos.Count; i++) {
+                        if (i == 0 && WindowManager.CurrentUser != null)
+                            continue;
+                        context.UserInfo.Add(userInfos[i]);
+                    }
+                    context.SaveChanges();
+                }
+                string invoice = InvoiceManager.MakeInvoicePdf(userInfos[0], selectedSeats, flight);
+                string invoiceNumber = invoice.Split('.')[0];
+                EmailManager.SendInvoice($"Factuur {invoiceNumber}","Beste Klant,\n\nHierbij de factuur van uw geboekte vlucht.\n\nMet Vriendelijke Groeten,\nRotterdam Airport", userInfos[0], invoice);
+                using (var context = new ApplicationDbContext()) {
+                    for (int i = 0; i < userInfos.Count; i++) {
+                        context.Tickets.Add(new Ticket(flight.FlightNumber, userInfos[i].Id, selectedSeats[i].Text, flight.DepartureTime.AddMinutes(-30), invoiceNumber));
+                    }
+                    context.SaveChanges();
+                }
                 WindowManager.GoToFirst();};
 
             Button closeButton = new Button() {
@@ -360,8 +308,8 @@ public class FlightOverview : Toplevel
             closeButton.Clicked += () => { WindowManager.GoToFirst(); };
 
             Add(reservationButton, closeButton);
-            
-        }   
+
+        }
 }
-        
-        
+
+

@@ -112,13 +112,10 @@ public class SearchReservationGuest : Toplevel
 
     private bool ChangePanel(string invoceNumber) {
         Remove(_reservationPanel);
-        
-        if (!int.TryParse(invoceNumber, out int flightNumber))
-            return false;
 
         List<Ticket> tickets;
         using (var context = new ApplicationDbContext()) {
-            tickets = context.Tickets.Where(t => t.FlightId == flightNumber).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
+            tickets = context.Tickets.Where(t => t.InvoiceNumber == invoceNumber).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
         }
 
         if (tickets.Count == 0)
