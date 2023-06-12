@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Terminal.Gui;
 using Managers;
 using Entities;
+using Db;
 
 namespace Windows;
 public class RegisterMenu : Toplevel
@@ -368,6 +369,11 @@ public class RegisterMenu : Toplevel
             user.UserInfo.DocumentNumber = (string)documentNumber.Text;
             user.UserInfo.DocumentType = (string)documentTypeComboBox.Text;
             user.UserInfo.ExpirationDate = expireDate;
+        }
+
+        using (var context = new ApplicationDbContext("Data Source=./airport.db;")) {
+            var newUser = context.Users.Add(user);
+            context.SaveChanges();
         }
 
         return user;
