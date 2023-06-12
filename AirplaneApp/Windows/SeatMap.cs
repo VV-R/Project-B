@@ -2,6 +2,7 @@ using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Newtonsoft.Json;
 using Entities;
+using Db;
 
 namespace Windows;
 public class SeatMap : Toplevel
@@ -40,8 +41,15 @@ public class SeatMap : Toplevel
 
             plane = airplanes[flight.Airplane];
         }
-        // Get all occupied seats for the DB
-        List<string> occupied = new List<string>() { "F2", "D5", "A7", "A16" };
+
+        List<string> occupied;
+        using (var context = new ApplicationDbContext()) {
+            var query = from ticket in context.Tickets
+                        where ticket.FlightId == flight.FlightNumber
+                        select ticket.SeatNumber;
+            occupied = query.ToList();
+        }
+
         _activeSeats = new();
 
         foreach (Seat seat in plane.Seats) {

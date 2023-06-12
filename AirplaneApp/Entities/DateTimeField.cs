@@ -14,21 +14,30 @@ public class DateTimeField : View
         int[] differentDays = {4, 6, 9, 11};
         int increaseDay = 1;
 
-        _dayComboBox = new ComboBox(){
-            Height = 4,
+        _yearComboBox = new ComboBox() {
+            Height = 2,
             Width = 8,
         };
 
-        _dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
+        _yearComboBox.SetSource(yearRange);
 
         _monthComboBox = new ComboBox(){
-            X = Pos.Right(_dayComboBox) + 1,
-            Y = Pos.Top(_dayComboBox),
-            Height = 4,
+            X = Pos.Right(_yearComboBox) + 1,
+            Y = Pos.Top(_yearComboBox),
+            Height = 2,
             Width = 8,
         };
 
         _monthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
+
+        _dayComboBox = new ComboBox(){
+            X = Pos.Right(_monthComboBox) + 1 ,
+            Y = Pos.Top(_monthComboBox),
+            Height = 2,
+            Width = 8,
+        };
+
+        _dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
         _monthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
             _dayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
@@ -37,16 +46,8 @@ public class DateTimeField : View
              }
             else {
                 _dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
-            } _dayComboBox.SelectedItem = 0; };
-
-        _yearComboBox = new ComboBox(){
-            X = Pos.Right(_monthComboBox) + 1 ,
-            Y = Pos.Top(_monthComboBox),
-            Height = 4,
-            Width = 8,
+            } _dayComboBox.SelectedItem = 0;
         };
-
-        _yearComboBox.SetSource(yearRange);
 
         _yearComboBox.SelectedItemChanged += (e) => {int year = Convert.ToInt32(e.Value);
             if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
@@ -54,7 +55,7 @@ public class DateTimeField : View
                 _monthComboBox.SelectedItem = 0;
             }
             else increaseDay = 0;
-            };
+        };
 
         _yearComboBox.SelectedItem = 0;
         _monthComboBox.SelectedItem = 0;
@@ -63,7 +64,7 @@ public class DateTimeField : View
         Width = _dayComboBox.Width + _monthComboBox.Width + _monthComboBox.Width + 3;
         Height = _dayComboBox.Height;
 
-        Add(_dayComboBox, _monthComboBox, _yearComboBox);
+        Add(_yearComboBox, _monthComboBox, _dayComboBox);
     }
 
 
