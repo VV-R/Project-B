@@ -227,73 +227,118 @@ public class FlightOverview : Toplevel
             };
 
             Add(extraBooking);
-            View Previousview = extraBooking;
-            int i = 1;
-            foreach (UserInfo user in userInfos.Skip(1))
-            {
-                Label passagierNumber = new Label(){
-                    Text = $"Extra passagier: {i}",
-                    Y = Pos.Bottom(Previousview) + 2,
-                    X = Pos.Right(firstlastnameLabel) + 30,
-                };
-                Label extranameLabel = new Label() {
-                        Text = "Naam:",
+            // View Previousview = extraBooking;
+            // int lol = 1;
+            // foreach (UserInfo user in userInfos.Skip(1))
+            // {
+            //     Label passagierNumber = new Label(){
+            //         Text = $"Extra passagier: {lol}",
+            //         Y = Pos.Bottom(Previousview) + 2,
+            //         X = Pos.Right(firstlastnameLabel) + 30,
+            //     };
+            //     Label extranameLabel = new Label() {
+            //             Text = "Naam:",
+            //             Y = Pos.Bottom(passagierNumber) + 1,
+            //             X = Pos.Right(firstlastnameLabel) + 30,
+            //         };
+            //         Label extrafirstlastnameLabel = new Label(){
+            //             Text = $"{userInfos[lol].FirstName} {userInfos[lol].LastName}",
+            //             Y = Pos.Top(extranameLabel),
+            //             X = Pos.Right(extranameLabel) + 15,
+            //         };
+
+            //         Label extradateOfBirthLabel = new Label() {
+            //             Text = "Geboortedatum:",
+            //             X = Pos.Left(extranameLabel),
+            //             Y = Pos.Bottom(extranameLabel),
+            //         };
+            //         Label extradateofBirthFielduserLabel = new Label() {
+            //             Text = $"{userInfos[lol].DateOfBirth}",
+            //             X = Pos.Left(extrafirstlastnameLabel),
+            //             Y = Pos.Bottom(extrafirstlastnameLabel),
+            //         };
+
+            //         Label extranationalityLabel = new Label() {
+            //             Text = "Nationaliteit:",
+            //             X = Pos.Left(extranameLabel),
+            //             Y = Pos.Bottom(extradateOfBirthLabel),
+            //         };
+            //         Label extranationalityuserLabel = new Label() {
+            //             Text = $"{userInfos[lol].Nationality}",
+            //             X = Pos.Left(extrafirstlastnameLabel),
+            //             Y = Pos.Top(extranationalityLabel),
+            //         };
+
+            //         Label extradocumentTypeLabel = new Label() {
+            //             Text = "Document type:",
+            //             X = Pos.Left(extranameLabel),
+            //             Y = Pos.Bottom(extranationalityLabel),
+            //         };
+            //         Label extradocumentTypeuserLabel = new Label() {
+            //             Text = $"{userInfos[lol].DocumentType}",
+            //             X = Pos.Left(extrafirstlastnameLabel),
+            //             Y = Pos.Top(extradocumentTypeLabel),
+            //         };
+
+            //         Label extradocumentNumberLabel = new Label() {
+            //             Text = "Document nummer:",
+            //             X = Pos.Left(extranameLabel),
+            //             Y = Pos.Bottom(extradocumentTypeLabel),
+            //         };
+            //         Label extradocumentNumberuserLabel = new Label() {
+            //             Text = $"{userInfos[lol].DocumentNumber}",
+            //             X = Pos.Left(extrafirstlastnameLabel),
+            //             Y = Pos.Top(extradocumentNumberLabel),
+            //         };
+                    
+            //         Add(passagierNumber, extranameLabel, extrafirstlastnameLabel, extradateOfBirthLabel, extradateofBirthFielduserLabel, extranationalityLabel, extranationalityuserLabel, extradocumentTypeLabel, extradocumentTypeuserLabel, extradocumentNumberLabel, extradocumentNumberuserLabel);
+            //         Previousview = extradocumentNumberuserLabel;
+            //         lol++;
+
+                // }
+                int xOffset = 40;
+                int rows = 2;
+                int labelHeight = 9;
+                for (int i = 1; i < userInfos.Count; i++) {
+                    Label passagierNumber = new Label(){
+                        Text = $"Extra passagier: {i}",
+                        Y = 2 + (labelHeight * ((i - 1) / rows)) + 1,
+                        X = Pos.Right(firstlastnameLabel) + 30 + (xOffset * ((i - 1) % rows)),
+                    };
+                    Add(passagierNumber);
+                    Label fieldLabel = new Label() {
+                        Text = "Naam:\nGeboortedatum:\nNationaliteit:\nDocument type:\nDocument nummer:\n",
                         Y = Pos.Bottom(passagierNumber) + 1,
-                        X = Pos.Right(firstlastnameLabel) + 30,
+                        X = Pos.Left(passagierNumber),
                     };
                     Label extrafirstlastnameLabel = new Label(){
                         Text = $"{userInfos[i].FirstName} {userInfos[i].LastName}",
-                        Y = Pos.Top(extranameLabel),
-                        X = Pos.Right(extranameLabel) + 15,
-                    };
-
-                    Label extradateOfBirthLabel = new Label() {
-                        Text = "Geboortedatum:",
-                        X = Pos.Left(extranameLabel),
-                        Y = Pos.Bottom(extranameLabel),
+                        Y = Pos.Top(fieldLabel),
+                        X = Pos.Right(fieldLabel) + 1,
                     };
                     Label extradateofBirthFielduserLabel = new Label() {
                         Text = $"{userInfos[i].DateOfBirth}",
                         X = Pos.Left(extrafirstlastnameLabel),
                         Y = Pos.Bottom(extrafirstlastnameLabel),
                     };
-
-                    Label extranationalityLabel = new Label() {
-                        Text = "Nationaliteit:",
-                        X = Pos.Left(extranameLabel),
-                        Y = Pos.Bottom(extradateOfBirthLabel),
-                    };
                     Label extranationalityuserLabel = new Label() {
                         Text = $"{userInfos[i].Nationality}",
                         X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Top(extranationalityLabel),
-                    };
-
-                    Label extradocumentTypeLabel = new Label() {
-                        Text = "Document type:",
-                        X = Pos.Left(extranameLabel),
-                        Y = Pos.Bottom(extranationalityLabel),
+                        Y = Pos.Bottom(extradateofBirthFielduserLabel),
                     };
                     Label extradocumentTypeuserLabel = new Label() {
                         Text = $"{userInfos[i].DocumentType}",
                         X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Top(extradocumentTypeLabel),
+                        Y = Pos.Bottom(extranationalityuserLabel),
                     };
-
-                    Label extradocumentNumberLabel = new Label() {
-                        Text = "Document nummer:",
-                        X = Pos.Left(extranameLabel),
-                        Y = Pos.Bottom(extradocumentTypeLabel),
-                    };
-                    Label extradocumentNumberuserLabel = new Label() {
+                     Label extradocumentNumberuserLabel = new Label() {
                         Text = $"{userInfos[i].DocumentNumber}",
                         X = Pos.Left(extrafirstlastnameLabel),
-                        Y = Pos.Top(extradocumentNumberLabel),
+                        Y = Pos.Bottom(extradocumentTypeuserLabel),
                     };
-                    
-                    Add(passagierNumber, extranameLabel, extrafirstlastnameLabel, extradateOfBirthLabel, extradateofBirthFielduserLabel, extranationalityLabel, extranationalityuserLabel, extradocumentTypeLabel, extradocumentTypeuserLabel, extradocumentNumberLabel, extradocumentNumberuserLabel);
-                    Previousview = extradocumentNumberuserLabel;
-                    i++;
+
+                    Add(fieldLabel, extrafirstlastnameLabel, extradateofBirthFielduserLabel, extranationalityuserLabel, extradocumentTypeuserLabel, extradocumentNumberuserLabel);
+
                 }
             }
             #endregion
