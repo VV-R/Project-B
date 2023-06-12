@@ -3,6 +3,7 @@ using System.Net.Mail;
 using Terminal.Gui;
 using Managers;
 using Entities;
+using Db;
 
 namespace Windows;
 public class FlightInfo : Toplevel
@@ -87,8 +88,10 @@ public class FlightInfo : Toplevel
 
 public class FlightInfoEdit : FlightInfo
 {
+    Flight TheFlight;
     public FlightInfoEdit(Flight flight)
     {
+        TheFlight = flight;
         Label arrivalLocation = new Label() {
             Text = flight.ArrivalLocation,
             X = Pos.Left(DepartureLocationCombo),
@@ -108,7 +111,7 @@ public class FlightInfoEdit : FlightInfo
         };
 
         updateButton.Clicked += () => {
-            if (UpdateFlight(flight, DepatureDateField.GetDateTime().Add(DepatureTime.Time)) != null) {
+            if (UpdateFlight(DepatureDateField.GetDateTime().Add(DepatureTime.Time)) != null) {
                 WindowManager.GoBackOne(this);
             }
         };
@@ -119,7 +122,7 @@ public class FlightInfoEdit : FlightInfo
             X = Pos.Right(updateButton) + 1
         };
 
-        cancelFlight.Clicked += () => { CancelFlight(flight); };
+        cancelFlight.Clicked += () => { CancelFlight(); };
 
         Button delayButton = new Button() {
             Text = "Vertraging invoeren",
@@ -140,7 +143,7 @@ public class FlightInfoEdit : FlightInfo
         Add(updateButton, cancelFlight , delayButton, goBackButton);
     }
 
-    private Flight? UpdateFlight(Flight flight, DateTime departureTime)
+    private Flight? UpdateFlight(DateTime departureTime)
     {
         if (DepartureLocationCombo.Text == "" || AirplaneCombobox.Text == "") {
             MessageBox.ErrorQuery("Vlucht Updaten", "Sommige velden zijn niet ingevuld.", "Ok");
@@ -167,28 +170,28 @@ public class FlightInfoEdit : FlightInfo
 
         DateTime arrivalTime = departureTime.Add(flightDuration);
 
-        string subject = $"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}";
-        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gewijzigd.\nDit zijn de wijzigingen:\n";
-        body += $"Vertrek Locatie:\t {flight.DepartureLocation} --> {(string)DepartureLocationCombo.Text}\n";
-        body += $"Tijd van Vertrek:\t {flight.DepartureTime} --> {departureTime}\n";
-         body += $"Tijd van Aankomst:\t{flight.ArrivalTime} --> {arrivalTime}\n";
-        body += $"Vliegtuig:\t\t\t{flight.Airplane} --> {(string)AirplaneCombobox.Text}\n\n";
+        string subject = $"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}";
+        string body = $"Beste Klant,\n\nUw vlucht van {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation} is gewijzigd.\nDit zijn de wijzigingen:\n";
+        body += $"Vertrek Locatie:\t {TheFlight.DepartureLocation} --> {(string)DepartureLocationCombo.Text}\n";
+        body += $"Tijd van Vertrek:\t {TheFlight.DepartureTime} --> {departureTime}\n";
+        body += $"Tijd van Aankomst:\t{TheFlight.ArrivalTime} --> {arrivalTime}\n";
+        body += $"Vliegtuig:\t\t\t{TheFlight.Airplane} --> {(string)AirplaneCombobox.Text}\n\n";
         body += "Met vriendelijke groeten,\nRotterdam Airline Service";
 
         SendEmails(subject, body);
 
         // Update the rest of the DB
 
-        flight.DepartureLocation = (string)DepartureLocationCombo.Text;
-        flight.DepartureTime = departureTime;
-        flight.ArrivalTime = arrivalTime;
-        flight.Airplane = (string)AirplaneCombobox.Text;
-        return flight;
+        TheFlight.DepartureLocation = (string)DepartureLocationCombo.Text;
+        TheFlight.DepartureTime = departureTime;
+        TheFlight.ArrivalTime = arrivalTime;
+        TheFlight.Airplane = (string)AirplaneCombobox.Text;
+        return TheFlight;
     }
 
-    private void CancelFlight(Flight flight)
+    private void CancelFlight()
     {
-        string body = $"Beste Klant,\n\nUw vlucht van {flight.DepartureLocation} - {flight.ArrivalLocation} is gecanceld vanwege {{0}}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+        string body = $"Beste Klant,\n\nUw vlucht van {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation} is gecanceld vanwege {{0}}.\nEen alternatief wordt geregeld. Wij houden U hierover op de hoogte.\n\nMet vriendelijke groeten,\nRotterdam Airline Service";
         var n = MessageBox.Query("Annuleren", "Wat is de reden van Annuleren", "Weer", "Storing", "Staking", "Vertraging", "Bijzondere reden", "Stoppen");
         string reason;
         switch(n) {
@@ -205,28 +208,37 @@ public class FlightInfoEdit : FlightInfo
                 reason = "een opgelopen vertraging";
                 break;
             case 4:
-                SpecialEmail(flight, string.Format(body, "%%"));
+                SpecialEmail(string.Format(body, "%%"));
                 return;
             default:
                 WindowManager.GoBackOne(this);
                 return;
         };
 
-        SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", String.Format(body, reason));
+        SendEmails($"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}", String.Format(body, reason));
 
         // Remove it from the DB
-        WindowManager.Flights.Remove(flight);
+        WindowManager.Flights.Remove(TheFlight);
+        using (var context = new ApplicationDbContext()) {
+            
+        }
+
         WindowManager.GoBackOne(this);
     }
 
     private void SendEmails(string subject, string body)
     {
-        // Notify customers via E-Mail
-        List<MailAddress> emails = new List<MailAddress>() {new MailAddress("2004levi@gmail.com"), new MailAddress("vandaalenlevi@gmail.com")};
-        EmailManager.SendEmails(subject, body, emails);
+        using (var context = new ApplicationDbContext()) {
+            var query = from ticket in context.Tickets
+                        join userInfo in context.UserInfo
+                            on ticket.FlightId equals TheFlight.FlightNumber
+                        where userInfo.Email != null
+                        select userInfo.Email;
+            EmailManager.SendEmails(subject, body, query.Distinct().ToList());
+        }
     }
 
-    private void SpecialEmail(Flight flight, string body)
+    private void SpecialEmail(string body)
     {
         RemoveAll();
         TextView textField = new TextView() {
@@ -241,7 +253,7 @@ public class FlightInfoEdit : FlightInfo
             Y = Pos.Bottom(textField) + 1
         };
 
-        sendButton.Clicked += () => { SendEmails($"Vlucht {flight.DepartureLocation} - {flight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
+        sendButton.Clicked += () => { SendEmails($"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}", (string)textField.Text); WindowManager.GoBackOne(this); };
 
         Button goBack = new Button() {
             Text = "Terug",
