@@ -1,7 +1,8 @@
 using Terminal.Gui;
+using Microsoft.EntityFrameworkCore;
 using Entities;
 using Managers;
-
+using Db;
 
 namespace Windows;
 public class SearchReservation : Toplevel
@@ -72,6 +73,65 @@ public class SearchReservationUser : SearchReservation
             WindowManager.GoForwardOne(new ReservationPanelUser(
                 WindowManager.CurrentUser.Reservations.Where(t => t.FlightId == ((Flight)item.Value).FlightNumber).ToList()));
         };
+    }
+}
+
+public class SearchReservationGuest : Toplevel 
+{
+    private ReservationPanelUser? _reservationPanel;
+    private TextField _searchField;
+    public SearchReservationGuest() {
+        Label infoLabel = new Label() {
+            Text = "Om een reservatie te zoeken vul het factuur nummer in. FN-XXXXXXXX",
+        };
+
+        _searchField = new TextField("") {
+            Y = Pos.Bottom(infoLabel) + 1,
+            Width = 14,
+        };
+
+        Button searchButton = new Button() {
+            Text = "Zoeken",
+            Y = Pos.Top(_searchField),
+            X = Pos.Right(_searchField) + 1,
+        };
+        
+        // Should search for TextField input
+        searchButton.Clicked += () => { ChangePanel((string)_searchField.Text); };
+
+        Button goBackButton = new Button() {
+            Text = "Terug",
+            Y = Pos.Top(_searchField),
+            X = Pos.Right(searchButton) + 1
+        };
+
+        goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
+
+        Add(infoLabel, _searchField, searchButton, goBackButton);
+    }
+
+    private bool ChangePanel(string invoceNumber) {
+        Remove(_reservationPanel);
+        
+        if (!int.TryParse(invoceNumber, out int flightNumber))
+            return false;
+
+        List<Ticket> tickets;
+        using (var context = new ApplicationDbContext()) {
+            tickets = context.Tickets.Where(t => t.FlightId == flightNumber).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
+        }
+
+        if (tickets.Count == 0)
+            return false;
+
+        _reservationPanel = new ReservationPanelUser(tickets) {
+            Y = Pos.Bottom(_searchField) + 1,
+            ColorScheme = WindowManager.CurrentColor,
+        };
+        _reservationPanel.Remove(_reservationPanel.GoBackButton);
+
+        Add(_reservationPanel);
+        return true;   
     }
 }
 
@@ -190,6 +250,7 @@ public class ReservationPanelAdmin : Toplevel
 
 public class ReservationPanelUser : Toplevel
 {
+    public Button GoBackButton;
     public ReservationPanelUser(List<Ticket> tickets)
     {
         Label flightLabel = new Label() {
@@ -216,13 +277,13 @@ public class ReservationPanelUser : Toplevel
             Add(ticketLabel, userLabel);
         }
 
-        Button goBackButton = new Button() {
+        GoBackButton = new Button() {
             Y = Pos.Bottom(flightLabel) + 1 + labelHeight * ((tickets.Count + 1) / rows),
             Text = "Terug",
         };
 
-        goBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
+        GoBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
 
-        Add(goBackButton);
+        Add(GoBackButton);
     }
 }
