@@ -4,7 +4,7 @@ using System.Net.Mail;
 using Terminal.Gui;
 using Managers;
 using Entities;
-using System.Drawing;
+using Db;
 
 namespace Windows;
 public class MainBooking : Toplevel
@@ -304,9 +304,28 @@ public class MainBooking : Toplevel
             return null;
         }
         string phonenumber = $"{DialCodesComboBox.Text}|{PhoneText.Text}";
-        UserInfo userInfo = new UserInfo((string)FirstnameText.Text, (string)PrepositionText.Text, (string)LastnameText.Text, new MailAddress((string)EmailText.Text), phonenumber, dateOfBirth, (string)NationalityComboBox.Text, (string)DocumentNumber.Text, (string)DocumentTypeComboBox.Text, expireDate);
-        // userInfo.IBAN = "iets";
-        return userInfo;
+        if (WindowManager.CurrentUser != null) {
+            UserInfo userInfo = WindowManager.CurrentUser.UserInfo;
+            userInfo.FirstName = (string)FirstnameText.Text;
+            userInfo.Preposition = (string)PrepositionText.Text;
+            userInfo.LastName = (string)LastnameText.Text;
+            userInfo.Email = new MailAddress((string)EmailText.Text);
+            userInfo.PhoneNumber = phonenumber;
+            userInfo.DateOfBirth = dateOfBirth;
+            userInfo.Nationality = (string)NationalityComboBox.Text;
+            userInfo.DocumentNumber = (string)DocumentNumber.Text;
+            userInfo.DocumentType = (string)DocumentTypeComboBox.Text;
+            userInfo.ExpirationDate = expireDate;
+            using (var context = new ApplicationDbContext()) {
+                context.UserInfo.Update(userInfo);
+                context.SaveChanges();
+            }
+            return userInfo;
+        } else {
+            UserInfo userInfo = new UserInfo((string)FirstnameText.Text, (string)PrepositionText.Text, (string)LastnameText.Text, new MailAddress((string)EmailText.Text), phonenumber, dateOfBirth, (string)NationalityComboBox.Text, (string)DocumentNumber.Text, (string)DocumentTypeComboBox.Text, expireDate);
+            return userInfo;
+        }
+
     }
 }
 

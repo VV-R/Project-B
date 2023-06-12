@@ -130,7 +130,7 @@ public class FlightInfoEdit : FlightInfo
             X = Pos.Right(cancelFlight) + 1,
         };
 
-        delayButton.Clicked += () => { DelayFlight(flight); };
+        delayButton.Clicked += () => { DelayFlight(); };
 
         Button goBackButton = new Button() {
             Text = "Annuleren",
@@ -155,7 +155,7 @@ public class FlightInfoEdit : FlightInfo
             return null;
         }
 
-        TimeSpan flightDuration = (string)DepartureLocationCombo.Text switch {
+        TimeSpan flightDuration = (string)TheFlight.ArrivalLocation switch {
             "Parijs" => new TimeSpan(1, 15, 0),
             "London" => new TimeSpan(0, 55, 0),
             "München" => new TimeSpan(1, 25, 0),
@@ -180,12 +180,14 @@ public class FlightInfoEdit : FlightInfo
 
         SendEmails(subject, body);
 
-        // Update the rest of the DB
-
         TheFlight.DepartureLocation = (string)DepartureLocationCombo.Text;
         TheFlight.DepartureTime = departureTime;
         TheFlight.ArrivalTime = arrivalTime;
         TheFlight.Airplane = (string)AirplaneCombobox.Text;
+        using (var context = new ApplicationDbContext()) {
+            context.Flights.Update(TheFlight);
+            context.SaveChanges();
+        }
         return TheFlight;
     }
 
@@ -217,8 +219,7 @@ public class FlightInfoEdit : FlightInfo
 
         SendEmails($"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}", String.Format(body, reason));
 
-        // Remove it from the DB
-        WindowManager.Flights.Remove(TheFlight);
+        // Edit The Status
         using (var context = new ApplicationDbContext()) {
             
         }
@@ -266,7 +267,7 @@ public class FlightInfoEdit : FlightInfo
         Add(textField, sendButton, goBack);
     }
 
-    private void DelayFlight(Flight flight) {
+    private void DelayFlight() {
         TimeSpan delay = TimeSpan.Zero;
         while (true) {
             int n = MessageBox.Query("Vertraging", $"Voeg minuten toe\nHudige vertraging: {delay}", "5 Minuten", "10 Minuten", "15 Minuten", "30 Minuten", "60 Minuten reden", "Invoeren","Stoppen");
@@ -282,7 +283,7 @@ public class FlightInfoEdit : FlightInfo
             delay += minutes;
 
             if (n == 5)
-                DelayFlight(flight, delay);
+                DelayFlight(delay);
 
             if (minutes == TimeSpan.Zero)
                 break;
@@ -290,10 +291,15 @@ public class FlightInfoEdit : FlightInfo
         WindowManager.GoBackOne(this);
     }
 
-    private void DelayFlight(Flight flight, TimeSpan delayTime) {
-        flight.ArrivalTime += delayTime;
-        // Shift all next flights with on this course up
-        // Notify customers....
+    private void DelayFlight(TimeSpan delayTime) {
+        TheFlight.DepartureTime += delayTime;
+        TheFlight.ArrivalTime += delayTime;
+        string body = $"Beste Klant,\n\nUw vlucht van {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation} is vertraagd.\nUw vlucht vertrekt nu vanaf {TheFlight.DepartureTime.ToString("dd-MM-yyyy HH:mm")} \n\nMet vriendelijke groeten,\nRotterdam Airline Service";
+        SendEmails($"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}", body);
+        using (var context = new ApplicationDbContext()) {
+            context.Flights.Update(TheFlight);
+            context.SaveChanges();
+        }
     }
 }
 
@@ -366,8 +372,14 @@ public class FlightInfoAdd : FlightInfo
             "Berlijn" => new TimeSpan(1, 20, 0),
             _ => TimeSpan.Zero
         };
-
-        return new Flight(WindowManager.Flights.Count, (string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, departureTime.Add(flightDuration), (string)AirplaneCombobox.Text);
+        Flight flight;
+        using (var context = new ApplicationDbContext()) {
+            flight = new Flight((string)DepartureLocationCombo.Text, departureTime, (string)ArrivalLocationCombo.Text, departureTime.Add(flightDuration), (string)AirplaneCombobox.Text);
+            context.Flights.Add(flight);
+            context.SaveChanges();
+        }
+        WindowManager.Flights.Add(flight);
+        return flight;
     }
 }
 
