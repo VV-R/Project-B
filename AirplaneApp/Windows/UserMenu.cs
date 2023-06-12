@@ -39,7 +39,7 @@ public class UserMenu : Toplevel
             Y = Pos.Bottom(airplaneInformationButton) + 1,
         };
 
-        infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo(WindowManager.CurrentUser)); };
+        infoButton.Clicked += () => { WindowManager.GoForwardOne(new EditUserInfo()); };
 
         Button searchReservation = new Button() {
             Text = "Reserveringen",

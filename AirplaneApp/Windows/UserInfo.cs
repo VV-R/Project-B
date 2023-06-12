@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Terminal.Gui;
 using Managers;
 using Entities;
+using Db;
 
 namespace Windows;
 public class UserInfoWindow : Toplevel
@@ -227,23 +228,17 @@ public class UserInfoWindow : Toplevel
 
 public class EditUserInfo : UserInfoWindow
 {
-    public EditUserInfo(User user) : base(user)
+    public EditUserInfo() : base()
     {
         Button editButton = new Button() {
             Text = "Aanpassen",
             Y = Pos.Bottom(ExpireDateLabel) + 1,
         };
 
-        editButton.Clicked += () =>
-        {
-            User? currentUser = WindowManager.CurrentUser;
-            if (currentUser != null)
-            {
-                User? user = EditInfo(currentUser, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime());
-                if (user != null) {
-                    WindowManager.GoBackOne(this);
-                }
-            }
+        editButton.Clicked += () => {
+            if (EditInfo(DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime())) {
+                WindowManager.GoBackOne(this);
+            };
         };
 
         Button exitButton = new Button() {
@@ -255,12 +250,16 @@ public class EditUserInfo : UserInfoWindow
         Add(editButton, exitButton);
     }
 
-    private User? EditInfo(User user, DateTime dateOfBirth, DateTime expireDate)
+    private bool EditInfo(DateTime dateOfBirth, DateTime expireDate)
     {
-        if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
-        EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
+        User? user = WindowManager.CurrentUser;
+        if (user == null)
+            return false;
+
+        if (FirstnameText.Text == "" || LastnameText.Text == "" || EmailText.Text == ""
+            || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {
             MessageBox.ErrorQuery("Aanpassen", "Sommige velden zijn niet ingevuld.", "Ok");
-            return null;
+            return false;
         }
 
         MailAddress address;
@@ -270,17 +269,17 @@ public class EditUserInfo : UserInfoWindow
             isValid = (address.Address == (string)EmailText.Text);
         } catch (FormatException) {
             MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
-            return null;
+            return false;
         }
 
         if (!isValid) {
             MessageBox.ErrorQuery("Aanpassen", "Onjuist email", "Ok");
-            return null;
+            return false;
         }
 
         if (PhoneText.Text.Length < 9) {
             MessageBox.ErrorQuery("Aanpassen", "Onjuist telefoonnummer", "Ok");
-            return null;
+            return false;
         }
         DateTime currentDate = DateTime.Today;
         int age =  currentDate.Year - dateOfBirth.Year;
@@ -289,15 +288,15 @@ public class EditUserInfo : UserInfoWindow
 
         if (age < 18) {
             MessageBox.ErrorQuery("Registreren", "Niet oud genoeg", "Ok");
-            return null;
+            return false;
         }
 
         if (DocumentTypeComboBox.Text == "" && DocumentNumber.Text != "") {
             MessageBox.ErrorQuery("Aanpassen", "Document type niet ingevuld", "Ok");
-            return null;
+            return false;
         } else if (currentDate > expireDate && DocumentNumber.Text != "") {
             MessageBox.ErrorQuery("Aanpassen", $"Uw {DocumentTypeComboBox.Text} is vervallen", "Ok");
-            return null;
+            return false;
         } else if (DocumentNumber.Text != "") {
             user.UserInfo.ExpirationDate = expireDate;
             user.UserInfo.DocumentNumber = (string)DocumentNumber.Text;
@@ -311,10 +310,14 @@ public class EditUserInfo : UserInfoWindow
         user.UserInfo.PhoneNumber = phonenumber;
         user.UserInfo.DateOfBirth = dateOfBirth;
         user.UserInfo.Nationality = (string)NationalityComboBox.Text;
-        return user;
+
+        using (var context = new ApplicationDbContext()) {
+            context.UserInfo.Update(user.UserInfo);
+            context.SaveChanges();
+        }
+        return true;
     }
 }
-
 
 public class EditUserInfoAdmin : UserInfoWindow
 {
