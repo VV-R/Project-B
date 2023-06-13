@@ -1,5 +1,6 @@
 using System;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Terminal.Gui;
 using Managers;
@@ -377,7 +378,17 @@ public class RegisterMenu : Toplevel
             user.UserInfo.ExpirationDate = expireDate;
         }
 
-        using (var context = new ApplicationDbContext("Data Source=./airport.db;")) {
+        using (var context = new ApplicationDbContext()) {
+            var query = from qUser in context.Users
+                        join qUserInfo in context.UserInfo
+                            on qUser.UserInfoId equals qUserInfo.Id
+                        where qUserInfo.Email == address
+                        select qUser;
+            if (query.ToList().Count != 0) {
+                MessageBox.ErrorQuery("Registreren", "MailAddress is al gekoppelt aan een account.", "Ok");
+                return null;
+            }
+
             var newUser = context.Users.Add(user);
             context.SaveChanges();
         }
