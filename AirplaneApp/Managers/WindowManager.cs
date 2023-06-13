@@ -54,14 +54,27 @@ public static class WindowManager
             SetWindow(oldwindow, _windows.Last());
         }
     }
-    public static void GoBackOne() => GoBackOne(CurrentWindow);
+    public static void GoBackOne() {
+        if (CurrentWindow is UserMenu) {
+            MainWindow.LoginButton.Text = "Inloggen";
+            CurrentUser = null;
+        }
+        GoBackOne(CurrentWindow);
+    }
+
     public static void GoForwardOne(Toplevel newwindow) {
         SetWindow(_windows.Last(), newwindow);
         _windows.Add(newwindow);
     }
 
     public static void GoToFirst() {
-        SetWindow(CurrentWindow, _firstWindow);
-        _windows = new List<Toplevel>() { _firstWindow};
+        if (CurrentUser == null) {
+            SetWindow(CurrentWindow, _firstWindow);
+            _windows = new List<Toplevel>() { _firstWindow};
+        } else {
+            var window = new UserMenu(CurrentUser);
+            SetWindow(CurrentWindow, window);
+            _windows = new List<Toplevel>() { _firstWindow, window };
+        }
     }
 }

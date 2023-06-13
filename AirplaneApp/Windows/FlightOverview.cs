@@ -298,10 +298,7 @@ public class FlightOverview : Toplevel
                     }
                     context.SaveChanges();
                 }
-                if (WindowManager.CurrentUser == null)
-                    WindowManager.GoToFirst();
-                else
-                    WindowManager.GoForwardOne(new UserMenu(WindowManager.CurrentUser));
+                WindowManager.GoToFirst();
             };
 
             Button closeButton = new Button() {
@@ -310,12 +307,7 @@ public class FlightOverview : Toplevel
                 X = Pos.Right(reservationButton) + 1,
             };
             
-            closeButton.Clicked += () => { 
-                if (WindowManager.CurrentUser == null)
-                    WindowManager.GoToFirst();
-                else
-                    WindowManager.GoForwardOne(new UserMenu(WindowManager.CurrentUser)); 
-            };
+            closeButton.Clicked += () => { WindowManager.GoToFirst(); };
 
             Add(reservationButton, closeButton);
 

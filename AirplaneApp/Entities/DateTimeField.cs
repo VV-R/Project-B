@@ -14,36 +14,36 @@ public class DateTimeField : View
         int[] differentDays = {4, 6, 9, 11};
         int increaseDay = 1;
 
-        _yearComboBox = new ComboBox() {
-            Height = 2,
-            Width = 8,
-        };
-
-        _yearComboBox.SetSource(yearRange);
-
-        _monthComboBox = new ComboBox(){
-            X = Pos.Right(_yearComboBox) + 1,
-            Y = Pos.Top(_yearComboBox),
-            Height = 2,
-            Width = 8,
-        };
-
-        _monthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
-
-        _dayComboBox = new ComboBox(){
-            X = Pos.Right(_monthComboBox) + 1 ,
-            Y = Pos.Top(_monthComboBox),
+        _dayComboBox = new ComboBox() {
             Height = 2,
             Width = 8,
         };
 
         _dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
 
+        _monthComboBox = new ComboBox(){
+            X = Pos.Right(_dayComboBox) + 1,
+            Y = Pos.Top(_dayComboBox),
+            Height = 2,
+            Width = 8,
+        };
+
+        _monthComboBox.SetSource(Enumerable.Range(1, 12).ToList());
+
+        _yearComboBox = new ComboBox() {
+            X = Pos.Right(_monthComboBox) + 1 ,
+            Y = Pos.Top(_monthComboBox),
+            Height = 2,
+            Width = 8,
+        };
+
+        _yearComboBox.SetSource(yearRange);
+
         _monthComboBox.SelectedItemChanged += (e) => { int month = Convert.ToInt32(e.Value); if (month == 2) {
             _dayComboBox.SetSource(Enumerable.Range(1, 28 + increaseDay).ToList());
             } else if (differentDays.Contains(month)) {
                 _dayComboBox.SetSource(Enumerable.Range(1, 30).ToList());
-             }
+            }
             else {
                 _dayComboBox.SetSource(Enumerable.Range(1, 31).ToList());
             } _dayComboBox.SelectedItem = 0;
