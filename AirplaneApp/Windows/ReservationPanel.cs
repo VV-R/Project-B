@@ -58,27 +58,31 @@ public class SearchReservationAdmin : SearchReservation
 public class SearchReservationUser : SearchReservation
 {
     public SearchReservationUser() : base(WindowManager.CurrentUser) {
-        List<Flight> flights = new List<Flight>();
+        List<string> invoiceNumbers = new List<string>();
+        List<string> infoNumbers = new List<string>();
         foreach (Ticket ticket in WindowManager.CurrentUser.Reservations) {
-            if (!flights.Contains(ticket.TheFlight))
-                flights.Add(ticket.TheFlight);
-        }
-        ReservationsView.SetSource(flights);
+            if (!invoiceNumbers.Contains(ticket.InvoiceNumber)) {
+                invoiceNumbers.Add(ticket.InvoiceNumber);
+                infoNumbers.Add($"{ticket.InvoiceNumber}: {ticket.TheFlight}");
+            }
 
-        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(flights?.FindAll((x) => {
-            return x.ToString().ToLower().Contains((string)SearchBox.Text.ToLower());
+        }
+        ReservationsView.SetSource(infoNumbers);
+
+        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(invoiceNumbers?.FindAll((x) => {
+            return x.ToLower().Contains((string)SearchBox.Text.ToLower());
         }));};
 
         ReservationsView.OpenSelectedItem += (item) => {
             WindowManager.GoForwardOne(new ReservationPanelUser(
-                WindowManager.CurrentUser.Reservations.Where(t => t.FlightId == ((Flight)item.Value).FlightNumber).ToList()));
+                WindowManager.CurrentUser.Reservations.Where(t => t.InvoiceNumber == invoiceNumbers[item.Item]).ToList()));
         };
     }
 }
 
 public class SearchReservationGuest : Toplevel 
 {
-    private ReservationPanelUser? _reservationPanel;
+    private ReservationPanel? _reservationPanel;
     private TextField _searchField;
     public SearchReservationGuest() {
         Label infoLabel = new Label() {
@@ -121,7 +125,7 @@ public class SearchReservationGuest : Toplevel
         if (tickets.Count == 0)
             return false;
 
-        _reservationPanel = new ReservationPanelUser(tickets) {
+        _reservationPanel = new ReservationPanel(tickets) {
             Y = Pos.Bottom(_searchField) + 1,
             ColorScheme = WindowManager.CurrentColor,
         };
@@ -247,8 +251,113 @@ public class ReservationPanelAdmin : Toplevel
 
 public class ReservationPanelUser : Toplevel
 {
+    List<Ticket> Tickets;
+    public ReservationPanelUser(List<Ticket> tickets) {
+        Tickets = tickets;
+        Start();
+    }
+    private void Start() {
+        RemoveAll();
+        ReservationPanel panel = new ReservationPanel(Tickets) { ColorScheme = WindowManager.CurrentColor };
+
+        Button cancelTicketButton = new Button() {
+            Text = "Ticket Cancelen",
+            X = Pos.Right(panel.GoBackButton) + 1,
+            Y = Pos.Top(panel.GoBackButton)
+        };
+
+        cancelTicketButton.Clicked += () => {
+            if (Tickets[0].BoardingTime.AddDays(-5) > DateTime.Now)
+                CancelTickets();
+            else MessageBox.ErrorQuery("Cancelen", "U bent buiten de 7 weken tijd om te cancelen!", "OK"); };
+        Add(panel, cancelTicketButton);
+    }
+
+    private void CancelTickets() {
+        RemoveAll();
+        Label flightLabel = new Label() {
+            Text = $"Vlucht:\n{Tickets[0].TheFlight.ToNewLineString()}",
+        };
+
+        Label helpLabel = new Label() {
+            Text = "Klik voor de tickets op het '-' om te selecteren welke ticket u wilt cancelen.\nKlik daarna op OK om doortegaan of STOP om te stoppen\nLET OP! Als de hoofdboeker zijn ticket canceled worden alle tickets gecanceled",
+            X = Pos.Right(flightLabel) + 2,
+        };
+
+        Add(flightLabel, helpLabel);
+
+        CheckBox[] checkBoxes = new CheckBox[Tickets.Count];
+        int xOffset = 42;
+        int rows = 2;
+        int labelHeight = 6;
+        for (int i = 0; i < Tickets.Count; i++) {
+            CheckBox checkBox = new CheckBox() {
+                Y = Pos.Bottom(flightLabel) + (labelHeight * (i / rows)) + 1,
+                X = xOffset * (i % rows)
+            };
+
+            checkBoxes[i] = checkBox;
+
+            Label ticketLabel = new Label() {
+                Text = $"Stoelnummer: {Tickets[i].SeatNumber}\nBoarding tijd: {Tickets[i].BoardingTime}",
+                Y = Pos.Top(checkBox),
+                X = Pos.Right(checkBox) + 1
+            };
+            UserInfo userInfo = Tickets[i].TheUserInfo;
+            Label userLabel = new Label() {
+                Text = $"{userInfo.FirstName} {userInfo.Preposition} {userInfo.LastName}",
+                Y = Pos.Bottom(ticketLabel) + 1,
+                X = Pos.Left(ticketLabel),
+            };
+
+            Add(checkBox, ticketLabel, userLabel);
+        }
+
+        Button okButton = new Button() {
+            Text = "OK",
+            Y = Pos.Bottom(flightLabel) + 1 + labelHeight * ((Tickets.Count + 1) / rows),
+        };
+
+        okButton.Clicked += () => {
+            List<Ticket> ticketsToCancel = new();
+            for (int i = 0; i < checkBoxes.Length; i++) {
+                if (i == 0 && checkBoxes[i].Checked) {
+                    ticketsToCancel = Tickets;
+                    break;
+                }
+                if(checkBoxes[i].Checked)
+                    ticketsToCancel.Add(Tickets[i]);
+            }
+            CancelTickets(ticketsToCancel);
+            Start();
+        };
+
+        Button cancelTicketButton = new Button() {
+            Text = "STOP",
+            X = Pos.Right(okButton) + 1,
+            Y = Pos.Top(okButton)
+        };
+
+        cancelTicketButton.Clicked += Start;
+
+        Add(okButton, cancelTicketButton);
+    }
+
+    private void CancelTickets(List<Ticket> tickets) {
+        using (var context = new ApplicationDbContext()) {
+            context.Tickets.RemoveRange(tickets);
+            context.SaveChanges();
+        }
+        foreach(var ticket in tickets) {
+            Tickets.Remove(ticket);
+        }
+    }
+}
+
+public class ReservationPanel : Toplevel
+{
     public Button GoBackButton;
-    public ReservationPanelUser(List<Ticket> tickets)
+    public ReservationPanel(List<Ticket> tickets)
     {
         Label flightLabel = new Label() {
             Text = $"Vlucht:\n{tickets[0].TheFlight.ToNewLineString()}",
@@ -279,7 +388,7 @@ public class ReservationPanelUser : Toplevel
             Text = "Terug",
         };
 
-        GoBackButton.Clicked += () => { WindowManager.GoBackOne(this);};
+        GoBackButton.Clicked += () => { WindowManager.GoBackOne();};
 
         Add(GoBackButton);
     }

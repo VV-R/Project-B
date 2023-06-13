@@ -92,7 +92,13 @@ public class LoginScreen : Toplevel
                 u => u.UserInfo.Email == new MailAddress(email) & u.Password == password
             );
             if (user != null) {
-                user.Reservations = context.Tickets.Where(t => t.UserId == user.UserInfoId).Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList();
+                user.Reservations = new List<Ticket>();
+                foreach(var uTicket in context.Tickets.Where(t => t.UserId == user.UserInfoId).ToList().DistinctBy(t => t.InvoiceNumber)) {
+                    var query = from ticket in context.Tickets
+                                where ticket.InvoiceNumber == uTicket.InvoiceNumber
+                                select ticket;
+                    user.Reservations.AddRange(query.Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList());
+                }
             }
             return user;
         }

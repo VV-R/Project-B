@@ -31,12 +31,14 @@ class Program {
         //     var user = context.Users.First(u => u.Role == "User");
         //     var flight1 = context.Flights.First(f => f.ArrivalLocation == "Parijs");
         //     var flight2 = context.Flights.First(f => f.ArrivalLocation == "London");
+        //     var lastFlight = context.Flights.OrderBy(f => f.DepartureTime).Last();
 
         //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B3", flight1.DepartureTime.AddMinutes(-30), "FN-00010001"));
         //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B2", flight1.DepartureTime.AddMinutes(-30), "FN-00010001"));
         //     context.Tickets.Add(new Ticket(flight1.FlightNumber, user.UserInfoId, "B1", flight1.DepartureTime.AddMinutes(-30), "FN-00010001"));
         //     context.Tickets.Add(new Ticket(flight2.FlightNumber, user.UserInfoId, "C1", flight2.DepartureTime.AddMinutes(-30), "FN-00650001"));
         //     context.Tickets.Add(new Ticket(flight2.FlightNumber, user.UserInfoId, "C2", flight2.DepartureTime.AddMinutes(-30), "FN-00650001"));
+        //     context.Tickets.Add(new Ticket(lastFlight.FlightNumber, user.UserInfoId, "D2", lastFlight.DepartureTime.AddMinutes(-30), "FN-01230001"));
         //     context.SaveChanges();
         // }
     }
