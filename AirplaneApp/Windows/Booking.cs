@@ -331,13 +331,14 @@ public class MainBooking : Toplevel
 
 public class BookingProcess : Toplevel
 {
-    List<UserInfo> userInfos = new List<UserInfo>();
+    UserInfo[] userInfos;
     Toplevel currentWindow;
     int seatsCount;
     int maxSeats;
     Flight currentFlight;
     public BookingProcess(int seats, Flight flight)
     {
+        userInfos = new UserInfo[seats];
         currentFlight = flight;
         maxSeats = seats;
         InteraciveSeat.MaxSeats = maxSeats;
@@ -370,10 +371,10 @@ public class BookingProcess : Toplevel
         if (userInfo == null)
             return;
 
-        userInfos.Add(userInfo);
+        userInfos[maxSeats - seatsCount] = userInfo;
 
         if (seatsCount == 1) {
-            WindowManager.GoForwardOne(new SeattingPlan(currentFlight, userInfos, maxSeats));
+            WindowManager.GoForwardOne(new SeattingPlan(currentFlight, userInfos));
             return;
         }
         seatsCount--;

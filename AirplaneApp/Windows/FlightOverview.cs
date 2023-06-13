@@ -15,7 +15,7 @@ public class FlightOverview : Toplevel
     private List<UserInfo>? userInfos;
     private List<Seat>? selectedSeats;
 
-    public FlightOverview(Flight flight, List<UserInfo> userInfos, List<Seat> selectedSeats)
+    public FlightOverview(Flight flight, UserInfo[] userInfos, List<Seat> selectedSeats)
     {
         #region PersonalInformation
         Label personalinformationLabel = new Label(){
@@ -219,7 +219,7 @@ public class FlightOverview : Toplevel
 
         #region extrabooking
 
-        if (userInfos.Count > 1)
+        if (userInfos.Length > 1)
         {
             Label extraBooking = new Label(){
             Text = "Extra passagiers",
@@ -231,7 +231,7 @@ public class FlightOverview : Toplevel
             int xOffset = 40;
             int rows = 2;
             int labelHeight = 9;
-            for (int i = 1; i < userInfos.Count; i++) {
+            for (int i = 1; i < userInfos.Length; i++) {
                 Label passagierNumber = new Label(){
                     Text = $"Extra passagier: {i}",
                     Y = 2 + (labelHeight * ((i - 1) / rows)) + 1,
@@ -282,7 +282,7 @@ public class FlightOverview : Toplevel
 
             reservationButton.Clicked += () => {
                 using (var context = new ApplicationDbContext()) {
-                    for (int i = 0; i < userInfos.Count; i++) {
+                    for (int i = 0; i < userInfos.Length; i++) {
                         if (i == 0 && WindowManager.CurrentUser != null)
                             continue;
                         context.UserInfo.Add(userInfos[i]);
@@ -293,7 +293,7 @@ public class FlightOverview : Toplevel
                 string invoiceNumber = invoice.Split('.')[0];
                 EmailManager.SendInvoice($"Factuur {invoiceNumber}","Beste Klant,\n\nHierbij de factuur van uw geboekte vlucht.\n\nMet Vriendelijke Groeten,\nRotterdam Airport", userInfos[0], invoice);
                 using (var context = new ApplicationDbContext()) {
-                    for (int i = 0; i < userInfos.Count; i++) {
+                    for (int i = 0; i < userInfos.Length; i++) {
                         context.Tickets.Add(new Ticket(flight.FlightNumber, userInfos[i].Id, selectedSeats[i].Text, flight.DepartureTime.AddMinutes(-30), invoiceNumber));
                     }
                     context.SaveChanges();
