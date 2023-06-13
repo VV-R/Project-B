@@ -15,7 +15,16 @@ public class AboutUs : Toplevel
     {
         Label aboutUs = new Label()
         {
-            Text = "Over Ons:\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tincidunt euismod neque, in aliquam orci fermentum ac. \nDonec tortor diam, semper lacinia lorem placerat, venenatis aliquet augue. Etiam in ipsum dapibus, faucibus augue ac, semper dolor. \nAenean est est, mattis eu blandit sit amet, aliquet sit amet nulla. Sed dapibus dapibus lacus, in condimentum orci tempus sed. \nNullam vel arcu in ante sollicitudin sollicitudin et at lorem. Maecenas ultricies accumsan justo ac laoreet. Quisque a hendrerit mauris, \nvitae pretium erat. Aenean cursus, metus ac vehicula bibendum, quam ligula sollicitudin diam, id bibendum leo eros vel ex. \nVivamus cursus eget diam ac posuere. Donec vel lacus magna.",
+            Text = "Over Rotterdam Airlines\n\n" +
+                "Rotterdam Airlines is een innovatieve en ambitieuze luchtvaartorganisatie die gespecialiseerd is in het aanbieden van vluchten binnen Europa.\n" +
+                "Onze missie is om hoogwaardige vluchtdiensten aan te bieden die voldoen aan de behoeften en verwachtingen van reizigers binnen Europa.\n" +
+                "Door gebruik te maken van moderne technologieën en best practices binnen de luchtvaartindustrie, streven we ernaar om een vlotte en comfortabele reiservaring te bieden aan al onze passagiers.\n\n" +
+                "Bij Rotterdam Airlines geloven we dat vliegen meer is dan alleen van punt A naar punt B reizen.\n" +
+                "We willen een gevoel van verbondenheid en ontdekking inspireren bij onze passagiers.\n" +
+                "Of het nu gaat om zakelijke reizen, vakanties of familiebezoeken, wij begrijpen dat elke reis uniek is.\n" +
+                "Daarom stellen we alles in het werk om aan individuele behoeften te voldoen en persoonlijke service van hoge kwaliteit te bieden.\n\n" +
+                "Bedankt voor uw interesse in Rotterdam Airlines.\n" +
+                "We kijken ernaar uit om u aan boord te verwelkomen en u een aangename reis te bieden binnen Europa.",
         };
 
         Label headerInfo = new Label()
