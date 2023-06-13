@@ -59,7 +59,7 @@ public class FlightOverview : Toplevel
             Y = Pos.Bottom(phoneLabel) + 1,
         };
         Label dateofBirthFielduserLabel = new Label() {
-            Text = $"{userInfos[0].DateOfBirth}",
+            Text = $"{userInfos[0].DateOfBirth.ToString("d")}",
             X = Pos.Left(emailuserLabel),
             Y = Pos.Top(dateOfBirthLabel),
         };
@@ -198,18 +198,26 @@ public class FlightOverview : Toplevel
 
             double total = seatPrice + flightPrice;
             totalPrice += total;
-            dataTable.Rows.Add(seat.Text, seat.SeatType, $"€{seatPrice}", $"€{flightPrice}", $"€{total}");
+            string seatPriceString = Math.Round(seatPrice, 2).ToString("0.00");
+            string flightPriceString = Math.Round(flightPrice, 2).ToString("0.00");
+            string totalString = Math.Round(total, 2).ToString("0.00");
+
+            dataTable.Rows.Add(seat.Text, seat.SeatType, $"€{seatPriceString}", $"€{flightPriceString}", $"€{totalString}");
         }
         TableView costTable = new TableView()
         {
             X = 0,
             Y = Pos.Bottom(previousView) + 1,
-            Width = 49,
+            Width =60,
             Height = 20,
         };
 
+        string TseatPriceString = Math.Round(totalSeatPrice, 2).ToString("0.00");
+        string TflightPriceString = Math.Round(totalFlightPrice, 2).ToString("0.00");
+        string TtotalString = Math.Round(totalPrice, 2).ToString("0.00");
+
         dataTable.Rows.Add("", "", "----", "----", "----");
-        dataTable.Rows.Add("", "", $"€{totalSeatPrice}", $"€{totalFlightPrice}", $"€{totalPrice}");
+        dataTable.Rows.Add("", "", $"€{TseatPriceString}", $"€{TflightPriceString}", $"€{TtotalString}");
 
         costTable.Table = dataTable;
 
@@ -249,7 +257,7 @@ public class FlightOverview : Toplevel
                     X = Pos.Right(fieldLabel) + 1,
                 };
                 Label extradateofBirthFielduserLabel = new Label() {
-                    Text = $"{userInfos[i].DateOfBirth}",
+                    Text = $"{userInfos[i].DateOfBirth.ToString("d")}",
                     X = Pos.Left(extrafirstlastnameLabel),
                     Y = Pos.Bottom(extrafirstlastnameLabel),
                 };

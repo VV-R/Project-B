@@ -168,8 +168,8 @@ public class UserInfoWindow : Toplevel
         Add(optionalLabel, optionalLine);
 
         Label documentNumberLabel = new Label() {
-            Text = "Document nummer:",
-            X = Pos.Left(emailLabel) + 2,
+            Text = "Document nummer*:",
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(optionalLabel) + 1,
         };
 
@@ -179,12 +179,12 @@ public class UserInfoWindow : Toplevel
             Width = Dim.Percent(20) - 2,
         };
 
-        DocumentNumber.TextChanged += (text) => {
-        if (!int.TryParse(DocumentNumber.Text == "" ? "0" : (string)DocumentNumber.Text, out _))
-            DocumentNumber.Text = text == "" ? "" : text;
-        else if (DocumentNumber.Text.Length > 9)
-            DocumentNumber.Text = text;
-        DocumentNumber.CursorPosition = DocumentNumber.Text.Length;};
+         DocumentNumber.TextChanged += (text) =>
+        {
+            if (DocumentNumber.Text.Length > 12)
+                DocumentNumber.Text = text;
+            DocumentNumber.CursorPosition = DocumentNumber.Text.Length;
+        };
 
         Label documentTypeLabel = new Label() {
             Text = "Type:",
@@ -202,9 +202,15 @@ public class UserInfoWindow : Toplevel
 
         DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
 
+        Label documentAttentionLabel = new Label(){
+            Text = "*documentnummer bevat 9 karakters.",
+            Y = Pos.Top(DocumentTypeComboBox),
+            X = Pos.Right(DocumentTypeComboBox) + 2,
+        };
+
         ExpireDateLabel = new Label() {
             Text = "Verval datum:",
-            X = Pos.Left(emailLabel) + 2,
+            X = Pos.Left(emailLabel),
             Y = Pos.Bottom(documentNumberLabel) + 1,
         };
 
@@ -218,7 +224,7 @@ public class UserInfoWindow : Toplevel
         else
             ExpireDateField.SetDateTime(DateTime.Now);
 
-        Add(documentNumberLabel, DocumentNumber, documentTypeLabel, DocumentTypeComboBox);
+        Add(documentNumberLabel, DocumentNumber, documentTypeLabel, DocumentTypeComboBox, documentAttentionLabel);
         Add(ExpireDateLabel, ExpireDateField);
         #endregion
     }

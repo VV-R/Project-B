@@ -101,7 +101,13 @@ public class SearchReservationGuest : Toplevel
         };
         
         // Should search for TextField input
-        searchButton.Clicked += () => { ChangePanel((string)_searchField.Text); };
+        searchButton.Clicked += () => { 
+        string searchQuery = (string)_searchField.Text;
+            if (!ChangePanel(searchQuery))
+            {
+                MessageBox.ErrorQuery("Geen resultaat", "Reservering niet gevonden.", "OK");
+            }
+        };
 
         Button goBackButton = new Button() {
             Text = "Terug",

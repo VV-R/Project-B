@@ -114,6 +114,14 @@ public class AboutUs : Toplevel
                 string question = (string)questionText.Text;
                 SendEmail(name, subject, email, question);
                 MessageBox.Query("Bevestiging", "Uw vraag is opgestuurd en zal binnenkort worden beantwoordt.", "Ok");
+                nameText.Text = string.Empty;
+                subjectComboBox.Text = string.Empty;
+                emailText.Text = string.Empty;
+                questionText.Text = string.Empty;
+                nameText.SetNeedsDisplay();
+                questionText.SetNeedsDisplay();
+                emailText.SetNeedsDisplay();
+                questionText.SetNeedsDisplay();
             }
         };
 

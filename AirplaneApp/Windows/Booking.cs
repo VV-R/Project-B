@@ -188,7 +188,7 @@ public class MainBooking : Toplevel
 
         Label documentNumberLabel = new Label()
         {
-            Text = "Document nummer:",
+            Text = "Document nummer*:",
             X = Pos.Left(emailLabel),
             Y = Pos.Bottom(nationalityLabel) + 1,
         };
@@ -223,6 +223,12 @@ public class MainBooking : Toplevel
         };
         DocumentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
 
+        Label documentAttentionLabel = new Label(){
+            Text = "*documentnummer bevat 9 karakters",
+            Y = Pos.Top(DocumentTypeComboBox),
+            X = Pos.Right(DocumentTypeComboBox) + 2,
+        };
+
         Label expireDateLabel = new Label()
         {
             Text = "Verval datum:",
@@ -236,7 +242,7 @@ public class MainBooking : Toplevel
             Y = Pos.Top(expireDateLabel),
         };
 
-        Add(documentNumberLabel, DocumentNumber, DocumentTypeComboBox, documentTypeLabel);
+        Add(documentNumberLabel, DocumentNumber, DocumentTypeComboBox, documentTypeLabel, documentAttentionLabel);
         Add(expireDateLabel, ExpireDateField);
         #endregion
         if (WindowManager.CurrentUser != null) {
@@ -483,7 +489,7 @@ public class ExtraBooking : Toplevel
 
         #region Document Information
         Label documentNumberLabel = new Label() {
-            Text = "Document nummer:",
+            Text = "Document nummer*:",
             Y = Pos.Bottom(nationalityLabel) + 1,
         };
 
@@ -512,6 +518,12 @@ public class ExtraBooking : Toplevel
         };
         documentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
 
+        Label documentAttentionLabel = new Label(){
+            Text = "*documentnummer bevat 9 karakters",
+            Y = Pos.Top(documentTypeComboBox),
+            X = Pos.Right(documentTypeComboBox) + 2,
+        };
+
         Label expireDateLabel = new Label() {
             Text = "Verval datum:",
             Y = Pos.Bottom(documentNumberLabel) + 1,
@@ -522,7 +534,7 @@ public class ExtraBooking : Toplevel
             Y = Pos.Top(expireDateLabel),
         };
 
-        Add(documentNumberLabel, documentNumber, documentTypeLabel, documentTypeComboBox);
+        Add(documentNumberLabel, documentNumber, documentTypeLabel, documentTypeComboBox, documentAttentionLabel);
         Add(expireDateLabel, expireDateField);
         #endregion
     }
