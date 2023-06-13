@@ -203,7 +203,7 @@ public class UserInfoWindow : Toplevel
         DocumentTypeComboBox.SelectedItem = user.UserInfo.DocumentType != null ? DocumentTypeComboBox.Source.ToList().IndexOf(user.UserInfo.DocumentType) : 0;
 
         Label documentAttentionLabel = new Label(){
-            Text = "*documentnummer bevat 9 karakters.",
+            Text = "*Documentnummer bevat 9 karakters.",
             Y = Pos.Top(DocumentTypeComboBox),
             X = Pos.Right(DocumentTypeComboBox) + 2,
         };

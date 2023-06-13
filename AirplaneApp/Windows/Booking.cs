@@ -224,7 +224,7 @@ public class MainBooking : Toplevel
         DocumentTypeComboBox.SetSource(new List<string>() { "Paspoort", "ID" });
 
         Label documentAttentionLabel = new Label(){
-            Text = "*documentnummer bevat 9 karakters",
+            Text = "*Documentnummer bevat 9 karakters",
             Y = Pos.Top(DocumentTypeComboBox),
             X = Pos.Right(DocumentTypeComboBox) + 2,
         };
@@ -519,7 +519,7 @@ public class ExtraBooking : Toplevel
         documentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
 
         Label documentAttentionLabel = new Label(){
-            Text = "*documentnummer bevat 9 karakters",
+            Text = "*Documentnummer bevat 9 karakters",
             Y = Pos.Top(documentTypeComboBox),
             X = Pos.Right(documentTypeComboBox) + 2,
         };

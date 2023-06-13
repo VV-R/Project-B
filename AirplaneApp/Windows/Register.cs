@@ -82,7 +82,7 @@ public class RegisterMenu : Toplevel
         };
 
         Label passwordLabel = new Label() {
-            Text = "Wachtwoord:",
+            Text = "Wachtwoord*:",
             Y = Pos.Bottom(emailLabel) + 1,
         };
 
@@ -102,7 +102,11 @@ public class RegisterMenu : Toplevel
             passwordText.Secret = !passwordText.Secret;
             passwordCheckBox.Text = passwordText.Secret ? "show" : "hide";
         };
-
+        Label attentionLabelpassword = new Label(){
+            Text = "*Het wachtwoord moet minimaal 9 karakters bevatten.",
+            X = Pos.Right(passwordCheckBox) + 1,
+            Y = Pos.Top(passwordLabel),
+        };
         Label passwordRepeatLabel = new Label() {
             Text = "Herhaal-Wachtwoord:",
             Y = Pos.Bottom(passwordLabel) + 1,
@@ -137,7 +141,7 @@ public class RegisterMenu : Toplevel
             passwordRepeatCheckBox.Text = passwordRepeat.Secret ? "show" : "hide";
         };
 
-        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox);
+        Add(emailLabel, emailText, passwordLabel, passwordText, passwordCheckBox, passwordRepeat, passwordRepeatLabel, passwordRepeatCheckBox, attentionLabelpassword);
         #endregion
 
         #region Phonenumber
@@ -265,7 +269,7 @@ public class RegisterMenu : Toplevel
         documentTypeComboBox.SetSource(new List<string>() {"Paspoort", "ID"});
 
         Label documentAttentionLabel = new Label(){
-            Text = "*documentnummer bevat 9 karakters",
+            Text = "*Documentnummer bevat 9 karakters",
             Y = Pos.Top(documentTypeComboBox),
             X = Pos.Right(documentTypeComboBox) + 2,
         };
