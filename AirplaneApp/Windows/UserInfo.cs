@@ -341,8 +341,8 @@ public class EditUserInfoAdmin : UserInfoWindow
             Height = 3,
         };
 
-        roleComboBox.SetSource(new List<string>() {"Customer", "Admin"});
-        roleComboBox.SelectedItem = roleComboBox.Source.ToList().IndexOf(user.Role);
+        roleComboBox.SetSource(Enum.GetNames<UserRole>());
+        roleComboBox.SelectedItem = roleComboBox.Source.ToList().IndexOf(user.Role.ToString());
 
         Add(roleLabel, roleComboBox);
 
@@ -352,7 +352,7 @@ public class EditUserInfoAdmin : UserInfoWindow
         };
 
         editButton.Clicked += () => {
-                User? userChanged = EditInfo(user, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime(), (string)roleComboBox.Text);
+                User? userChanged = EditInfo(user, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime(), Enum.Parse<UserRole>((string)roleComboBox.Text));
                 if (userChanged != null) {
                     WindowManager.GoBackOne(this);
                 }
@@ -377,7 +377,7 @@ public class EditUserInfoAdmin : UserInfoWindow
         Add(editButton, deleteButton, exitButton);
     }
 
-    private User? EditInfo(User user, DateTime dateOfBirth, DateTime expireDate, string role)
+    private User? EditInfo(User user, DateTime dateOfBirth, DateTime expireDate, UserRole role)
     {
         if (FirstnameText.Text == "" || LastnameText.Text == "" || PrepositionText.Text == "" ||
         EmailText.Text == "" || PhoneText.Text == "" || DialCodesComboBox.Text == "" || NationalityComboBox.Text == "") {

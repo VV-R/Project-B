@@ -55,7 +55,7 @@ public class LoginScreen : Toplevel
             if (user != null) {
                 WindowManager.CurrentUser = user;
                 MainWindow.LoginButton.Text = "Uitloggen";
-                if (user.Role == "Admin"){
+                if (user.Role == UserRole.Admin){
                     WindowManager.CurrentColor = Colors.TopLevel;
                     WindowManager.GoForwardOne(new AdminMenu());
                 } else {

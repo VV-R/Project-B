@@ -1,12 +1,18 @@
 using System.Net.Mail;
 namespace Entities;
+
+public enum UserRole {
+    Customer = 0,
+    Admin = 1
+}
+
 public class User
 {
     public int IdUser { get; set; }
     public UserInfo UserInfo {get; set; }
     public int UserInfoId { get; set; }
     public string Password {get; set; }
-    public string Role {get; set; }
+    public UserRole Role {get; set; }
     public List<Ticket> Reservations = new List<Ticket>();
 
     public User() {}
@@ -16,7 +22,7 @@ public class User
         IdUser = id;
         UserInfo = userInfo;
         Password = password;
-        Role = "Customer";
+        Role = UserRole.Customer;
     }
 
     public User (int idUser, int userInfoId, string password) {
@@ -33,6 +39,7 @@ public class User
 
     public string FullName() => $"{UserInfo.FirstName} {UserInfo.Preposition} {UserInfo.LastName}";
 }
+
 public class UserInfo
 {
     public int Id {get; set; }
@@ -51,7 +58,7 @@ public class UserInfo
     public UserInfo() {}
 
     public UserInfo(string firstName, string preposition,
-                    string lastName, MailAddress email, string phoneNumber, 
+                    string lastName, MailAddress email, string phoneNumber,
                     DateTime dateOfBirth, string  nationality, string documentNumber, string documentType, DateTime expirationDate)
     {
         FirstName = firstName;

@@ -19,6 +19,7 @@ class Program {
         }
         DeserializeOptions = new ();
         DeserializeOptions.Converters.Add(new EmailJsonConverter());
+        DeserializeOptions.Converters.Add(new JsonStringEnumConverter());
 
         using (var context = new ApplicationDbContext(db)) {
            AddEntities<User>(data, "Users.json", context.Users);
