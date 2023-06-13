@@ -22,9 +22,7 @@ public class Dashboard : Toplevel
         arrivalsTable.Columns.Add("STATUS", typeof(string));
 
         foreach(Flight flight in WindowManager.Flights) {
-            string? status = GetStatus(flight);
-            if (status == null)
-                continue;
+            string? status = flight.StatusString();
             if (flight.ArrivalLocation == "Rotterdam") {
                 string time = $"{flight.ArrivalTime.Hour.ToString().PadLeft(2, '0')}:{flight.ArrivalTime.Minute.ToString().PadLeft(2, '0')}";
                 arrivalsTable.Rows.Add(flight.FlightNumber, flight.DepartureLocation, time, status);
@@ -91,18 +89,5 @@ public class Dashboard : Toplevel
         goBackButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
         Add(goBackButton);
-    }
-
-    private string? GetStatus(Flight flight)
-    {
-        if (flight.DepartureTime < DateTime.Now && flight.ArrivalTime > DateTime.Now)
-            return "ONDERWEG";
-        else if (flight.DepartureTime.AddMinutes(-30) < DateTime.Now && flight.DepartureTime > DateTime.Now)
-            return "BOARDING";
-        else if (flight.ArrivalTime.AddMinutes(30) > DateTime.Now && flight.ArrivalTime < DateTime.Now)
-            return "DISEMBARK";
-        else if (flight.ArrivalTime.AddMinutes(30) < DateTime.Now)
-            return "COMPLETED";
-        else return "VERWACHT";
     }
 }

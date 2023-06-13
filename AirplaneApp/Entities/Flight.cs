@@ -2,6 +2,17 @@ using System.Collections;
 using Newtonsoft.Json;
 
 namespace Entities;
+
+public enum FlightStatus {
+    Waiting = 0,
+    Delayed = 1,
+    Boarding = 2,
+    Departed = 3,
+    Disembarking = 4,
+    Completed = 5,
+    Cancelled = 6
+}
+
 public class Flight : IComparable<Flight>
 {
     public int FlightNumber { get; set; }
@@ -10,7 +21,16 @@ public class Flight : IComparable<Flight>
     public string ArrivalLocation { get; set; }
     public DateTime ArrivalTime { get; set; }
     public string Airplane { get; set; }
-    
+    public FlightStatus Status { get {
+        if (IsCancelled) return FlightStatus.Cancelled;
+        if (ArrivalTime.AddMinutes(30) < DateTime.Now) return FlightStatus.Completed;
+        if (ArrivalTime.AddMinutes(30) > DateTime.Now && ArrivalTime < DateTime.Now) return FlightStatus.Disembarking;
+        if (DateTime.Now > DepartureTime) return FlightStatus.Departed;
+        if (DateTime.Now.AddMinutes(30) > DepartureTime) return FlightStatus.Boarding;
+        return FlightStatus.Waiting;
+    } }
+    public bool IsCancelled { get; set; }
+
     [JsonConstructor]
     public Flight(int flightNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane)
     {
@@ -31,7 +51,19 @@ public class Flight : IComparable<Flight>
 
 
     public Flight() {}
-    
+
+    public static string StatusString(FlightStatus status) => status switch {
+        FlightStatus.Waiting => "VERWACHT",
+        FlightStatus.Delayed => "VERTRAGING",
+        FlightStatus.Boarding => "BOARDING",
+        FlightStatus.Departed => "VERTROKKEN",
+        FlightStatus.Disembarking => "DISEMBARKING",
+        FlightStatus.Completed => "COMPLETED",
+        FlightStatus.Cancelled => "GEANNULEERD"
+    };
+
+    public string StatusString() => StatusString(Status);
+
     public override string ToString() {
         string flightString = $"Bestemming: {ArrivalLocation};" .PadRight(23);
         flightString += $"Tijd van Aankomst: {ArrivalTime.ToString("dd/MM/yyyy HH:mm")}; ";
