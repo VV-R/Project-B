@@ -330,6 +330,11 @@ public class RegisterMenu : Toplevel
             MessageBox.ErrorQuery("Registreren", "Sommige velden zijn niet ingevuld.", "Ok");
             return null;
         }
+        
+        if (passwordText.Text.Length < 9) {
+            MessageBox.ErrorQuery("Registreren", "Wachtwoord is niet lang genoeg.", "Ok");
+            return null;
+        }
 
         if (passwordText.Text != passwordRepeat.Text) {
             MessageBox.ErrorQuery("Registreren", "Wachtwoorden komt niet overheen.", "Ok");
