@@ -328,6 +328,17 @@ public class MainBooking : Toplevel
             }
             return userInfo;
         } else {
+            using (var context = new ApplicationDbContext()) {
+                var query = from qUser in context.Users
+                            join qUserInfo in context.UserInfo
+                                on qUser.UserInfoId equals qUserInfo.Id
+                            where qUserInfo.Email == address
+                            select qUser;
+                if (query.ToList().Count != 0) {
+                    MessageBox.ErrorQuery("Registreren", "MailAddress is al gekoppelt aan een account.", "Ok");
+                    return null;
+                }
+            }
             UserInfo userInfo = new UserInfo((string)FirstnameText.Text, (string)PrepositionText.Text, (string)LastnameText.Text, new MailAddress((string)EmailText.Text), phonenumber, dateOfBirth, (string)NationalityComboBox.Text, (string)DocumentNumber.Text, (string)DocumentTypeComboBox.Text, expireDate);
             return userInfo;
         }
