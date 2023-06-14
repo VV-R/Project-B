@@ -354,6 +354,10 @@ public class EditUserInfoAdmin : UserInfoWindow
         editButton.Clicked += () => {
                 User? userChanged = EditInfo(user, DateOfBirthField.GetDateTime(), ExpireDateField.GetDateTime(), Enum.Parse<UserRole>((string)roleComboBox.Text));
                 if (userChanged != null) {
+                    using (var context = new Db.ApplicationDbContext()) {
+                        context.Update(userChanged);
+                        context.SaveChanges();
+                    }
                     WindowManager.GoBackOne(this);
                 }
         };
