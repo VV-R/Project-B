@@ -20,7 +20,7 @@ public class AboutUs : Toplevel
                 "Onze missie is om hoogwaardige vluchtdiensten aan te bieden die voldoen aan de behoeften en verwachtingen van reizigers binnen Europa.\n" +
                 "Door gebruik te maken van moderne technologieën en best practices binnen de luchtvaartindustrie, streven we ernaar om een vlotte en comfortabele reiservaring te bieden aan al onze passagiers.\n\n" +
                 "Bij Rotterdam Airlines geloven we dat vliegen meer is dan alleen van punt A naar punt B reizen.\n" +
-                "We willen een gevoel van verbondenheid en ontdekking inspireren bij onze passagiers.\n" +
+                "Wij willen een gevoel van verbondenheid en ontdekking inspireren bij onze passagiers.\n" +
                 "Of het nu gaat om zakelijke reizen, vakanties of familiebezoeken, wij begrijpen dat elke reis uniek is.\n" +
                 "Daarom stellen we alles in het werk om aan individuele behoeften te voldoen en persoonlijke service van hoge kwaliteit te bieden.\n\n" +
                 "Bedankt voor uw interesse in Rotterdam Airlines.\n" +

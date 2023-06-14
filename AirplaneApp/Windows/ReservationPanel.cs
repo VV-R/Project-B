@@ -69,7 +69,7 @@ public class SearchReservationUser : SearchReservation
         }
         ReservationsView.SetSource(infoNumbers);
 
-        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(invoiceNumbers?.FindAll((x) => {
+        SearchBox.TextChanged += (text) => {ReservationsView.SetSource(infoNumbers?.FindAll((x) => {
             return x.ToLower().Contains((string)SearchBox.Text.ToLower());
         }));};
 
@@ -267,15 +267,15 @@ public class ReservationPanelUser : Toplevel
         ReservationPanel panel = new ReservationPanel(Tickets) { ColorScheme = WindowManager.CurrentColor };
 
         Button cancelTicketButton = new Button() {
-            Text = "Ticket Cancelen",
+            Text = "Ticket Annuleren",
             X = Pos.Right(panel.GoBackButton) + 1,
             Y = Pos.Top(panel.GoBackButton)
         };
 
         cancelTicketButton.Clicked += () => {
-            if (Tickets[0].BoardingTime.AddDays(-5) > DateTime.Now)
+            if (Tickets[0].BoardingTime.AddDays(-2) > DateTime.Now)
                 CancelTickets();
-            else MessageBox.ErrorQuery("Cancelen", "U bent buiten de 7 weken tijd om te cancelen!", "OK"); };
+            else MessageBox.ErrorQuery("Cancelen", "U bent buiten de 2 dagen annulerings tijd", "OK"); };
         Add(panel, cancelTicketButton);
     }
 

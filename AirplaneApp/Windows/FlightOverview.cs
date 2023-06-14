@@ -5,6 +5,7 @@ using Terminal.Gui;
 using Managers;
 using Entities;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 using Db;
 
 namespace Windows;
@@ -299,12 +300,27 @@ public class FlightOverview : Toplevel
                 }
                 string invoice = InvoiceManager.MakeInvoicePdf(userInfos[0], selectedSeats, flight);
                 string invoiceNumber = invoice.Split('.')[0];
+                List<Ticket> tickets = new();
                 EmailManager.SendInvoice($"Factuur {invoiceNumber}","Beste Klant,\n\nHierbij de factuur van uw geboekte vlucht.\n\nMet Vriendelijke Groeten,\nRotterdam Airport", userInfos[0], invoice);
                 using (var context = new ApplicationDbContext()) {
                     for (int i = 0; i < userInfos.Length; i++) {
-                        context.Tickets.Add(new Ticket(flight.FlightNumber, userInfos[i].Id, selectedSeats[i].Text, flight.DepartureTime.AddMinutes(-30), invoiceNumber));
+                        Ticket ticket = new Ticket(flight.FlightNumber, userInfos[i].Id, selectedSeats[i].Text, flight.DepartureTime.AddMinutes(-30), invoiceNumber);
+                        tickets.Add(ticket);
+                        context.Tickets.Add(ticket);
                     }
                     context.SaveChanges();
+                }
+                if (WindowManager.CurrentUser != null) {
+                    using (var context = new ApplicationDbContext()) {
+                        User user = WindowManager.CurrentUser;                   
+                        user.Reservations = new List<Ticket>();
+                        foreach(var uTicket in context.Tickets.Where(t => t.UserId == user.UserInfoId).ToList().DistinctBy(t => t.InvoiceNumber)) {
+                            var query = from ticket in context.Tickets
+                                        where ticket.InvoiceNumber == uTicket.InvoiceNumber
+                                        select ticket;
+                            user.Reservations.AddRange(query.Include(t => t.TheFlight).Include(t => t.TheUserInfo).ToList());
+                        }
+                    }
                 }
                 WindowManager.GoToFirst();
             };

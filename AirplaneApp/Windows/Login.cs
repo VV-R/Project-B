@@ -88,8 +88,12 @@ public class LoginScreen : Toplevel
     private User? CheckLogin(string email, string password)
     {
         using (var context = new Db.ApplicationDbContext()) {
+            if (!MailAddress.TryCreate(email, out MailAddress mailAddress)) {
+                return null;
+            }
+
             User? user = context.Users.Include(u => u.UserInfo).SingleOrDefault(
-                u => u.UserInfo.Email == new MailAddress(email) & u.Password == password
+                u => u.UserInfo.Email == mailAddress && u.Password == password
             );
             if (user != null) {
                 user.Reservations = new List<Ticket>();

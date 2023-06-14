@@ -389,7 +389,7 @@ public class RegisterMenu : Toplevel
                         where qUserInfo.Email == address
                         select qUser;
             if (query.ToList().Count != 0) {
-                MessageBox.ErrorQuery("Registreren", "MailAddress is al gekoppelt aan een account.", "Ok");
+                MessageBox.ErrorQuery("Registreren", "Email is al gekoppelt aan een account.", "Ok");
                 return null;
             }
 
