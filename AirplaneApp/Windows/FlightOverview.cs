@@ -310,12 +310,12 @@ public class FlightOverview : Toplevel
             };
 
             Button closeButton = new Button() {
-                Text = "Afsluiten",
+                Text = "Terug",
                 Y = Pos.Top(reservationButton),
                 X = Pos.Right(reservationButton) + 1,
             };
             
-            closeButton.Clicked += () => { WindowManager.GoToFirst(); };
+            closeButton.Clicked += () => { WindowManager.GoBackOne(this); };
 
             Add(reservationButton, closeButton);
 
