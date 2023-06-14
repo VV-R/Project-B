@@ -221,9 +221,10 @@ public class FlightInfoEdit : FlightInfo
 
         // Edit The Status
         using (var context = new ApplicationDbContext()) {
-            
+            TheFlight.IsCancelled = true;
+            context.Flights.Update(TheFlight);
+            context.SaveChanges();
         }
-
         WindowManager.GoBackOne(this);
     }
 
@@ -294,6 +295,7 @@ public class FlightInfoEdit : FlightInfo
     private void DelayFlight(TimeSpan delayTime) {
         TheFlight.DepartureTime += delayTime;
         TheFlight.ArrivalTime += delayTime;
+        TheFlight.IsDelayed = true;
         string body = $"Beste Klant,\n\nUw vlucht van {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation} is vertraagd.\nUw vlucht vertrekt nu vanaf {TheFlight.DepartureTime.ToString("dd-MM-yyyy HH:mm")} \n\nMet vriendelijke groeten,\nRotterdam Airline Service";
         SendEmails($"Vlucht {TheFlight.DepartureLocation} - {TheFlight.ArrivalLocation}", body);
         using (var context = new ApplicationDbContext()) {
@@ -332,7 +334,6 @@ public class FlightInfoAdd : FlightInfo
         addButton.Clicked += () => {
             Flight? flight = AddFlight(DepatureDateField.GetDateTime().Add(DepatureTime.Time));
             if (flight != null) {
-                WindowManager.Flights.Add(flight);
                 WindowManager.GoBackOne(this);
             }
         };

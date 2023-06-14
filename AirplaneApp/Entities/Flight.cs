@@ -23,6 +23,7 @@ public class Flight : IComparable<Flight>
     public string Airplane { get; set; }
     public FlightStatus Status { get {
         if (IsCancelled) return FlightStatus.Cancelled;
+        if (IsDelayed) return FlightStatus.Delayed;
         if (ArrivalTime.AddMinutes(30) < DateTime.Now) return FlightStatus.Completed;
         if (ArrivalTime.AddMinutes(30) > DateTime.Now && ArrivalTime < DateTime.Now) return FlightStatus.Disembarking;
         if (DateTime.Now > DepartureTime) return FlightStatus.Departed;
@@ -30,6 +31,7 @@ public class Flight : IComparable<Flight>
         return FlightStatus.Waiting;
     } }
     public bool IsCancelled { get; set; }
+    public bool IsDelayed {get; set; }
 
     [JsonConstructor]
     public Flight(int flightNumber, string departureLocation, DateTime departureTime, string arrivalLocation, DateTime arrivalTime, string airplane)
@@ -69,7 +71,8 @@ public class Flight : IComparable<Flight>
         flightString += $"Tijd van Aankomst: {ArrivalTime.ToString("dd/MM/yyyy HH:mm")}; ";
         flightString += $"Vertrek Locatie: {DepartureLocation}; ".PadRight(28);
         flightString += $"Vertrek Tijd: {DepartureTime.ToString("dd/MM/yyyy HH:mm")}; ";
-        flightString += $" Vliegtuig: {Airplane}";
+        flightString += $"Status: {StatusString()}; ".PadRight(20);
+        flightString += $"Vliegtuig: {Airplane}";
         return flightString;
     }
     public string ToNewLineString() => $"Vertrek Locatie: {DepartureLocation}\nVertrek Tijd: {DepartureTime}\nBestemming: {ArrivalLocation}\nTijd van Aankomst: {ArrivalTime}\nVliegtuig: {Airplane}";
