@@ -103,7 +103,7 @@ public class RegisterMenu : Toplevel
             passwordCheckBox.Text = passwordText.Secret ? "show" : "hide";
         };
         Label attentionLabelpassword = new Label(){
-            Text = "*Het wachtwoord moet minimaal 9 karakters bevatten.",
+            Text = "*wachtwoord moet minimaal 9 karakters bevatten.",
             X = Pos.Right(passwordCheckBox) + 1,
             Y = Pos.Top(passwordLabel),
         };
