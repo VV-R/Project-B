@@ -56,6 +56,7 @@ public static class WindowManager
     }
     public static void GoBackOne() {
         if (CurrentWindow is UserMenu) {
+            MessageBox.Query("Uitgelogd", "U bent nu uitgelogd", "Ok");
             MainWindow.LoginButton.Text = "Inloggen";
             CurrentUser = null;
         }
