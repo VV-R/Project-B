@@ -59,6 +59,7 @@ public class MainWindow : Window
                 WindowManager.GoForwardOne(new LoginScreen());
             }
             else if (LoginButton.Text == "Uitloggen") {
+                MessageBox.Query("Uitgelogd", "U bent nu uitgelogd", "Ok");
                 WindowManager.CurrentUser = null;
                 WindowManager.CurrentColor = Colors.Base;
                 WindowManager.GoToFirst();
