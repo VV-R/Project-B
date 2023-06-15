@@ -65,8 +65,8 @@ public class SearchReservationUser : SearchReservation
                 invoiceNumbers.Add(ticket.InvoiceNumber);
                 infoNumbers.Add($"{ticket.InvoiceNumber}: {ticket.TheFlight}");
             }
-
         }
+
         ReservationsView.SetSource(infoNumbers);
 
         SearchBox.TextChanged += (text) => {ReservationsView.SetSource(infoNumbers?.FindAll((x) => {
@@ -328,13 +328,18 @@ public class ReservationPanelUser : Toplevel
             List<Ticket> ticketsToCancel = new();
             for (int i = 0; i < checkBoxes.Length; i++) {
                 if (i == 0 && checkBoxes[i].Checked) {
-                    ticketsToCancel = Tickets;
+                    ticketsToCancel.AddRange(Tickets);
                     break;
                 }
                 if(checkBoxes[i].Checked)
                     ticketsToCancel.Add(Tickets[i]);
             }
             CancelTickets(ticketsToCancel);
+            if (Tickets.Count == 0) {
+                WindowManager.GoBackOne(this);
+                WindowManager.GoBackOne();
+                return;
+            }
             Start();
         };
 
@@ -356,6 +361,7 @@ public class ReservationPanelUser : Toplevel
         }
         foreach(var ticket in tickets) {
             Tickets.Remove(ticket);
+            WindowManager.CurrentUser?.Reservations.Remove(ticket);
         }
     }
 }

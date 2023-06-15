@@ -44,7 +44,14 @@ public class AdminMenu : Toplevel
 
         changeSeatingPrice.Clicked += () => { WindowManager.GoForwardOne(new ChangeSeatingPrice()); };
 
-        Add(nameLabel, searchUsers, searchReservation, flightSchedule, changeSeatingPrice);
+        Button createAiplanebutton = new Button() {
+            Text = "Vliegtuig aanmaken",
+            Y = Pos.Bottom(changeSeatingPrice) + 1,
+        };
+
+        createAiplanebutton.Clicked += () => { WindowManager.GoForwardOne(new CreateAirplane()); };
+
+        Add(nameLabel, searchUsers, searchReservation, flightSchedule, changeSeatingPrice, createAiplanebutton);
     }
 }
 

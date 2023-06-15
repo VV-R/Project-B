@@ -66,6 +66,16 @@ public class SeatMap : Toplevel
 
         DrawBody(plane);
     }
+
+    public SeatMap(Airplane airplane) {
+        InteraciveSeat.MaxSeats = 0;
+        InteraciveSeat.SeatCount = 0;
+        foreach (Seat seat in airplane.Seats) {
+            Add(new InteraciveSeat(seat, false));
+        }
+        DrawBody(airplane);
+    }
+
     private void DrawBody(Airplane plane) {
         ColorScheme = Colors.Base;
 

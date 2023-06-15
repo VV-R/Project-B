@@ -29,7 +29,7 @@ class Program {
 
         // Code to create a few tickets for testing
         // using (var context = new ApplicationDbContext(db)) {
-        //     var user = context.Users.First(u => u.Role == "User");
+        //     var user = context.Users.First(u => u.Role == UserRole.Customer);
         //     var flight1 = context.Flights.First(f => f.ArrivalLocation == "Parijs");
         //     var flight2 = context.Flights.First(f => f.ArrivalLocation == "London");
         //     var lastFlight = context.Flights.OrderBy(f => f.DepartureTime).Last();
