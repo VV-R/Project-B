@@ -1,13 +1,13 @@
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Entities;
 using Db;
 
 public static class PopulateFlights
 {
     private static string dbPath = "";
-    private static string[] _planes = {"Boeing 737", "Airbus 330", "Boeing 787"};
+    private static string[] _planes;
     private static Random _rng = new Random();
-    private static List<string> _locations = new List<string>() {"Parijs", "London", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Madrid"};
+    private static string[] _locations = {"Parijs", "London", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Madrid"};
     public static ListOfFlight Flights = new ListOfFlight();
     public static List<(int amount, string location)> updateLocation = new();
     public const int TOTAL_FLIGHTS_TO_GENERATE = 64;
@@ -15,6 +15,14 @@ public static class PopulateFlights
     private static int _totalGenerated = 0;
 
     public static void Start(string db) {
+        using (StreamReader reader = new StreamReader("../AirplaneApp/Airplanes.json")) {
+            var airplanes = JsonConvert.DeserializeObject<Dictionary<string, Airplane>>(reader.ReadToEnd())!;
+            if (airplanes == null) {
+                _planes = new string[] {"Boeing 737", "Airbus 330", "Boeing 787"};
+            } else {
+                _planes = airplanes.Keys.ToArray();
+            }
+        }
         dbPath = db;
         using (var context = new ApplicationDbContext(db)) {
             Flights.SetList(context.Flights.ToList());

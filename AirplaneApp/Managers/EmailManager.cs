@@ -23,11 +23,15 @@ public static class EmailManager
     public static void SendOneEmail(string subject, string body, MailAddress toAddress) {
         SmtpClient client = SetupSmtp();
         Application.MainLoop.Invoke(async () => {
-            using (MailMessage message = new MailMessage(_fromMailaddress, toAddress) {
-                Subject = subject,
-                Body = body,
-            })  {
-                await client.SendMailAsync(message);
+            try {
+                using (MailMessage message = new MailMessage(_fromMailaddress, toAddress) {
+                    Subject = subject,
+                    Body = body,
+                })  {
+                    await client.SendMailAsync(message);
+                }
+            } catch (Exception ) {
+                MessageBox.ErrorQuery("Mail versturen", "Mails versturen lukt op het moment niet.", "Ok");
             }
         });
     }
@@ -35,13 +39,17 @@ public static class EmailManager
     public static void SendEmails(string subject, string body, List<MailAddress> emails) {
         SmtpClient client = SetupSmtp();
         Application.MainLoop.Invoke(async () => {
-            foreach (var email in emails) {
-                using (MailMessage message = new MailMessage(_fromMailaddress, email) {
-                    Subject = subject,
-                    Body = body,
-                })  {
-                    await client.SendMailAsync(message);
+            try {
+                foreach (var email in emails) {
+                    using (MailMessage message = new MailMessage(_fromMailaddress, email) {
+                        Subject = subject,
+                        Body = body,
+                    })  {
+                        await client.SendMailAsync(message);
+                    }
                 }
+            } catch (Exception ) {
+                MessageBox.ErrorQuery("Mail versturen", "Mails versturen lukt op het moment niet.", "Ok");
             }
         });
     }
@@ -51,16 +59,19 @@ public static class EmailManager
         if (userInfo.Email == null)
             return false;
         Application.MainLoop.Invoke(async () => {
-            using (MailMessage message = new MailMessage(_fromMailaddress, userInfo.Email) {
-                Subject = subject,
-                Body = body,
-            })  {
-                message.Attachments.Add(new Attachment(invoice));
-                await client.SendMailAsync(message);
+            try {
+                using (MailMessage message = new MailMessage(_fromMailaddress, userInfo.Email) {
+                    Subject = subject,
+                    Body = body,
+                }) {
+                    message.Attachments.Add(new Attachment(invoice));
+                    await client.SendMailAsync(message);
+                }
+                File.Delete(invoice);
+            } catch (Exception ) {
+                MessageBox.ErrorQuery("Mail versturen", "Mails versturen lukt op het moment niet.\nFactuur staat nu in de folder.", "Ok");
             }
-            File.Delete(invoice);
         });
-
         return true;
     }
 }
