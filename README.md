@@ -8,7 +8,7 @@ Dit een console applicatie voor het reserveren vluchten en het checken van vluch
 
 - Gebruiker vriendelijk
 - Muisfunctie in de console
-- Live database
+- Database
 
 
 ## Authors
