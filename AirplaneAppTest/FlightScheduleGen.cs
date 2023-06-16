@@ -8,31 +8,21 @@ public static class FlightScheduleGen
     private static List<string> _locations = new List<string>() {"Parijs", "London", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Madrid"};
     public static ListOfFlight Flights = new ListOfFlight();
     public static List<(int amount, string location)> updateLocation = new();
-    public static int AmountOfFlights = 64;
-    static FlightScheduleGen()
-    {
-        // Get all current Flights from DB now its just JSON
-        StreamReader reader = new StreamReader("../../../../AirplaneApp/Flights.json");
-        Flights.SetList(JsonConvert.DeserializeObject<List<Flight>>(reader.ReadToEnd())!);
-        reader.Close();
-        reader.Dispose();
-        UpdateList();
-    }
-
+    public const int TOTAL_FLIGHTS_TO_GENERATE = 64;
+    public const int MAX_CONCURRENT_FLIGHTS = 3;
     public static void RemoveOld() => Flights.RemoveAll(fl => fl.ArrivalTime < DateTime.Now);
     public static void UpdateList() {
         RemoveOld();
         bool changed = false;
         foreach (string location in _locations) {
             int count = Flights.Where(fl => fl.ArrivalLocation == location || fl.DepartureLocation == location).Count();
-            if (count != AmountOfFlights) {
-                PopulateByAmount(AmountOfFlights - count, location);
+            if (count != TOTAL_FLIGHTS_TO_GENERATE) {
+                PopulateByAmount(TOTAL_FLIGHTS_TO_GENERATE - count, location);
                 changed = true;
             }
         }
         if (changed) {
             Flights.Sort();
-            StoreInJson();
         }
     }
 
@@ -44,7 +34,7 @@ public static class FlightScheduleGen
 
     public static void PopulateByLocation(string location)
     {
-        if (Flights.Count >= AmountOfFlights * _locations.Count)
+        if (Flights.Count >= TOTAL_FLIGHTS_TO_GENERATE * _locations.Count)
             return;
         string airplane = _planes[_rng.Next(_planes.Length)];
         TimeSpan flightDuration = location switch {
@@ -63,7 +53,7 @@ public static class FlightScheduleGen
         if(flightDuration == TimeSpan.Zero)
             return;
 
-        for(int i = 0; i < AmountOfFlights / 2; i++) {
+        for(int i = 0; i < TOTAL_FLIGHTS_TO_GENERATE / 2; i++) {
             if (i == 0)
                 Flights.Add(new Flight(Flights.Count, "Rotterdam", DateTime.Now.AddHours(6), location, DateTime.Now.AddHours(6).Add(flightDuration), airplane));
             else
@@ -75,7 +65,7 @@ public static class FlightScheduleGen
 
     private static void PopulateByAmount(int amount, string location)
     {
-        if (amount == AmountOfFlights) {
+        if (amount == TOTAL_FLIGHTS_TO_GENERATE) {
             PopulateByLocation(location);
             return;
         }
@@ -94,10 +84,6 @@ public static class FlightScheduleGen
 
         if(flightDuration == TimeSpan.Zero)
             return;
-
-        // Even = terug naar rotterdam
-        // Oneven = naar locatie to
-
         Console.WriteLine($"{location}: {amount}");
 
         for (int i = amount; i > 0; i--) {
@@ -107,12 +93,5 @@ public static class FlightScheduleGen
             else
                 Flights.Add(new Flight(Flights.Count, "Rotterdam", latestFlight.ArrivalTime.AddHours(1), location, latestFlight.ArrivalTime.AddHours(1).Add(flightDuration), latestFlight.Airplane));
         }
-    }
-
-    private static void StoreInJson() {
-        StreamWriter writer = new StreamWriter("../../../../AirplaneApp/Flights.json");
-        writer.Write(JsonConvert.SerializeObject(Flights, Formatting.Indented));
-        writer.Close();
-        writer.Dispose();
     }
 }

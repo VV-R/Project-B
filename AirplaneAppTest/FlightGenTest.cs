@@ -23,7 +23,7 @@ public class FlightGenTest
         FlightScheduleGen.PopulateByLocation("");
         Assert.AreEqual(FlightScheduleGen.Flights.Count, 0);
         FlightScheduleGen.PopulateByLocation("Parijs");
-        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights);
+        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.TOTAL_FLIGHTS_TO_GENERATE);
         Assert.IsFalse(FlightScheduleGen.Flights.Where(fl => fl.ArrivalLocation == "Parijs").Count() == 0);
     }
 
@@ -34,10 +34,10 @@ public class FlightGenTest
         FlightScheduleGen.PopulateByLocation("");
         Assert.AreEqual(FlightScheduleGen.Flights.Count, 0);
         FlightScheduleGen.PopulateByLocation("Parijs");
-        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights);
+        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.TOTAL_FLIGHTS_TO_GENERATE);
         Assert.IsFalse(FlightScheduleGen.Flights.Where(fl => fl.ArrivalLocation == "Parijs").Count() == 0);
         FlightScheduleGen.PopulateByLocation("Madrid");
-        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights * 2);
+        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.TOTAL_FLIGHTS_TO_GENERATE * 2);
         Assert.IsFalse(FlightScheduleGen.Flights.Where(fl => fl.ArrivalLocation == "Madrid").Count() == 0);
     }
 
@@ -46,12 +46,13 @@ public class FlightGenTest
     {
         FlightScheduleGen.Flights.SetList(new List<Flight>());
         FlightScheduleGen.PopulateAll();
-        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.AmountOfFlights * 9);
+        Assert.AreEqual(FlightScheduleGen.Flights.Count, FlightScheduleGen.TOTAL_FLIGHTS_TO_GENERATE * 9);
     }
 
     [TestMethod]
     public void TestUpdateFeature()
     {
+        FlightScheduleGen.UpdateList();
         Assert.AreEqual(FlightScheduleGen.Flights.Count, 576);
     }
 }

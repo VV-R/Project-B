@@ -182,7 +182,10 @@ public class CreateAirplane : Toplevel
             double columns = double.Parse((string)seatTypeView.ColumnField.Text);
             for (double y = 0; y < maxColumns; y += (double)maxColumns / columns) {
                 for (int x = 0; x < rows; x++) {
-                    seats.Add(new Seat($"{x + currentRow}{Convert.ToChar(65 + (int)Math.Round(y))}", (currentRow * xOffset + ((x + 1) * xOffset)), rightWallY + (int)Math.Round(y) + 2, (string)seatTypeView.ComboBox.Text));
+                    seats.Add(new Seat($"{x + currentRow}{Convert.ToChar(65 + (int)Math.Round(y))}",
+                                        (currentRow * xOffset + ((x + 1) * xOffset)),
+                                        rightWallY + (int)Math.Round(y) + 2,
+                                        (string)seatTypeView.ComboBox.Text));
                 }
             }
             currentRow += rows;
@@ -203,7 +206,11 @@ public class CreateAirplane : Toplevel
         int width = totalRows * xOffset;
         int halfWidth = width / 2;
 
-        return new Airplane(rightWing.ToString(), (rightWingY, halfWidth), (rightWallY, halfHeigth + xOffset), width, (leftWallY, halfHeigth + xOffset), width, leftWing.ToString(), (leftWallY + 1, halfWidth), cockPit.ToString(), (rightWallY, 4), (rightWallY, width + xOffset * 2), heigth, (leftWallY + 14, xOffset * 5), seats);
+        return new Airplane(rightWing.ToString(), (rightWingY, halfWidth),
+                            (rightWallY, halfHeigth + xOffset), width,
+                            (leftWallY, halfHeigth + xOffset), width, leftWing.ToString(),
+                            (leftWallY + 1, halfWidth), cockPit.ToString(), (rightWallY, 4),
+                            (rightWallY, width + xOffset * 2), heigth, (leftWallY + 14, xOffset * 5), seats);
     }
 }
 
