@@ -10,7 +10,7 @@ public static class PopulateFlights
     private static string[] _locations = {"Parijs", "London", "München", "Wenen", "Rome", "Barcelona", "Brussel", "Berlijn", "Madrid"};
     public static ListOfFlight Flights = new ListOfFlight();
     public static List<(int amount, string location)> updateLocation = new();
-    public const int TOTAL_FLIGHTS_TO_GENERATE = 64;
+    public const int TOTAL_FLIGHTS_TO_GENERATE = 128;
     public const int MAX_CONCURRENT_FLIGHTS = 3;
     private static int _totalGenerated = 0;
 
